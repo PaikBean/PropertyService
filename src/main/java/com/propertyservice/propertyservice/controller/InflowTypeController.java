@@ -17,6 +17,11 @@ public class InflowTypeController {
 
     private final InflowTypeService inflowTypeService;
 
+    /**
+     * 유입경로 목록 조회
+     *
+     * @return
+     */
     @GetMapping("/v1/inflow-type-list")
     public Response searchInflowTypeList() {
         try {
