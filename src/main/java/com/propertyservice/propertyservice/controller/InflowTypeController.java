@@ -25,7 +25,7 @@ public class InflowTypeController {
     @GetMapping("/v1/inflow-type-list")
     public Response searchInflowTypeList() {
         try {
-            return new Response(ResponseCode.SUCCESS, inflowTypeService.searchInflowTypeList());
+            return new Response(ResponseCode.SUCCESS, inflowTypeService.searchInflowTypeList(), "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }

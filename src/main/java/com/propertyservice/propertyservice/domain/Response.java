@@ -10,11 +10,6 @@ public class Response<T> {
     private String message;
     private String code;
 
-    public Response(ResponseCode responseCode, T data) {
-        this.responseCode = responseCode;
-        this.data = data;
-    }
-
     public Response(ResponseCode responseCode, String message, String code) {
         this.responseCode = responseCode;
         this.message = message;
