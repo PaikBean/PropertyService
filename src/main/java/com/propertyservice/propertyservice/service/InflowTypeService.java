@@ -18,6 +18,7 @@ import java.util.List;
 public class InflowTypeService {
 
     private final InflowTypeRepository inflowTypeRepository;
+
     public List<InflowTypeDto> searchInflowTypeList() {
         List<InflowTypeDto> inflowTypeDtoList = new ArrayList<>();
 

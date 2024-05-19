@@ -2,7 +2,6 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.Response;
 import com.propertyservice.propertyservice.domain.ResponseCode;
-import com.propertyservice.propertyservice.repository.InflowTypeRepository;
 import com.propertyservice.propertyservice.service.InflowTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +18,10 @@ public class InflowTypeController {
     private final InflowTypeService inflowTypeService;
 
     @GetMapping("/v1/inflow-type-list")
-    public Response searchInflowTypeList(){
-        try{
+    public Response searchInflowTypeList() {
+        try {
             return new Response(ResponseCode.SUCCESS, inflowTypeService.searchInflowTypeList());
-        } catch (Exception e){
+        } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
