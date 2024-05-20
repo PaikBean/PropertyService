@@ -1,4 +1,4 @@
-package com.propertyservice.propertyservice.domain;
+package com.propertyservice.propertyservice.domain.response;
 
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
 package com.propertyservice.propertyservice.controller;
 
-import com.propertyservice.propertyservice.domain.Response;
-import com.propertyservice.propertyservice.domain.ResponseCode;
+import com.propertyservice.propertyservice.domain.response.Response;
+import com.propertyservice.propertyservice.domain.response.ResponseCode;
 import com.propertyservice.propertyservice.service.InflowTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
