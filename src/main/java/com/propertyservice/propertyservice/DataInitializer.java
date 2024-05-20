@@ -2,6 +2,8 @@ package com.propertyservice.propertyservice;
 
 import com.propertyservice.propertyservice.domain.InflowType;
 import com.propertyservice.propertyservice.repository.InflowTypeRepository;
+import com.propertyservice.propertyservice.repository.address.AddressLevel1Repository;
+import com.propertyservice.propertyservice.repository.address.AddressLevel2Respository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,21 +35,25 @@ public class DataInitializer {
     }
 
     @Bean
-    public CommandLineRunner initialAddressData(JdbcTemplate jdbcTemplate) {
+    public CommandLineRunner initialAddressData(JdbcTemplate jdbcTemplate,
+                                                AddressLevel1Repository addressLevel1Repository,
+                                                AddressLevel2Respository addressLevel2Respository) {
         return args -> {
-            try (InputStream inputStream = getClass().getResourceAsStream("/static/sql/insert_address_data.sql");
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+            if (addressLevel1Repository.count() == 0 && addressLevel2Respository.count() == 0){
+                try (InputStream inputStream = getClass().getResourceAsStream("/static/sql/insert_address_data.sql");
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    // Skip empty lines
-                    if (StringUtils.hasText(line) && !line.toLowerCase().contains("nan")) {
-                        // Execute each insert statement
-                        jdbcTemplate.execute(line);
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        // Skip empty lines
+                        if (StringUtils.hasText(line) && !line.toLowerCase().contains("nan")) {
+                            // Execute each insert statement
+                            jdbcTemplate.execute(line);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         };
     }
