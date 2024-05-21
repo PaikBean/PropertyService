@@ -1,7 +1,9 @@
 package com.propertyservice.propertyservice;
 
 import com.propertyservice.propertyservice.domain.InflowType;
+import com.propertyservice.propertyservice.domain.TransactionType;
 import com.propertyservice.propertyservice.repository.InflowTypeRepository;
+import com.propertyservice.propertyservice.repository.TransactionTypeRepository;
 import com.propertyservice.propertyservice.repository.address.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.address.AddressLevel2Respository;
 import org.springframework.boot.CommandLineRunner;
@@ -39,7 +41,7 @@ public class DataInitializer {
                                                 AddressLevel1Repository addressLevel1Repository,
                                                 AddressLevel2Respository addressLevel2Respository) {
         return args -> {
-            if (addressLevel1Repository.count() == 0 && addressLevel2Respository.count() == 0){
+            if (addressLevel1Repository.count() == 0 && addressLevel2Respository.count() == 0) {
                 try (InputStream inputStream = getClass().getResourceAsStream("/static/sql/insert_address_data.sql");
                      BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
@@ -54,6 +56,32 @@ public class DataInitializer {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        };
+    }
+
+    @Bean
+    public CommandLineRunner initTransactionTypeData(TransactionTypeRepository transactionTypeRepository) {
+        return args -> {
+            if (transactionTypeRepository.count() == 0) {
+                TransactionType type1 = TransactionType.builder()
+                        .transactionTypeName("월세")
+                        .transactionTypeCode("monthly")
+                        .build();
+                TransactionType type2 = TransactionType.builder()
+                        .transactionTypeName("전세")
+                        .transactionTypeCode("jeonse")
+                        .build();
+                TransactionType type3 = TransactionType.builder()
+                        .transactionTypeName("매매")
+                        .transactionTypeCode("trade")
+                        .build();
+                TransactionType type4 = TransactionType.builder()
+                        .transactionTypeName("단기")
+                        .transactionTypeCode("shorterm")
+                        .build();
+                List<TransactionType> typeList = Arrays.asList(type1, type2, type3, type4);
+                transactionTypeRepository.saveAll(typeList);
             }
         };
     }
