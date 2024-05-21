@@ -1,11 +1,11 @@
 package com.propertyservice.propertyservice;
 
-import com.propertyservice.propertyservice.domain.InflowType;
-import com.propertyservice.propertyservice.domain.TransactionType;
-import com.propertyservice.propertyservice.repository.InflowTypeRepository;
-import com.propertyservice.propertyservice.repository.TransactionTypeRepository;
-import com.propertyservice.propertyservice.repository.address.AddressLevel1Repository;
-import com.propertyservice.propertyservice.repository.address.AddressLevel2Respository;
+import com.propertyservice.propertyservice.domain.client.InflowType;
+import com.propertyservice.propertyservice.domain.common.TransactionType;
+import com.propertyservice.propertyservice.repository.client.InflowTypeRepository;
+import com.propertyservice.propertyservice.repository.common.TransactionTypeRepository;
+import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
+import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
