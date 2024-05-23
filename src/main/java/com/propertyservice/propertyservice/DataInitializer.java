@@ -1,13 +1,11 @@
 package com.propertyservice.propertyservice;
 
 import com.propertyservice.propertyservice.domain.client.InflowType;
+import com.propertyservice.propertyservice.domain.common.Gender;
+import com.propertyservice.propertyservice.domain.common.ManagerState;
 import com.propertyservice.propertyservice.domain.common.TransactionType;
-import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.repository.client.InflowTypeRepository;
-import com.propertyservice.propertyservice.repository.common.TransactionTypeRepository;
-import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
-import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
-import com.propertyservice.propertyservice.repository.company.CompanyRepository;
+import com.propertyservice.propertyservice.repository.common.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -106,6 +105,34 @@ public class DataInitializer {
                 e.printStackTrace();
             }
 
+        };
+    }
+
+    @Bean
+    public CommandLineRunner initGender(GenderRepository genderRepository) {
+        return args -> {
+            if (genderRepository.count() == 0) {
+                List<String> genders = new ArrayList<>(Arrays.asList("남성", "여성", "미상"));
+                for (String gender : genders) {
+                    genderRepository.save(Gender.builder()
+                            .gender(gender)
+                            .build());
+                }
+            }
+        };
+    }
+
+    @Bean
+    public CommandLineRunner initManagerState(ManagerStateRepository managerStateRepository) {
+        return args -> {
+            if (managerStateRepository.count() == 0) {
+                List<String> states = new ArrayList<>(Arrays.asList("재직", "휴직", "퇴사"));
+                for (String state : states) {
+                    managerStateRepository.save(ManagerState.builder()
+                            .managerState(state)
+                            .build());
+                }
+            }
         };
     }
 }
