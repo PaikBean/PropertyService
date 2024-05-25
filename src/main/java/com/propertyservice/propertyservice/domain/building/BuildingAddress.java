@@ -18,9 +18,6 @@ public class BuildingAddress extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "building_address_id")
     private Long buildingAddressId;
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "building_id")
-    private Building building;
     @Column(name = "address_level1_id", nullable = false)
     private Long addressLevel1Id;
     @Column(name = "address_level2_id", nullable = false)
@@ -28,9 +25,8 @@ public class BuildingAddress extends BaseTimeEntity {
     private String addressLevel3;
 
     @Builder
-    public BuildingAddress(Long buildingAddressId, Building building, Long addressLevel1Id, Long addressLevel2Id, String addressLevel3) {
+    public BuildingAddress(Long buildingAddressId, Long addressLevel1Id, Long addressLevel2Id, String addressLevel3) {
         this.buildingAddressId = buildingAddressId;
-        this.building = building;
         this.addressLevel1Id = addressLevel1Id;
         this.addressLevel2Id = addressLevel2Id;
         this.addressLevel3 = addressLevel3;

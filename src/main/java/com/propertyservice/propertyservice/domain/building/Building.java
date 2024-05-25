@@ -21,10 +21,14 @@ public class Building extends BaseTimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "owner_id")
     private Owner owner;
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "building_address_id")
+    private BuildingAddress buildingAddress;
 
     @Builder
-    public Building(Long buildingId, Owner owner) {
+    public Building(Long buildingId, Owner owner, BuildingAddress buildingAddress) {
         this.buildingId = buildingId;
         this.owner = owner;
+        this.buildingAddress = buildingAddress;
     }
 }
