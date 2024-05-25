@@ -20,6 +20,7 @@ public class Owner extends BaseTimeEntity {
     @Column(nullable = false)
     private String ownerName;
     private String ownerRelation;
+    @Column(nullable = false)
     private String ownerPhoneNumber;
 
     @Builder

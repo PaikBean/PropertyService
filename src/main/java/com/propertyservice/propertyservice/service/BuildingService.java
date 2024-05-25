@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -37,15 +38,20 @@ public class BuildingService {
         return buildingRepository.searchBuildingList(buildingCondition);
     }
 
+    @Transactional
     public void createBuilding(BuildingOwnerForm buildingOwnerForm) {
-        Owner owner = ownerRepository.save(Owner.builder()
-                .ownerName(buildingOwnerForm.getOwnerName())
-                .ownerRelation(buildingOwnerForm.getOwnerRelation())
-                .ownerPhoneNumber(buildingOwnerForm.getOwnerPhoneNumber())
-                .build());
+        Owner isOwnerExsit = validOwnerDuplicate(buildingOwnerForm.getOwnerPhoneNumber());
+        Owner owner = isOwnerExsit == null ?
+                ownerRepository.save(Owner.builder()
+                        .ownerName(buildingOwnerForm.getOwnerName())
+                        .ownerRelation(buildingOwnerForm.getOwnerRelation())
+                        .ownerPhoneNumber(buildingOwnerForm.getOwnerPhoneNumber())
+                        .build())
+                : isOwnerExsit;
+        validBuildingDuplicate(buildingOwnerForm.getBuildingAddressLevel1(), buildingOwnerForm.getBuildingAddressLevel2(), buildingOwnerForm.getBuildingAddressLevel3());
         BuildingAddress buildingAddress = buildingAddressRepository.save(BuildingAddress.builder()
-                .addressLevel1Id(valiDaddressLevel1(buildingOwnerForm.getBuildingAddressLevel1()))
-                .addressLevel2Id(valiDaddressLevel2(buildingOwnerForm.getBuildingAddressLevel2()))
+                .addressLevel1Id(validAddressLevel1(buildingOwnerForm.getBuildingAddressLevel1()))
+                .addressLevel2Id(validAddressLevel2(buildingOwnerForm.getBuildingAddressLevel2()))
                 .addressLevel3(buildingOwnerForm.getBuildingAddressLevel3())
                 .build());
         buildingRepository.save(Building.builder()
@@ -57,10 +63,25 @@ public class BuildingService {
                 .build());
     }
 
-    private Long valiDaddressLevel1(Long addressLevel1Id){
-        return addressLevel1Repository.findById(addressLevel1Id).orElseThrow(EntityNotFoundException::new).getAddressLevel1Id();
+    private Long validAddressLevel1(Long addressLevel1Id){
+        return addressLevel1Repository.findById(addressLevel1Id).orElseThrow(
+                () -> new IllegalStateException("주소의 입력이 잘못되었습니다.")
+        ).getAddressLevel1Id();
     }
-    private Long valiDaddressLevel2(Long addressLevel2Id){
-        return addressLevel2Respository.findById(addressLevel2Id).orElseThrow(EntityNotFoundException::new).getAddressLevel2Id();
+    private Long validAddressLevel2(Long addressLevel2Id){
+        return addressLevel2Respository.findById(addressLevel2Id).orElseThrow(
+                () -> new IllegalStateException("주소의 입력이 잘못되었습니다.")
+        ).getAddressLevel2Id();
+    }
+
+    private Owner validOwnerDuplicate(String phoneNumber){
+        return ownerRepository.findByOwnerPhoneNumber(phoneNumber).orElse(null);
+    }
+
+    private void validBuildingDuplicate(Long addressLevel1Id, Long addressLevel2Id, String addressLevel3){
+        if (buildingAddressRepository.existsByAddressLevel1IdAndAddressLevel2IdAndAddressLevel3(addressLevel1Id, addressLevel2Id, addressLevel3)){
+            throw new IllegalStateException("등록된 건물의 주소입니다.");
+        }
+
     }
 }
