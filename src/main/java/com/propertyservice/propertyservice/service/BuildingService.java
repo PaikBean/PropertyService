@@ -34,6 +34,7 @@ public class BuildingService {
     private final OwnerRepository ownerRepository;
     private final AddressLevel1Repository addressLevel1Repository;
     private final AddressLevel2Respository addressLevel2Respository;
+
     public List<BuildingDto> searchBuildingList(BuildingCondition buildingCondition) {
         return buildingRepository.searchBuildingList(buildingCondition);
     }
@@ -54,32 +55,34 @@ public class BuildingService {
                 .addressLevel2Id(validAddressLevel2(buildingOwnerForm.getBuildingAddressLevel2()))
                 .addressLevel3(buildingOwnerForm.getBuildingAddressLevel3())
                 .build());
-        buildingRepository.save(Building.builder()
+        Building building = buildingRepository.save(Building.builder()
                 .owner(owner)
                 .buildingAddress(buildingAddress)
                 .build());
         buildingRemarkRepository.save(BuildingRemark.builder()
+                .building(building)
                 .remark(buildingOwnerForm.getBuildingRemark())
                 .build());
     }
 
-    private Long validAddressLevel1(Long addressLevel1Id){
+    private Long validAddressLevel1(Long addressLevel1Id) {
         return addressLevel1Repository.findById(addressLevel1Id).orElseThrow(
                 () -> new IllegalStateException("주소의 입력이 잘못되었습니다.")
         ).getAddressLevel1Id();
     }
-    private Long validAddressLevel2(Long addressLevel2Id){
+
+    private Long validAddressLevel2(Long addressLevel2Id) {
         return addressLevel2Respository.findById(addressLevel2Id).orElseThrow(
                 () -> new IllegalStateException("주소의 입력이 잘못되었습니다.")
         ).getAddressLevel2Id();
     }
 
-    private Owner validOwnerDuplicate(String phoneNumber){
+    private Owner validOwnerDuplicate(String phoneNumber) {
         return ownerRepository.findByOwnerPhoneNumber(phoneNumber).orElse(null);
     }
 
-    private void validBuildingDuplicate(Long addressLevel1Id, Long addressLevel2Id, String addressLevel3){
-        if (buildingAddressRepository.existsByAddressLevel1IdAndAddressLevel2IdAndAddressLevel3(addressLevel1Id, addressLevel2Id, addressLevel3)){
+    private void validBuildingDuplicate(Long addressLevel1Id, Long addressLevel2Id, String addressLevel3) {
+        if (buildingAddressRepository.existsByAddressLevel1IdAndAddressLevel2IdAndAddressLevel3(addressLevel1Id, addressLevel2Id, addressLevel3)) {
             throw new IllegalStateException("등록된 건물의 주소입니다.");
         }
 
