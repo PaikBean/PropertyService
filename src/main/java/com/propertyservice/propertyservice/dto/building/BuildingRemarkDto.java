@@ -2,9 +2,11 @@ package com.propertyservice.propertyservice.dto.building;
 
 import com.propertyservice.propertyservice.domain.building.BuildingRemark;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 public class BuildingRemarkDto {
     private Long buildingRemarkId;
     private String remark;
@@ -12,10 +14,10 @@ public class BuildingRemarkDto {
     private LocalDateTime updatedDate;
 
     @Builder
-    public BuildingRemarkDto(BuildingRemark buildingRemark) {
-        this.buildingRemarkId = buildingRemark.getRemarkId();
-        this.remark = buildingRemark.getRemark();
-        this.createdDate = buildingRemark.getCreatedDate();
-        this.updatedDate = buildingRemark.getUpdatedDate();
+    public BuildingRemarkDto(Long buildingRemarkId, String remark, LocalDateTime createdDate, LocalDateTime updatedDate) {
+        this.buildingRemarkId = buildingRemarkId;
+        this.remark = remark;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
     }
 }

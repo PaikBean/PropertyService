@@ -7,10 +7,7 @@ import com.propertyservice.propertyservice.service.PropertyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -31,6 +28,16 @@ public class PropertyController {
             propertyService.createProperty(propertyForm);
             return new Response(ResponseCode.SUCCESS, null, "200");
         } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+
+    @GetMapping("/v1/property-list/{buildingId}")
+    public Response searchPropertyList(@PathVariable(name = "buildingId") Long buildingId){
+        try {
+            return new Response(ResponseCode.SUCCESS, propertyService.searchPropertyList(buildingId), "200");
+        } catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }

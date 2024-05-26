@@ -15,6 +15,7 @@ public class PropertyForm {
     @NotNull @NotBlank
     private String unitNumber;
     private Long picManagerId;
+    private Long propertyTypeId;
     @NotNull
     private Long transactionTypeId;
     private BigDecimal deposit;
@@ -32,5 +33,6 @@ public class PropertyForm {
     @NotNull
     private boolean maintenanceItemGas;
     private String maintenanceItemOthers;
+    private Long transactionStateId;
     private String remark;
 }
