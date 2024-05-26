@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Getter
-@Table(name = "propety_type")
+@Table(name = "property_type")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PropertyType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "propety_type_id")
+    @Column(name = "property_type_id")
     private Long propertyTypeId;
     @Column(nullable = false)
     private String propertyType;
