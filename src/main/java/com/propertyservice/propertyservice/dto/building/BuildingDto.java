@@ -24,7 +24,6 @@ public class BuildingDto {
     }
 
     @QueryProjection
-
     public BuildingDto(Long buildingId, String ownerName, String buildingAddress) {
         this.buildingId = buildingId;
         this.ownerName = ownerName;
