@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PropertyRepository extends JpaRepository<Property, Long> {
+public interface PropertyRepository extends JpaRepository<Property, Long>, PropertyRepositoryCustom {
     boolean existsByBuildingAndUnitNumber(Building building, String unitNumber);
 
     List<Property> findAllByBuildingBuildingId(Long buildingID);
