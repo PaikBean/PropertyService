@@ -8,7 +8,9 @@ import com.propertyservice.propertyservice.domain.property.PropertyRemark;
 import com.propertyservice.propertyservice.dto.building.BuildingDto;
 import com.propertyservice.propertyservice.dto.building.BuildingPropertyDto;
 import com.propertyservice.propertyservice.dto.building.BuildingRemarkDto;
+import com.propertyservice.propertyservice.dto.property.PropertyDto;
 import com.propertyservice.propertyservice.dto.property.PropertyForm;
+import com.propertyservice.propertyservice.dto.property.PropertyRemarkDto;
 import com.propertyservice.propertyservice.dto.property.PropertySummaryDto;
 import com.propertyservice.propertyservice.repository.building.BuildingRemarkRepository;
 import com.propertyservice.propertyservice.repository.building.BuildingRepository;
@@ -73,7 +75,7 @@ public class PropertyService {
         );
     }
 
-    private MaintenanceItem createMaintenanceItem(PropertyForm propertyForm){
+    private MaintenanceItem createMaintenanceItem(PropertyForm propertyForm) {
         return maintenanceItemRepository.save(MaintenanceItem.builder()
                 .water(propertyForm.isMaintenanceItemWater())
                 .electricity(propertyForm.isMaintenanceItemElectricity())
@@ -83,7 +85,7 @@ public class PropertyService {
                 .build());
     }
 
-    private void validPropertyDuplicate(Building building, String unitNumber){
+    private void validPropertyDuplicate(Building building, String unitNumber) {
         if (propertyRepository.existsByBuildingAndUnitNumber(building, unitNumber)) {
             throw new IllegalStateException("이미 등록된 매물입니다.");
         }
@@ -109,12 +111,12 @@ public class PropertyService {
         }
         List<BuildingRemarkDto> buildingRemarkDtoList = new ArrayList<>();
         for (BuildingRemark buildingRemark : buildingRemarkRepository.findAllByBuildingBuildingId(buildingId)) {
-           buildingRemarkDtoList.add(BuildingRemarkDto.builder()
-                           .buildingRemarkId(buildingRemark.getRemarkId())
-                           .remark(buildingRemark.getRemark())
-                           .createdDate(buildingRemark.getCreatedDate())
-                           .updatedDate(buildingRemark.getUpdatedDate())
-                   .build());
+            buildingRemarkDtoList.add(BuildingRemarkDto.builder()
+                    .buildingRemarkId(buildingRemark.getRemarkId())
+                    .remark(buildingRemark.getRemark())
+                    .createdDate(buildingRemark.getCreatedDate())
+                    .updatedDate(buildingRemark.getUpdatedDate())
+                    .build());
         }
 
         return BuildingPropertyDto.builder()
@@ -129,8 +131,9 @@ public class PropertyService {
                 .propertySummaryDtoList(propertySummaryDtoList)
                 .build();
     }
-    private String getSummaryPrice(Property property){
-        if(property.getTransactionTypeId() == 1 || property.getTransactionTypeId() == 4)
+
+    private String getSummaryPrice(Property property) {
+        if (property.getTransactionTypeId() == 1 || property.getTransactionTypeId() == 4)
             return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getPropertyId()).orElseThrow(
                     () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
             ).getTransactionTypeName(), property.getDeposit(), property.getMonthlyFee());
@@ -144,5 +147,41 @@ public class PropertyService {
             ).getTransactionTypeName(), property.getTradeFee());
         else
             return null;
+    }
+
+    public PropertyDto searchProperty(Long propertyId) {
+        Property property = propertyRepository.findById(propertyId).orElseThrow(
+                () -> new EntityNotFoundException("등록되지 않은 매물입니다.")
+        );
+
+        List<PropertyRemarkDto> propertyRemarkDtoList = new ArrayList<>();
+        for (PropertyRemark propertyRemark : propertyRemarkRepository.findByPropertyPropertyId(propertyId)) {
+            propertyRemarkDtoList.add(PropertyRemarkDto.builder()
+                    .propertyRemarkId(propertyRemark.getRemarkId())
+                    .propertyRemark(propertyRemark.getRemark())
+                    .createdDate(propertyRemark.getCreatedDate())
+                    .updatedDate(propertyRemark.getUpdatedDate())
+                    .build());
+        }
+
+        return PropertyDto.builder()
+                .propertyId(property.getPropertyId())
+                .unitNumber(property.getUnitNumber())
+                .picManagerId(property.getPicManagerId())
+                .picManagerName(null)   // Todo 추후 manager 엔티티 주가되면 가져오기
+                .transactionTypeId(property.getTransactionTypeId())
+                .deposit(property.getDeposit())
+                .monthlyFee(property.getMonthlyFee())
+                .jeonseFee(property.getJeonseFee())
+                .tradeFee(property.getTradeFee())
+                .maintenanceFee(property.getMaintenanceFee())
+                .maintenanceItemWater(property.getMaintenanceItem().isWater())
+                .maintenanceItemElectricity(property.getMaintenanceItem().isElectricity())
+                .maintenanceItemInternet(property.getMaintenanceItem().isInternet())
+                .maintenanceItemGas(property.getMaintenanceItem().isGas())
+                .maintenanceItemOthers(property.getMaintenanceItem().getOthers())
+                .transactionStateId(property.getTransactionStateId())
+                .propertyRemarkDtoList(propertyRemarkDtoList)
+                .build();
     }
 }
