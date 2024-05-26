@@ -1,4 +1,4 @@
-package com.propertyservice.propertyservice.domain.common;
+package com.propertyservice.propertyservice.domain.company;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

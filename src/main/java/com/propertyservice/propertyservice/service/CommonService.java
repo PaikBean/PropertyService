@@ -1,6 +1,7 @@
 package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.common.*;
+import com.propertyservice.propertyservice.domain.company.ManagerState;
 import com.propertyservice.propertyservice.dto.common.AddressLevel1Dto;
 import com.propertyservice.propertyservice.dto.common.AddressLevel2Dto;
 import com.propertyservice.propertyservice.dto.common.TransactionTypeDto;

@@ -1,11 +1,5 @@
 package com.propertyservice.propertyservice;
 
-import com.propertyservice.propertyservice.domain.client.InflowType;
-import com.propertyservice.propertyservice.domain.common.Gender;
-import com.propertyservice.propertyservice.domain.common.ManagerState;
-import com.propertyservice.propertyservice.domain.common.TransactionType;
-import com.propertyservice.propertyservice.repository.client.InflowTypeRepository;
-import com.propertyservice.propertyservice.repository.common.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +10,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 public class DataInitializer {
