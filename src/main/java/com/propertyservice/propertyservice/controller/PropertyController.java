@@ -34,7 +34,7 @@ public class PropertyController {
 
 
     /**
-     * 매물 목록 조회
+     * 건물 매물 목록 조회
      *
      * @param buildingId
      * @return
