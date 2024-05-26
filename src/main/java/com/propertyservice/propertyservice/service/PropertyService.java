@@ -134,15 +134,15 @@ public class PropertyService {
 
     private String getSummaryPrice(Property property) {
         if (property.getTransactionTypeId() == 1 || property.getTransactionTypeId() == 4)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getPropertyId()).orElseThrow(
+            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
                     () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
             ).getTransactionTypeName(), property.getDeposit(), property.getMonthlyFee());
         else if (property.getTransactionTypeId() == 2)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getPropertyId()).orElseThrow(
+            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
                     () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
             ).getTransactionTypeName(), property.getJeonseFee());
         else if (property.getTransactionTypeId() == 3)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getPropertyId()).orElseThrow(
+            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
                     () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
             ).getTransactionTypeName(), property.getTradeFee());
         else
