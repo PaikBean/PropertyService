@@ -23,27 +23,9 @@ import java.util.List;
 @Configuration
 public class DataInitializer {
     @Bean
-    public CommandLineRunner initialData(InflowTypeRepository inflowTypeRepository) {
+    public CommandLineRunner initialInitData(JdbcTemplate jdbcTemplate) {
         return args -> {
-            if (inflowTypeRepository.count() == 0) {
-                InflowType type1 = InflowType.builder().inflowType("직방").build();
-                InflowType type2 = InflowType.builder().inflowType("다방").build();
-                InflowType type3 = InflowType.builder().inflowType("피터팬").build();
-                InflowType type4 = InflowType.builder().inflowType("집토스").build();
-                InflowType type5 = InflowType.builder().inflowType("기타").build();
-                List<InflowType> typeList = Arrays.asList(type1, type2, type3, type4, type5);
-                inflowTypeRepository.saveAll(typeList);
-            }
-        };
-    }
-
-    @Bean
-    public CommandLineRunner initialAddressData(JdbcTemplate jdbcTemplate,
-                                                AddressLevel1Repository addressLevel1Repository,
-                                                AddressLevel2Respository addressLevel2Respository) {
-        return args -> {
-            if (addressLevel1Repository.count() == 0 && addressLevel2Respository.count() == 0) {
-                try (InputStream inputStream = getClass().getResourceAsStream("/static/sql/insert_address_data.sql");
+                try (InputStream inputStream = getClass().getResourceAsStream("/static/sql/insert_init_data.sql");
                      BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
                     String line;
@@ -54,36 +36,8 @@ public class DataInitializer {
                             jdbcTemplate.execute(line);
                         }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        };
-    }
 
-    @Bean
-    public CommandLineRunner initTransactionTypeData(TransactionTypeRepository transactionTypeRepository) {
-        return args -> {
-            if (transactionTypeRepository.count() == 0) {
-                TransactionType type1 = TransactionType.builder()
-                        .transactionTypeName("월세")
-                        .transactionTypeCode("monthly")
-                        .build();
-                TransactionType type2 = TransactionType.builder()
-                        .transactionTypeName("전세")
-                        .transactionTypeCode("jeonse")
-                        .build();
-                TransactionType type3 = TransactionType.builder()
-                        .transactionTypeName("매매")
-                        .transactionTypeCode("trade")
-                        .build();
-                TransactionType type4 = TransactionType.builder()
-                        .transactionTypeName("단기")
-                        .transactionTypeCode("shorterm")
-                        .build();
-                List<TransactionType> typeList = Arrays.asList(type1, type2, type3, type4);
-                transactionTypeRepository.saveAll(typeList);
-            }
         };
     }
 
@@ -105,34 +59,6 @@ public class DataInitializer {
                 e.printStackTrace();
             }
 
-        };
-    }
-
-    @Bean
-    public CommandLineRunner initGender(GenderRepository genderRepository) {
-        return args -> {
-            if (genderRepository.count() == 0) {
-                List<String> genders = new ArrayList<>(Arrays.asList("남성", "여성", "미상"));
-                for (String gender : genders) {
-                    genderRepository.save(Gender.builder()
-                            .gender(gender)
-                            .build());
-                }
-            }
-        };
-    }
-
-    @Bean
-    public CommandLineRunner initManagerState(ManagerStateRepository managerStateRepository) {
-        return args -> {
-            if (managerStateRepository.count() == 0) {
-                List<String> states = new ArrayList<>(Arrays.asList("재직", "휴직", "퇴사"));
-                for (String state : states) {
-                    managerStateRepository.save(ManagerState.builder()
-                            .managerState(state)
-                            .build());
-                }
-            }
         };
     }
 }
