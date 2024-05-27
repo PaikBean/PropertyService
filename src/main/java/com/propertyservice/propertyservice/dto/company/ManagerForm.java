@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ManagerFormDto {
+public class ManagerForm {
 
     private String companyCode; //회사 코드
     private String managerEmail;
@@ -12,7 +12,7 @@ public class ManagerFormDto {
     private String managerName;
 
     @Builder
-    public ManagerFormDto(String companyCode, String managerEmail, String managerPassword, String managerName){
+    public ManagerForm(String companyCode, String managerEmail, String managerPassword, String managerName){
         this.companyCode = companyCode;
         this.managerEmail = managerEmail;
         this.managerPassword =managerPassword;
