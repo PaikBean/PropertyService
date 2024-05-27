@@ -41,6 +41,21 @@ public class ManagerService implements UserDetailsService {
                 ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요."));
     }
 
+    /*
+        회원가입시 email 중복 체크
+        @ false : 이메일 중복
+        @ true : 생성 가능.
+     */
+    public boolean checkDuplicate(String email){
+        try{
+            Manager manager = searchManagerByEmail(email);
+            return false;
+        }catch (Exception e){
+            return true;
+        }
+    }
+
+
 
     /*
         사용자 로그인
