@@ -8,6 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.http.*;
 
 import org.springframework.web.client.RestTemplate;
@@ -58,14 +61,28 @@ public class ValidBizRegNumber {
 
             ResponseEntity<BizNumberStatusResponseDto> response = restTemplate.exchange(url.toURI(), HttpMethod.POST, request, BizNumberStatusResponseDto.class);
 
-            return isStatusBizNumberAvail(response.getBody());
+            return response.getStatusCode().is2xxSuccessful() && isStatusBizNumberAvail(response.getBody());
         } catch (MalformedURLException | URISyntaxException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     private boolean isStatusBizNumberAvail(BizNumberStatusResponseDto bizNumberStatusResponseDto) {
-        return true;
+        if (!bizNumberStatusResponseDto.getData().get(0)
+                .getTaxType().equals("국세청에 등록되지 않은 사업자등록번호입니다.")){
+            if (bizNumberStatusResponseDto.getData().get(0).getBStt().equals("계속사업자")
+                    && bizNumberStatusResponseDto.getData().get(0).getBSttCd().equals("01")
+                    && isEndDateAfterCurrentDate(bizNumberStatusResponseDto.getData().get(0).getEndDt()))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean isEndDateAfterCurrentDate(String endDt){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate endDate = LocalDate.parse(endDt, formatter);
+        LocalDate currentDate = LocalDate.now();
+        return endDate.isAfter(currentDate);
     }
 
     private JSONObject createBizNumberStatusRequestJson(BizNumberStatusRequestForm bizNumberStatusRequestForm) {
