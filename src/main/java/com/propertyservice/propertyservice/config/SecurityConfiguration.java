@@ -31,8 +31,8 @@ public class SecurityConfiguration {
                 .loginPage("/")                             //로그인 페이지
                 .loginProcessingUrl("/")
                 //.defaultSuccessUrl("/")                   //성공시 이동될 페이지
-                .usernameParameter("email")                 //로그인시 id
-                .passwordParameter("password")              //로그인시 password
+                .usernameParameter("managerEmail")                 //로그인시 id
+                .passwordParameter("managerPassword")              //로그인시 password
                 .failureHandler(customAuthFailureHandler)   //로그인 실패 핸들러
                 .successHandler(customAuthSueccessHandler)  //로그인 성공 핸들러
         );
