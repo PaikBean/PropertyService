@@ -2,13 +2,12 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
-import com.propertyservice.propertyservice.dto.building.BuildingCondition;
-import com.propertyservice.propertyservice.dto.building.BuildingDto;
-import com.propertyservice.propertyservice.dto.building.BuildingOwnerForm;
+import com.propertyservice.propertyservice.dto.building.*;
 import com.propertyservice.propertyservice.service.BuildingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +39,8 @@ public class BuildingController {
     }
 
     /**
+     * 건물/임대인 등록
+     *
      * @param buildingOwnerForm
      * @return
      */
@@ -47,6 +48,32 @@ public class BuildingController {
     public Response createBuilding(@RequestBody @Valid BuildingOwnerForm buildingOwnerForm) {
         try {
             buildingService.createBuilding(buildingOwnerForm);
+            return new Response(ResponseCode.SUCCESS, null, "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 건물 특이사항 등록
+     *
+     * @param buildingRemarkForm
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping("/v1/building-remark")
+    public Response createBuildingRemark(@RequestBody @Valid BuildingRemarkForm buildingRemarkForm, BindingResult bindingResult) {
+        try {
+            return new Response(ResponseCode.SUCCESS, buildingService.createBuildingRemark(buildingRemarkForm), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    @DeleteMapping("/v1/building-remark")
+    public Response deleteBuildingRemark(@RequestBody @Valid BuildingRemarkIdForm buildingRemarkIdForm, BindingResult bindingResult) {
+        try {
+            buildingService.deleteBuildingRemark(buildingRemarkIdForm);
             return new Response(ResponseCode.SUCCESS, null, "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");

@@ -4,9 +4,7 @@ import com.propertyservice.propertyservice.domain.building.Building;
 import com.propertyservice.propertyservice.domain.building.BuildingAddress;
 import com.propertyservice.propertyservice.domain.building.BuildingRemark;
 import com.propertyservice.propertyservice.domain.building.Owner;
-import com.propertyservice.propertyservice.dto.building.BuildingCondition;
-import com.propertyservice.propertyservice.dto.building.BuildingDto;
-import com.propertyservice.propertyservice.dto.building.BuildingOwnerForm;
+import com.propertyservice.propertyservice.dto.building.*;
 import com.propertyservice.propertyservice.repository.building.BuildingAddressRepository;
 import com.propertyservice.propertyservice.repository.building.BuildingRemarkRepository;
 import com.propertyservice.propertyservice.repository.building.BuildingRepository;
@@ -86,5 +84,22 @@ public class BuildingService {
             throw new IllegalStateException("등록된 건물의 주소입니다.");
         }
 
+    }
+
+    @Transactional
+    public Long createBuildingRemark(BuildingRemarkForm buildingRemarkForm) {
+        return buildingRemarkRepository.save(BuildingRemark.builder()
+                        .building(
+                                buildingRepository.findById(buildingRemarkForm.getBuildingId()).orElseThrow(
+                                        () -> new EntityNotFoundException("등록되지 않은 빌딩입니다."))
+                        )
+                        .remark(buildingRemarkForm.getRemark())
+                        .build())
+                .getBuilding().getBuildingId();
+    }
+
+    @Transactional
+    public void deleteBuildingRemark(BuildingRemarkIdForm buildingRemarkIdForm) {
+        buildingRemarkRepository.deleteById(buildingRemarkIdForm.getBuildingRemarkId());
     }
 }
