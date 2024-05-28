@@ -34,4 +34,12 @@ public class MaintenanceItem {
         this.gas = gas;
         this.others = others;
     }
+
+    public void updateMaintenanceItem(boolean water, boolean electricity, boolean internet, boolean gas, String others) {
+        this.water = water;
+        this.electricity = electricity;
+        this.internet = internet;
+        this.gas = gas;
+        this.others = others;
+    }
 }

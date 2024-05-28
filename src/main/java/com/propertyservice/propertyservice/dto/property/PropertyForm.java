@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class PropertyForm {
+    private Long propertyId;
     @NotNull
     private Long buildingId;
     @NotNull @NotBlank

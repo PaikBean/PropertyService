@@ -56,4 +56,18 @@ public class Property extends BaseTimeEntity {
         this.maintenanceItem = maintenanceItem;
         this.transactionStateId = transactionStateId;
     }
+
+    public void updateProperty(String unitNumber, Long picManagerId, Long propertyTypeId, Long transactionTypeId, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, Long transactionStateId) {
+        this.unitNumber = unitNumber;
+        this.picManagerId = picManagerId;
+        this.propertyTypeId = propertyTypeId;
+        this.transactionTypeId = transactionTypeId;
+        this.deposit = deposit;
+        this.monthlyFee = monthlyFee;
+        this.jeonseFee = jeonseFee;
+        this.tradeFee = tradeFee;
+        this.maintenanceFee = maintenanceFee;
+        this.maintenanceItem = maintenanceItem;
+        this.transactionStateId = transactionStateId;
+    }
 }

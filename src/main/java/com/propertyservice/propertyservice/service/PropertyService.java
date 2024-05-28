@@ -126,4 +126,32 @@ public class PropertyService {
                 .propertyRemarkDtoList(propertyRemarkDtoList)
                 .build();
     }
+
+    @Transactional
+    public Long updateProperty(PropertyForm propertyForm) {
+        Property property = propertyRepository.findById(propertyForm.getPropertyId()).orElseThrow(
+                () -> new EntityNotFoundException("등록되지 않은 매물입니다."));
+        MaintenanceItem maintenanceItem = property.getMaintenanceItem();
+        maintenanceItem.updateMaintenanceItem(
+                propertyForm.isMaintenanceItemWater(),
+                propertyForm.isMaintenanceItemElectricity(),
+                propertyForm.isMaintenanceItemInternet(),
+                propertyForm.isMaintenanceItemGas(),
+                propertyForm.getMaintenanceItemOthers()
+        );
+        property.updateProperty(
+                propertyForm.getUnitNumber(),
+                propertyForm.getPicManagerId(),
+                propertyForm.getPropertyTypeId(),
+                propertyForm.getTransactionTypeId(),
+                propertyForm.getDeposit(),
+                propertyForm.getMonthlyFee(),
+                propertyForm.getJeonseFee(),
+                propertyForm.getTradeFee(),
+                propertyForm.getMaintenanceFee(),
+                maintenanceItem,
+                propertyForm.getTransactionStateId()
+        );
+        return property.getPropertyId();
+    }
 }

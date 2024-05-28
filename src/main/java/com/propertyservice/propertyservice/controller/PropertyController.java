@@ -7,6 +7,7 @@ import com.propertyservice.propertyservice.service.PropertyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -44,6 +45,15 @@ public class PropertyController {
         try {
             return new Response(ResponseCode.SUCCESS, propertyService.searchProperty(propertyId), "200");
         } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    @PutMapping("/v1/property")
+    public Response updateProperty(@RequestBody @Valid PropertyForm propertyForm, BindingResult bindingResult){
+        try {
+            return new Response(ResponseCode.SUCCESS, propertyService.updateProperty(propertyForm), "200");
+        } catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
