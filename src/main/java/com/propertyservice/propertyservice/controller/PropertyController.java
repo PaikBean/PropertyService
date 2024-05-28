@@ -34,21 +34,6 @@ public class PropertyController {
 
 
     /**
-     * 빌딩 매물 목록 조회
-     *
-     * @param buildingId
-     * @return
-     */
-    @GetMapping("/v1/property-list/{buildingId}")
-    public Response searchPropertyList(@PathVariable(name = "buildingId") Long buildingId) {
-        try {
-            return new Response(ResponseCode.SUCCESS, propertyService.searchPropertyList(buildingId), "200");
-        } catch (Exception e) {
-            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
-        }
-    }
-
-    /**
      * 매물 조회
      *
      * @param propertyId

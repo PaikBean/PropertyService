@@ -31,4 +31,10 @@ public class BuildingAddress extends BaseTimeEntity {
         this.addressLevel2Id = addressLevel2Id;
         this.addressLevel3 = addressLevel3;
     }
+
+    public void updateBuildingAddress(Long addressLevel1Id, Long addressLevel2Id, String addressLevel3) {
+        this.addressLevel1Id = addressLevel1Id;
+        this.addressLevel2Id = addressLevel2Id;
+        this.addressLevel3 = addressLevel3;
+    }
 }

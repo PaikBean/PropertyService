@@ -91,64 +91,6 @@ public class PropertyService {
         }
     }
 
-    public BuildingPropertyDto searchPropertyList(Long buildingId) {
-        Building building = buildingRepository.findById(buildingId).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 빌딩입니다."));
-        List<PropertySummaryDto> propertySummaryDtoList = new ArrayList<>();
-        for (Property property : propertyRepository.findAllByBuildingBuildingId(buildingId)) {
-            propertySummaryDtoList.add(
-                    PropertySummaryDto.builder()
-                            .propertyId(property.getPropertyId())
-                            .propertyTypeId(property.getPropertyTypeId())
-                            .unitNumber(property.getUnitNumber())
-                            .propertyTypeId(property.getPropertyTypeId())
-                            .transactionTypeId(property.getTransactionTypeId())
-                            .price(getSummaryPrice(property))
-                            .transactionStateId(property.getTransactionStateId())
-                            .transactionStateId(property.getTransactionStateId())
-                            .build()
-            );
-        }
-        List<BuildingRemarkDto> buildingRemarkDtoList = new ArrayList<>();
-        for (BuildingRemark buildingRemark : buildingRemarkRepository.findAllByBuildingBuildingId(buildingId)) {
-            buildingRemarkDtoList.add(BuildingRemarkDto.builder()
-                    .buildingRemarkId(buildingRemark.getRemarkId())
-                    .remark(buildingRemark.getRemark())
-                    .createdDate(buildingRemark.getCreatedDate())
-                    .updatedDate(buildingRemark.getUpdatedDate())
-                    .build());
-        }
-
-        return BuildingPropertyDto.builder()
-                .buildingId(building.getBuildingId())
-                .ownerName(building.getOwner().getOwnerName())
-                .ownerPhoneNumber(building.getOwner().getOwnerPhoneNumber())
-                .ownerRelation(building.getOwner().getOwnerRelation())
-                .addressLevel1(building.getBuildingAddress().getAddressLevel1Id())
-                .addressLevel2(building.getBuildingAddress().getAddressLevel2Id())
-                .addressLevel3(building.getBuildingAddress().getAddressLevel3())
-                .buildingRemarkDtoList(buildingRemarkDtoList)
-                .propertySummaryDtoList(propertySummaryDtoList)
-                .build();
-    }
-
-    private String getSummaryPrice(Property property) {
-        if (property.getTransactionTypeId() == 1 || property.getTransactionTypeId() == 4)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
-                    () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
-            ).getTransactionTypeName(), property.getDeposit(), property.getMonthlyFee());
-        else if (property.getTransactionTypeId() == 2)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
-                    () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
-            ).getTransactionTypeName(), property.getJeonseFee());
-        else if (property.getTransactionTypeId() == 3)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
-                    () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
-            ).getTransactionTypeName(), property.getTradeFee());
-        else
-            return null;
-    }
-
     public PropertyDto searchProperty(Long propertyId) {
         Property property = propertyRepository.findById(propertyId).orElseThrow(
                 () -> new EntityNotFoundException("등록되지 않은 매물입니다.")

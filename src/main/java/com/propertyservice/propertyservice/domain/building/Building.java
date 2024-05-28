@@ -31,4 +31,9 @@ public class Building extends BaseTimeEntity {
         this.owner = owner;
         this.buildingAddress = buildingAddress;
     }
+
+    public void updateBuilding(Owner owner, BuildingAddress buildingAddress) {
+        this.owner = owner;
+        this.buildingAddress = buildingAddress;
+    }
 }

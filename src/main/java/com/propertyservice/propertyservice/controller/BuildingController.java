@@ -70,12 +70,48 @@ public class BuildingController {
         }
     }
 
+    /**
+     * 건물 특이사항 제거
+     * @param buildingRemarkIdForm
+     * @param bindingResult
+     * @return
+     */
     @DeleteMapping("/v1/building-remark")
     public Response deleteBuildingRemark(@RequestBody @Valid BuildingRemarkIdForm buildingRemarkIdForm, BindingResult bindingResult) {
         try {
             buildingService.deleteBuildingRemark(buildingRemarkIdForm);
             return new Response(ResponseCode.SUCCESS, null, "200");
         } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 건물 상세 및 매물 목록 조회
+     *
+     * @param buildingId
+     * @return
+     */
+    @GetMapping("/v1/building-property-list/{buildingId}")
+    public Response searchBuildingPropertyList(@PathVariable(name = "buildingId") Long buildingId) {
+        try {
+            return new Response(ResponseCode.SUCCESS, buildingService.searchBuildingPropertyList(buildingId), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 건물 상세 수정
+     * @param buildingPropertyForm
+     * @param bindingResult
+     * @return
+     */
+    @PutMapping("/v1/building-detail/")
+    public Response updateBuildingDetail(@RequestBody @Valid BuildingPropertyForm buildingPropertyForm, BindingResult bindingResult){
+        try {
+            return new Response(ResponseCode.SUCCESS, buildingService.updateBuildingDetail(buildingPropertyForm), "200");
+        } catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }

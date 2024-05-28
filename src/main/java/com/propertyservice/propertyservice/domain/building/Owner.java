@@ -30,4 +30,10 @@ public class Owner extends BaseTimeEntity {
         this.ownerRelation = ownerRelation;
         this.ownerPhoneNumber = ownerPhoneNumber;
     }
+
+    public void updateOwner(String ownerName, String ownerRelation, String ownerPhoneNumber) {
+        this.ownerName = ownerName;
+        this.ownerRelation = ownerRelation;
+        this.ownerPhoneNumber = ownerPhoneNumber;
+    }
 }
