@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BizNumberStatusRequestForm {
-    private String b_no;
+    private String bNo;         // 사업자 등록 번호
 }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @Slf4j
@@ -105,9 +107,14 @@ public class CommonController {
      * @return
      */
     @GetMapping("/v1/valid/biz-number-validate")
-    public Response test1(BizNumberValidateRequestForm bIzNumberValidateRequestForm) {
-//        ValidBizRegNumber.validateBizNumber();
-        return new Response(ResponseCode.SUCCESS, null, "200");
+    public Response validBizNumberValidate(BizNumberValidateRequestForm bIzNumberValidateRequestForm) {
+        try {
+            return ValidBizRegNumber.validateBizNumber(bIzNumberValidateRequestForm) ?
+                    new Response(ResponseCode.SUCCESS, null, "200")
+                    : new Response(ResponseCode.SUCCESS, null, "204");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
     }
 
     /**
@@ -118,9 +125,12 @@ public class CommonController {
      */
     @GetMapping("/v1/valid/biz-number-status")
     public Response validBizNumberStatus(BizNumberStatusRequestForm bizNumberStatusRequestForm) {
-        boolean result = ValidBizRegNumber.statusBizNumber(bizNumberStatusRequestForm);
-        return result ?
-                new Response(ResponseCode.SUCCESS, null, "200")
-                : new Response(ResponseCode.FAIL, null, "400");
+        try {
+            return ValidBizRegNumber.statusBizNumber(bizNumberStatusRequestForm) ?
+                    new Response(ResponseCode.SUCCESS, null, "200")
+                    : new Response(ResponseCode.SUCCESS, null, "204");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
     }
 }
