@@ -22,8 +22,7 @@ public class CommonService {
     private final AddressLevel1Repository addressLevel1Repository;
     private final AddressLevel2Respository addressLevel2Respository;
     private final TransactionTypeRepository transactionTypeRepository;
-    private final GenderRepository genderRepository;
-    private final ManagerStateRepository managerStateRepository;
+
 
     public List<AddressLevel1Dto> getAddressLevel1List() {
         List<AddressLevel1Dto> addressLevel1DtoList = new ArrayList<>();
