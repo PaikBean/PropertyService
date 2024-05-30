@@ -11,10 +11,10 @@ INSERT INTO manager_state (manager_state) VALUES ('재직');
 INSERT INTO manager_state (manager_state) VALUES ('휴직');
 INSERT INTO manager_state (manager_state) VALUES ('퇴사');
 
--- 성별 정보
-INSERT INTO gender (gender) VALUES ('남성');
-INSERT INTO gender (gender) VALUES ('여성');
-INSERT INTO gender (gender) VALUES ('미상');
+-- -- 성별 정보
+-- INSERT INTO gender (gender) VALUES ('남성');
+-- INSERT INTO gender (gender) VALUES ('여성');
+-- INSERT INTO gender (gender) VALUES ('미상');
 
 -- 거래유형 정보
 INSERT INTO transaction_type (transaction_type_name, transaction_type_code) VALUES ('월세', 'monthly');
