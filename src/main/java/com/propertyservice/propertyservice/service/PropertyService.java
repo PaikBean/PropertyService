@@ -8,17 +8,11 @@ import com.propertyservice.propertyservice.domain.property.PropertyRemark;
 import com.propertyservice.propertyservice.dto.building.BuildingDto;
 import com.propertyservice.propertyservice.dto.building.BuildingPropertyDto;
 import com.propertyservice.propertyservice.dto.building.BuildingRemarkDto;
-import com.propertyservice.propertyservice.dto.property.PropertyDto;
-import com.propertyservice.propertyservice.dto.property.PropertyForm;
-import com.propertyservice.propertyservice.dto.property.PropertyRemarkDto;
-import com.propertyservice.propertyservice.dto.property.PropertySummaryDto;
+import com.propertyservice.propertyservice.dto.property.*;
 import com.propertyservice.propertyservice.repository.building.BuildingRemarkRepository;
 import com.propertyservice.propertyservice.repository.building.BuildingRepository;
 import com.propertyservice.propertyservice.repository.common.TransactionTypeRepository;
-import com.propertyservice.propertyservice.repository.property.MaintenanceItemRepository;
-import com.propertyservice.propertyservice.repository.property.PropertyRemarkRepository;
-import com.propertyservice.propertyservice.repository.property.PropertyRepository;
-import com.propertyservice.propertyservice.repository.property.PropertyTypeRepository;
+import com.propertyservice.propertyservice.repository.property.*;
 import com.propertyservice.propertyservice.utils.SummaryPrice;
 import com.sun.security.auth.UserPrincipal;
 import jakarta.persistence.EntityNotFoundException;
@@ -41,6 +35,7 @@ public class PropertyService {
     private final PropertyRemarkRepository propertyRemarkRepository;
     private final TransactionTypeRepository transactionTypeRepository;
     private final BuildingRemarkRepository buildingRemarkRepository;
+    private final PropertyImageRepository propertyImageRepository;
 
     @Transactional
     public void createProperty(PropertyForm propertyForm) {
@@ -153,5 +148,15 @@ public class PropertyService {
                 propertyForm.getTransactionStateId()
         );
         return property.getPropertyId();
+    }
+
+    @Transactional
+    public void deleteProperty(PropertyIdForm propertyIdForm) {
+        Property property = propertyRepository.findById(propertyIdForm.getPropertyId()).orElseThrow(
+                () -> new EntityNotFoundException("등록되지 않은 매물입니다."));
+        maintenanceItemRepository.delete(property.getMaintenanceItem());
+        propertyRemarkRepository.deleteAllByProperty(property);
+        propertyImageRepository.deleteAllByProperty(property);
+        propertyRepository.delete(property);
     }
 }
