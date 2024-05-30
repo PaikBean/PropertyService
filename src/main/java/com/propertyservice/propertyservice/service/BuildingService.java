@@ -192,4 +192,17 @@ public class BuildingService {
         );
         return building.getBuildingId();
     }
+
+    public List<BuildingRemarkDto> searchBuildingRemarkList(Long buildingId) {
+        List<BuildingRemarkDto> buildingRemarkDtoList = new ArrayList<>();
+        for (BuildingRemark buildingRemark : buildingRemarkRepository.findAllByBuildingBuildingId(buildingId)) {
+            buildingRemarkDtoList.add(BuildingRemarkDto.builder()
+                            .buildingRemarkId(buildingRemark.getRemarkId())
+                            .remark(buildingRemark.getRemark())
+                            .createdDate(buildingRemark.getCreatedDate())
+                            .updatedDate(buildingRemark.getUpdatedDate())
+                    .build());
+        }
+        return buildingRemarkDtoList;
+    }
 }

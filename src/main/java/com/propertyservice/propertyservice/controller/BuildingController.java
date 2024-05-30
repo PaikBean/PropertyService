@@ -115,4 +115,22 @@ public class BuildingController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
+    /**
+     * 건물 특이사항 목록 조회
+     *
+     * @param buildingId
+     * @return
+     */
+    @GetMapping("/v1/building-remark-list/{buildingId}")
+    public Response searchBuildingRemarkList(@PathVariable(name = "buildingId") Long buildingId) {
+        try {
+            List<BuildingRemarkDto> buildingRemarkDtoList = buildingService.searchBuildingRemarkList(buildingId);
+            return buildingRemarkDtoList.isEmpty()
+                    ? new Response(ResponseCode.SUCCESS, buildingRemarkDtoList, "204")
+                    : new Response(ResponseCode.SUCCESS, buildingRemarkDtoList, "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 }
