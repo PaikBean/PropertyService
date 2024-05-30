@@ -34,7 +34,7 @@ public class ManagerForm {
     private String managerPassword; // 비밀번호.
 
     @Builder
-    public ManagerForm(String companyCode,String managerRank, String managerPosition, String state, String managerCode,  String managerEmail, String managerPassword, String managerName, String managerPhoneNumber, Gender gender, String departmentName){
+    public ManagerForm(Long managerAddressLevel1, Long managerAddressLevel2, String managerAddressLevel3, String companyCode,String managerRank, String managerPosition, String state, String managerCode,  String managerEmail, String managerPassword, String managerName, String managerPhoneNumber, Gender gender, String departmentName){
         this.companyCode = companyCode;
         this.managerName = managerName;
         this.managerPhoneNumber = managerPhoneNumber;
@@ -46,6 +46,10 @@ public class ManagerForm {
         this.managerCode = managerCode;
         this.managerEmail = managerEmail;
         this.managerPassword =managerPassword;
+
+        this.managerAddressLevel1 = managerAddressLevel1;
+        this.managerAddressLevel2 = managerAddressLevel2;
+        this.managerAddressLevel3 =managerAddressLevel3;
 
 
     }

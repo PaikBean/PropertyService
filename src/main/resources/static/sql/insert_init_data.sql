@@ -6,10 +6,10 @@ INSERT INTO property_type (property_type) VALUES ('상업용');
 INSERT INTO transaction_state (transaction_state) VALUES ('거래중');
 INSERT INTO transaction_state (transaction_state) VALUES ('거래완료');
 
--- 근무상태 정보
-INSERT INTO manager_state (manager_state) VALUES ('재직');
-INSERT INTO manager_state (manager_state) VALUES ('휴직');
-INSERT INTO manager_state (manager_state) VALUES ('퇴사');
+-- -- 근무상태 정보
+-- INSERT INTO manager_state (manager_state) VALUES ('재직');
+-- INSERT INTO manager_state (manager_state) VALUES ('휴직');
+-- INSERT INTO manager_state (manager_state) VALUES ('퇴사');
 
 -- -- 성별 정보
 -- INSERT INTO gender (gender) VALUES ('남성');
