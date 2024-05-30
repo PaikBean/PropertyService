@@ -1,6 +1,7 @@
 package com.propertyservice.propertyservice.domain.company;
 
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
+import com.propertyservice.propertyservice.domain.common.Gender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,7 +26,9 @@ public class Manager extends BaseTimeEntity{
     private String managerCode;
 
     private Long managerStateId; //stateId Entity
-    private Long genderId; // genderId;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender; // genderId;
     private String managerPhoneNumber;
 
     private Long managerAddressId; // addressId Entity
@@ -38,13 +41,13 @@ public class Manager extends BaseTimeEntity{
 
 
     @Builder
-    public Manager(String managerName, String managerRank, String managerPosition, String managerCode, Long managerStateId, Long genderId, String managerPhoneNumber, Long managerAddressId, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount){
+    public Manager(String managerName, String managerRank, String managerPosition, String managerCode, Long managerStateId, Gender gender, String managerPhoneNumber, Long managerAddressId, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount){
         this.managerName = managerName;
         this.managerRank = managerRank;
         this.managerPosition = managerPosition;
         this.managerCode = managerCode;
         this.managerStateId = managerStateId;
-        this.genderId = genderId;
+        this.gender = gender;
         this.managerPhoneNumber = managerPhoneNumber;
         this.managerAddressId = managerAddressId;
         this.managerEntranceDate = managerEntranceDate;
