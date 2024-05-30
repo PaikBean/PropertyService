@@ -10,6 +10,7 @@ public class DepartmentService {
     @Autowired
     private DepartmentRepository departmentRepository;
     public Department searchDepartment(String departmentName){
-        return departmentRepository.findByDepartmentName(departmentName).orElse(null);
+        return departmentRepository.findByDepartmentName(departmentName).orElseThrow(
+                ()-> new IllegalStateException("부서가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -93,6 +94,7 @@ public class ManagerService implements UserDetailsService {
                 .build();
 
         return  managerRepository.save(Manager.builder()
+                .company_id(companyService.searchCompany(managerForm.getCompanyCode()))
                 .managerName(managerForm.getManagerName())
                 .managerPhoneNumber(managerForm.getManagerPhoneNumber())
                 .managerAddressId(managerAddress)
@@ -104,6 +106,9 @@ public class ManagerService implements UserDetailsService {
                 .managerCode(managerForm.getManagerCode())
                 .managerEmail(managerForm.getManagerEmail())
                 .managerPassword(managerForm.getManagerPassword())
+                .managerEntranceDate(LocalDateTime.now())
+                .managerResignDate(null)
+                .passwordErrorCount(0)
                 .build());
     }
 
