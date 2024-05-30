@@ -16,23 +16,26 @@ import java.time.LocalDateTime;
 @Entity
 public class Manager extends BaseTimeEntity{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "manager_id")
     private Long managerId;
-    private Long department_id; // department Entity
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department_id; // department Entity
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company_id;
     private String managerName;
     private String managerRank;
     private String managerPosition;
     private String managerCode;
-
-    private Long managerStateId; //stateId Entity
-
+    private String managerState;
     @Enumerated(EnumType.STRING)
     private Gender gender; // genderId;
     private String managerPhoneNumber;
-
-    private Long managerAddressId; // addressId Entity
-
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_address_id")
+    private ManagerAddress managerAddressId; // addressId Entity
     private LocalDateTime managerEntranceDate;
     private LocalDateTime managerResignDate;
     private String managerEmail; // Login Email;
@@ -41,12 +44,14 @@ public class Manager extends BaseTimeEntity{
 
 
     @Builder
-    public Manager(String managerName, String managerRank, String managerPosition, String managerCode, Long managerStateId, Gender gender, String managerPhoneNumber, Long managerAddressId, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount){
+    public Manager(String managerName, Company company_id, Department department_id,String managerRank, String managerPosition, String managerCode, String managerState, Gender gender, String managerPhoneNumber, ManagerAddress managerAddressId, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount){
+        this.company_id = company_id;
+        this.department_id = department_id;
         this.managerName = managerName;
         this.managerRank = managerRank;
         this.managerPosition = managerPosition;
         this.managerCode = managerCode;
-        this.managerStateId = managerStateId;
+        this.managerState = managerState;
         this.gender = gender;
         this.managerPhoneNumber = managerPhoneNumber;
         this.managerAddressId = managerAddressId;
