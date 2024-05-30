@@ -1,3 +1,10 @@
+-- 일정 유형 정보
+INSERT INTO schedule_type (schedule_type) VALUES ('잔금');
+INSERT INTO schedule_type (schedule_type) VALUES ('미팅');
+INSERT INTO schedule_type (schedule_type) VALUES ('휴가');
+INSERT INTO schedule_type (schedule_type) VALUES ('입주');
+INSERT INTO schedule_type (schedule_type) VALUES ('퇴실');
+
 -- 주용도 정보
 INSERT INTO property_type (property_type) VALUES ('주거용');
 INSERT INTO property_type (property_type) VALUES ('상업용');
