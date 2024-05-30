@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 public enum Priority {
-    HIGH("상"),
-    MEDIUM("중"),
-    LOW("하");
+    HIGH("1"),
+    MEDIUM("2"),
+    LOW("3");
 
     private final String label;
 
