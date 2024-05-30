@@ -2,16 +2,14 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
-import com.propertyservice.propertyservice.domain.schedule.ScheduleType;
-import com.propertyservice.propertyservice.dto.schedule.ScheduleTypeDto;
-import com.propertyservice.propertyservice.repository.schedule.ScheduleRepository;
-import com.propertyservice.propertyservice.repository.schedule.ScheduleTypeRepository;
+import com.propertyservice.propertyservice.dto.schedule.*;
 import com.propertyservice.propertyservice.service.ScheduleService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,4 +36,98 @@ public class ScheduleController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
+    /**
+     * 일정 등록
+     *
+     * @param scheduleForm
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping("/v1/schedule")
+    public Response createSchedule(@RequestBody @Valid ScheduleForm scheduleForm, BindingResult bindingResult) {
+        try {
+            scheduleService.createSchedule(scheduleForm);
+            return new Response(ResponseCode.SUCCESS, null, "200");
+        } catch (EntityNotFoundException e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 일정 수정
+     *
+     * @param scheduleForm
+     * @param bindingResult
+     * @return
+     */
+    @PutMapping("/v1/schedule")
+    public Response updateSchedule(@RequestBody @Valid ScheduleForm scheduleForm, BindingResult bindingResult) {
+        try {
+            scheduleService.updateSchedule(scheduleForm);
+            return new Response(ResponseCode.SUCCESS, null, "200");
+        } catch (EntityNotFoundException e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 일정 삭제
+     *
+     * @param scheduleIdForm
+     * @param bindingResult
+     * @return
+     */
+    @DeleteMapping("/v1/schedule")
+    public Response deleteSchedule(@RequestBody @Valid ScheduleIdForm scheduleIdForm, BindingResult bindingResult) {
+        try {
+            scheduleService.deleteSchedule(scheduleIdForm);
+            return new Response(ResponseCode.SUCCESS, null, "200");
+        } catch (EntityNotFoundException e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 일정 상세 조회
+     *
+     * @param scheduleId
+     * @return
+     */
+    @GetMapping("/v1/schedule/{scheduleId}")
+    public Response searchSchedule(@PathVariable(name = "scheduleId") Long scheduleId) {
+        try {
+            return new Response(ResponseCode.SUCCESS, scheduleService.searchSchedule(scheduleId), "200");
+        } catch (EntityNotFoundException e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 일정 목록 조회
+     *
+     * @param scheduleCondition
+     * @return
+     */
+    @GetMapping("/v1/schedule-list")
+    public Response serachScheduleList(ScheduleCondition scheduleCondition) {
+        try {
+            List<ScheduleSummaryDto> scheduleSummaryDtoList = scheduleService.searchScheduleList(scheduleCondition);
+            return scheduleSummaryDtoList.isEmpty()
+                    ? new Response(ResponseCode.SUCCESS, scheduleSummaryDtoList, "200")
+                    : new Response(ResponseCode.SUCCESS, scheduleSummaryDtoList, "204");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+
 }
