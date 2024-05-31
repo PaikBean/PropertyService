@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "mamager")
+@Table(name = "manager")
 @Entity
 public class Manager extends BaseTimeEntity{
     @Id

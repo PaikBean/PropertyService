@@ -1,4 +1,4 @@
-package com.propertyservice.propertyservice.service;
+package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Gender;
 import com.propertyservice.propertyservice.dto.company.ManagerForm;
@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @Transactional
-class ManagerServiceTest {
+class ManagerControllerTest {
+
     @Autowired
-    private ManagerService managerService;
+    private ManagerController managerController;
+
     @Test
     public void createManagerTest(){
         ManagerForm managerForm = ManagerForm.builder()
@@ -34,8 +34,18 @@ class ManagerServiceTest {
                 .managerAddressLevel3("asd")
                 .build();
 
-        managerService.createManager(managerForm);
+        System.out.println("Controller CreateManager : " + managerController.createManager(managerForm).getResponseCode());
 
     }
+    @Test
+    public void checkEmail(){
+        System.out.println("Controller checkEmail" + managerController.checkEmail("1@1").getResponseCode());
+    }
+
+    @Test
+    public void checkEmail2(){
+        System.out.println("Controller checkEmail" + managerController.checkChange("1@1").getResponseCode());
+    }
+
 
 }

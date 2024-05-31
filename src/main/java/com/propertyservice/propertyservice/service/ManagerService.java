@@ -6,6 +6,7 @@ import com.propertyservice.propertyservice.domain.company.ManagerAddress;
 import com.propertyservice.propertyservice.dto.company.ManagerForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
+import com.propertyservice.propertyservice.repository.company.ManagerAddressRepository;
 import com.propertyservice.propertyservice.repository.company.ManagerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class ManagerService implements UserDetailsService {
 
     @Autowired
     private ManagerRepository managerRepository;
+    @Autowired
+    private ManagerAddressRepository managerAddressRepository;
     @Autowired
     private CompanyService companyService;
     @Autowired
@@ -73,47 +76,45 @@ public class ManagerService implements UserDetailsService {
     }
 
     /**
-     * 이메일 중복확인 validation
-     * @param email 이메일
-     * @return
-     */
-    private Manager validEmailDuplicate(String email) {
-        return managerRepository.findByManagerEmail(email).orElse(null);
-    }
-
-    /**
      * 사용자 회원가입.
      * @param managerForm
      * @return
      */
     public Manager createManager(ManagerForm managerForm){
-        ManagerAddress managerAddress = ManagerAddress.builder()
-                .addressLevel1Id(validAddressLevel1(managerForm.getManagerAddressLevel1()))
-                .addressLevel2Id(validAddressLevel2(managerForm.getManagerAddressLevel2()))
-                .addressLevel3(managerForm.getManagerAddressLevel3())
-                .build();
+        try {
+            ManagerAddress managerAddress = ManagerAddress.builder()
+                    .addressLevel1Id(validAddressLevel1(managerForm.getManagerAddressLevel1()))
+                    .addressLevel2Id(validAddressLevel2(managerForm.getManagerAddressLevel2()))
+                    .addressLevel3(managerForm.getManagerAddressLevel3())
+                    .build();
+            managerAddressRepository.save(managerAddress);
 
-        return  managerRepository.save(Manager.builder()
-                .company_id(companyService.searchCompany(managerForm.getCompanyCode()))
-                .managerName(managerForm.getManagerName())
-                .managerPhoneNumber(managerForm.getManagerPhoneNumber())
-                .managerAddressId(managerAddress)
-                .gender(managerForm.getGender())
-                .department_id(departmentService.searchDepartment(managerForm.getDepartmentName()))
-                .managerRank(managerForm.getManagerRank())
-                .managerPosition(managerForm.getManagerPosition())
-                .managerState(managerForm.getState())
-                .managerCode(managerForm.getManagerCode())
-                .managerEmail(managerForm.getManagerEmail())
-                .managerPassword(managerForm.getManagerPassword())
-                .managerEntranceDate(LocalDateTime.now())
-                .managerResignDate(null)
-                .passwordErrorCount(0)
-                .build());
+           return managerRepository.save(Manager.builder()
+                    .company_id(companyService.searchCompany(managerForm.getCompanyCode()))
+                    .managerName(managerForm.getManagerName())
+                    .managerPhoneNumber(managerForm.getManagerPhoneNumber())
+                    .managerAddressId(managerAddress)
+                    .gender(managerForm.getGender())
+                    .department_id(departmentService.searchDepartment(managerForm.getDepartmentName()))
+                    .managerRank(managerForm.getManagerRank())
+                    .managerPosition(managerForm.getManagerPosition())
+                    .managerState(managerForm.getState())
+                    .managerCode(managerForm.getManagerCode())
+                    .managerEmail(managerForm.getManagerEmail())
+                    .managerPassword(managerForm.getManagerPassword())
+                    .managerEntranceDate(LocalDateTime.now())
+                    .managerResignDate(null)
+                    .passwordErrorCount(0)
+                    .build());
+        }catch (Exception e){
+            return null;
+        }
+
     }
 
 
     private Long validAddressLevel1(Long addressLevel1Id) {
+
         return addressLevel1Repository.findById(addressLevel1Id).orElseThrow(
                 () -> new IllegalStateException("주소의 입력이 잘못되었습니다.")
         ).getAddressLevel1Id();
