@@ -1,7 +1,10 @@
 package com.propertyservice.propertyservice.service;
 
+import com.propertyservice.propertyservice.domain.company.Company;
+import com.propertyservice.propertyservice.repository.company.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,4 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CompanyService {
+    @Autowired
+    private CompanyRepository companyRepository;
+    public Company searchCompany(String companyCode){
+        return companyRepository.findByCompanyCode(companyCode).orElseThrow(
+                ()->new IllegalStateException("회사코드가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
+    }
 }

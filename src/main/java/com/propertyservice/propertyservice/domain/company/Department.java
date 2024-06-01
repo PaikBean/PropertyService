@@ -18,18 +18,14 @@ public class Department extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "department_id")
     private Long departmentId;
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "company_id")
-    private Company company;
     @Column(nullable = false)
     private String departmentName;
     @Column(nullable = false)
     private String departmentCode;
 
     @Builder
-    public Department(Long departmentId, Company company, String departmentName, String departmentCode) {
+    public Department(Long departmentId, String departmentName, String departmentCode) {
         this.departmentId = departmentId;
-        this.company = company;
         this.departmentName = departmentName;
         this.departmentCode = departmentCode;
     }

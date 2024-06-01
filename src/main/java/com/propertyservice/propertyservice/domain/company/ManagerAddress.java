@@ -14,7 +14,7 @@ public class ManagerAddress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "manager_address")
+    @Column(name = "manager_address_id")
     private Long managerAddressId;
     @Column(nullable = false)
     private Long addressLevel1Id;

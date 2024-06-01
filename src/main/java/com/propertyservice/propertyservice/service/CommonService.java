@@ -1,7 +1,6 @@
 package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.common.*;
-import com.propertyservice.propertyservice.domain.company.ManagerState;
 import com.propertyservice.propertyservice.dto.common.AddressLevel1Dto;
 import com.propertyservice.propertyservice.dto.common.AddressLevel2Dto;
 import com.propertyservice.propertyservice.dto.common.TransactionTypeDto;
@@ -23,8 +22,7 @@ public class CommonService {
     private final AddressLevel1Repository addressLevel1Repository;
     private final AddressLevel2Respository addressLevel2Respository;
     private final TransactionTypeRepository transactionTypeRepository;
-    private final GenderRepository genderRepository;
-    private final ManagerStateRepository managerStateRepository;
+
 
     public List<AddressLevel1Dto> getAddressLevel1List() {
         List<AddressLevel1Dto> addressLevel1DtoList = new ArrayList<>();
@@ -58,27 +56,27 @@ public class CommonService {
         return transactionTypeDtoList;
     }
 
-    public List<GenderDto> searchGenderList() {
-        List<GenderDto> genderDtoList = new ArrayList<>();
-        for (Gender gender : genderRepository.findAll()) {
-            genderDtoList.add(GenderDto.builder()
-                    .genderId(gender.getGenderId())
-                    .gender(gender.getGender())
-                    .build());
-        }
-        return genderDtoList;
-    }
-
-    public List<ManagerStateDto> searhManagerStateList() {
-        List<ManagerStateDto> managerStateDtoList = new ArrayList<>();
-        for (ManagerState managerState : managerStateRepository.findAll()) {
-            managerStateDtoList.add(ManagerStateDto.builder()
-                    .mangerStateId(managerState.getManagerStateId())
-                    .managerState(managerState.getManagerState())
-                    .build());
-        }
-        return managerStateDtoList;
-    }
+//    public List<GenderDto> searchGenderList() {
+//        List<GenderDto> genderDtoList = new ArrayList<>();
+//        for (Gender gender : genderRepository.findAll()) {
+//            genderDtoList.add(GenderDto.builder()
+//                    .genderId(gender.getGenderId())
+//                    .gender(gender.getGender())
+//                    .build());
+//        }
+//        return genderDtoList;
+//    }
+//
+//    public List<ManagerStateDto> searhManagerStateList() {
+//        List<ManagerStateDto> managerStateDtoList = new ArrayList<>();
+//        for (ManagerState managerState : managerStateRepository.findAll()) {
+//            managerStateDtoList.add(ManagerStateDto.builder()
+//                    .mangerStateId(managerState.getManagerStateId())
+//                    .managerState(managerState.getManagerState())
+//                    .build());
+//        }
+//        return managerStateDtoList;
+//    }
 
     ;
 }
