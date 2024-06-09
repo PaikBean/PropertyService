@@ -1,4 +1,3 @@
-const { default: Department } = require('@/components/autocomplete/Department')
 const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit')
 
 export const fetchDepartmentList = createAsyncThunk(
