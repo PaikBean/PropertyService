@@ -1,13 +1,16 @@
 package com.propertyservice.propertyservice.service;
 
-import com.propertyservice.propertyservice.domain.building.Owner;
 import com.propertyservice.propertyservice.domain.company.Manager;
 import com.propertyservice.propertyservice.domain.company.ManagerAddress;
-import com.propertyservice.propertyservice.dto.company.ManagerForm;
+import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
+import com.propertyservice.propertyservice.repository.company.CompanyRepository;
+import com.propertyservice.propertyservice.repository.company.DepartmentRepository;
 import com.propertyservice.propertyservice.repository.company.ManagerAddressRepository;
 import com.propertyservice.propertyservice.repository.company.ManagerRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,17 +19,23 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class ManagerService implements UserDetailsService {
 
+    private final CompanyRepository companyRepository;
+    private final DepartmentRepository departmentRepository;
+    private final PasswordEncoder passwordEncoder;
     @Autowired
     private ManagerRepository managerRepository;
     @Autowired
@@ -77,39 +86,34 @@ public class ManagerService implements UserDetailsService {
 
     /**
      * 사용자 회원가입.
-     * @param managerForm
+     * @param managerSignUpForm
      * @return
      */
-    public Manager createManager(ManagerForm managerForm){
-        try {
-            ManagerAddress managerAddress = ManagerAddress.builder()
-                    .addressLevel1Id(validAddressLevel1(managerForm.getManagerAddressLevel1()))
-                    .addressLevel2Id(validAddressLevel2(managerForm.getManagerAddressLevel2()))
-                    .addressLevel3(managerForm.getManagerAddressLevel3())
-                    .build();
-            managerAddressRepository.save(managerAddress);
-
-           return managerRepository.save(Manager.builder()
-                    .company_id(companyService.searchCompany(managerForm.getCompanyCode()))
-                    .managerName(managerForm.getManagerName())
-                    .managerPhoneNumber(managerForm.getManagerPhoneNumber())
-                    .managerAddressId(managerAddress)
-                    .gender(managerForm.getGender())
-                    .department_id(departmentService.searchDepartment(managerForm.getDepartmentName()))
-                    .managerRank(managerForm.getManagerRank())
-                    .managerPosition(managerForm.getManagerPosition())
-                    .managerState(managerForm.getState())
-                    .managerCode(managerForm.getManagerCode())
-                    .managerEmail(managerForm.getManagerEmail())
-                    .managerPassword(managerForm.getManagerPassword())
-                    .managerEntranceDate(LocalDateTime.now())
-                    .managerResignDate(null)
-                    .passwordErrorCount(0)
-                    .build());
-        }catch (Exception e){
-            return null;
-        }
-
+    @Transactional
+    public Long createManager(ManagerSignUpForm managerSignUpForm) {
+        return managerRepository.save(Manager.builder()
+                .company_id(companyRepository.findByCompanyCode(managerSignUpForm.getCompanyCode()).orElseThrow(
+                        () -> new EntityNotFoundException("회사 코드 오류!")))
+                .department_id(departmentRepository.findByDepartmentName(managerSignUpForm.getDepartmentName()).orElseThrow(
+                        () -> new EntityNotFoundException("부서 이름 오류!")))
+                .managerName(managerSignUpForm.getManagerName())
+                .managerRank(managerSignUpForm.getManagerRank())
+                .managerPosition(managerSignUpForm.getManagerPosition())
+                .managerCode(managerSignUpForm.getManagerCode())
+                .managerState(managerSignUpForm.getState())
+                .gender(managerSignUpForm.getGender())
+                .managerPhoneNumber(managerSignUpForm.getManagerPhoneNumber())
+                .managerAddressId(managerAddressRepository.save(ManagerAddress.builder()
+                        .addressLevel1Id(validAddressLevel1(managerSignUpForm.getManagerAddressLevel1()))
+                        .addressLevel2Id(validAddressLevel2(managerSignUpForm.getManagerAddressLevel2()))
+                        .addressLevel3(managerSignUpForm.getManagerAddressLevel3())
+                        .build()))
+                .managerEntranceDate(LocalDateTime.now())
+                .managerResignDate(LocalDateTime.now())
+                .managerEmail(managerSignUpForm.getManagerEmail())
+                .managerPassword(passwordEncoder.encode(managerSignUpForm.getManagerPassword()))
+                .passwordErrorCount(0)
+                .build()).getManagerId();
     }
 
 

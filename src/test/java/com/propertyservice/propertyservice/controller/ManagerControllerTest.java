@@ -1,7 +1,7 @@
 package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Gender;
-import com.propertyservice.propertyservice.dto.company.ManagerForm;
+import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +16,7 @@ class ManagerControllerTest {
 
     @Test
     public void createManagerTest(){
-        ManagerForm managerForm = ManagerForm.builder()
+        ManagerSignUpForm managerSignUpForm = ManagerSignUpForm.builder()
                 .companyCode("COMP001")
                 .managerName("test")
                 .managerPhoneNumber("010-0000-0000")
@@ -34,7 +34,7 @@ class ManagerControllerTest {
                 .managerAddressLevel3("asd")
                 .build();
 
-        System.out.println("Controller CreateManager : " + managerController.createManager(managerForm).getResponseCode());
+        System.out.println("Controller CreateManager : " + managerController.createManager(managerSignUpForm).getResponseCode());
 
     }
     @Test
