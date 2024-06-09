@@ -54,6 +54,7 @@ export default function SignUp() {
   const [inputFourth, setInputFourth] = useState({
     managerEmail: '',
     managerPassword: '',
+    duplicateEmail: false,
     checkPassword: '',
     checkResult: false,
   })
@@ -63,7 +64,11 @@ export default function SignUp() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (currentStep === 3 && !validInputFourth()) {
+    if (
+      currentStep === 3 &&
+      !validInputFourth() &&
+      inputFourth.duplicateEmail
+    ) {
       setShowAlert(true)
       setTimeout(() => {
         setShowAlert(false)

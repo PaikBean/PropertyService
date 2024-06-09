@@ -81,6 +81,28 @@ export const fetchSignUpApiCallTest = createAsyncThunk(
   }
 )
 
+export const fetchDuplicateEmail = createAsyncThunk(
+  'signup/fetchDuplicateEmail',
+  async (email, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/manager/v1/duplicate?email=${email}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await response.json()
+      if (response.ok) {
+        return data
+      } else {
+        throw new Error(data.message || 'Error!')
+      }
+    } catch (error) {
+      return rejectWithValue(error.message)
+    }
+  }
+)
+
 const signUpSlice = createSlice({
   name: 'signup',
   initialState: {
@@ -102,6 +124,7 @@ const signUpSlice = createSlice({
     },
     loginInfo: {
       managerEmail: '',
+      duplicateEmail: false,
       managerPassword: '',
       checkPassword: '',
       checkResult: false,
@@ -149,6 +172,8 @@ const signUpSlice = createSlice({
       state.loginInfo = {
         managerEmail: '',
         managerPassword: '',
+        checkPassword: '',
+        checkResult: false,
       }
     },
   },
