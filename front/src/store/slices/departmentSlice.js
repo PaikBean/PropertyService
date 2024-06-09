@@ -8,19 +8,27 @@ export const fetchDepartmentList = createAsyncThunk(
     const data = [
       {
         departmentId: 1,
-        department: 'A 부서',
+        department: 'Sales',
       },
       {
         departmentId: 2,
-        department: 'B 부서',
+        department: 'Marketing',
       },
       {
         departmentId: 3,
-        department: 'C 부서',
+        department: 'HR',
       },
       {
         departmentId: 4,
-        department: 'D 부서',
+        department: 'Finance',
+      },
+      {
+        departmentId: 5,
+        department: 'IT',
+      },
+      {
+        departmentId: 4,
+        department: 'Support',
       },
     ]
     return data

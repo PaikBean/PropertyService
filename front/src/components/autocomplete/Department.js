@@ -13,7 +13,7 @@ const Department = ({ onChange }) => {
   }, [companyInfo, dispatch])
 
   const handleAddressChange = (event, value) => {
-    onChange(value ? value.departmentId : '')
+    onChange(value ? value.department : '')
   }
   return (
     <Autocomplete
