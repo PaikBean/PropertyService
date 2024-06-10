@@ -20,13 +20,13 @@ public class ManagerSignUpForm {
     private String departmentName;
     private String managerRank;
     private String managerPosition;
-    private String state;
+    private Long state;
     private String managerCode;
     private String managerEmail;
     private String managerPassword;
 
     @Builder
-    public ManagerSignUpForm(String companyCode, String managerName, String managerPhoneNumber, Long managerAddressLevel1, Long managerAddressLevel2, String managerAddressLevel3, Gender gender, String departmentName, String managerRank, String managerPosition, String state, String managerCode, String managerEmail, String managerPassword) {
+    public ManagerSignUpForm(String companyCode ,String managerName, String managerPhoneNumber, Long managerAddressLevel1, Long managerAddressLevel2, String managerAddressLevel3, Gender gender, String departmentName, String managerRank, String managerPosition, Long state, String managerCode, String managerEmail, String managerPassword) {
         this.companyCode = companyCode;
         this.managerName = managerName;
         this.managerPhoneNumber = managerPhoneNumber;

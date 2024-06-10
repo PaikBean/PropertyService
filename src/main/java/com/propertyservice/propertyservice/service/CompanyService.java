@@ -21,7 +21,7 @@ public class CompanyService {
     private final ManagerRepository managerRepository;
     public Company searchCompany(String companyCode){
         return companyRepository.findByCompanyCode(companyCode).orElseThrow(
-                ()->new IllegalStateException("회사코드가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
+                ()->new EntityNotFoundException("회사코드가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
     }
 
     public CompanySimpleDto searchCompanyByCompanyCode(String companyCode) {

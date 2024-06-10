@@ -9,7 +9,6 @@ import com.propertyservice.propertyservice.repository.company.CompanyRepository;
 import com.propertyservice.propertyservice.repository.company.DepartmentRepository;
 import com.propertyservice.propertyservice.repository.company.ManagerAddressRepository;
 import com.propertyservice.propertyservice.repository.company.ManagerRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,15 +91,13 @@ public class ManagerService implements UserDetailsService {
     @Transactional
     public Long createManager(ManagerSignUpForm managerSignUpForm) {
         return managerRepository.save(Manager.builder()
-                .company_id(companyRepository.findByCompanyCode(managerSignUpForm.getCompanyCode()).orElseThrow(
-                        () -> new EntityNotFoundException("회사 코드 오류!")))
-                .department_id(departmentRepository.findByDepartmentName(managerSignUpForm.getDepartmentName()).orElseThrow(
-                        () -> new EntityNotFoundException("부서 이름 오류!")))
+                .company_id(companyService.searchCompany(managerSignUpForm.getCompanyCode()))
+                .department_id(departmentService.searchDepartment(managerSignUpForm.getDepartmentName()))
                 .managerName(managerSignUpForm.getManagerName())
                 .managerRank(managerSignUpForm.getManagerRank())
                 .managerPosition(managerSignUpForm.getManagerPosition())
                 .managerCode(managerSignUpForm.getManagerCode())
-                .managerState(managerSignUpForm.getState())
+                .managerStateId(managerSignUpForm.getState())
                 .gender(managerSignUpForm.getGender())
                 .managerPhoneNumber(managerSignUpForm.getManagerPhoneNumber())
                 .managerAddressId(managerAddressRepository.save(ManagerAddress.builder()

@@ -1,6 +1,7 @@
 package com.propertyservice.propertyservice.domain.company;
 
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
+import com.propertyservice.propertyservice.domain.common.Gender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,17 +19,23 @@ public class Manager extends BaseTimeEntity{
     @GeneratedValue
     @Column(name = "manager_id")
     private Long managerId;
-    private Long department_id; // department Entity
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company_id;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department_id; // department Entity
     private String managerName;
     private String managerRank;
     private String managerPosition;
     private String managerCode;
 
     private Long managerStateId; //stateId Entity
-    private Long genderId; // genderId;
+    private Gender gender; // genderId;
     private String managerPhoneNumber;
-
-    private Long managerAddressId; // addressId Entity
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_address_id" )
+    private ManagerAddress managerAddressId; // addressId Entity
 
     private LocalDateTime managerEntranceDate;
     private LocalDateTime managerResignDate;
@@ -38,13 +45,15 @@ public class Manager extends BaseTimeEntity{
 
 
     @Builder
-    public Manager(String managerName, String managerRank, String managerPosition, String managerCode, Long managerStateId, Long genderId, String managerPhoneNumber, Long managerAddressId, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount){
+    public Manager(Company company_id, Department department_id, String managerName, String managerRank, String managerPosition, String managerCode, Long managerStateId, Gender gender, String managerPhoneNumber, ManagerAddress managerAddressId, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount){
+        this.company_id = company_id;
+        this.department_id = department_id;
         this.managerName = managerName;
         this.managerRank = managerRank;
         this.managerPosition = managerPosition;
         this.managerCode = managerCode;
         this.managerStateId = managerStateId;
-        this.genderId = genderId;
+        this.gender = gender;
         this.managerPhoneNumber = managerPhoneNumber;
         this.managerAddressId = managerAddressId;
         this.managerEntranceDate = managerEntranceDate;

@@ -19,7 +19,7 @@ public class ManagerState {
     private String managerState;
 
     @Builder
-    public ManagerState(Long managerStateId, String managerState) {
+    public ManagerState(Long managerStateId,     String managerState) {
         this.managerStateId = managerStateId;
         this.managerState = managerState;
     }
