@@ -20,6 +20,7 @@ public class Company extends BaseTimeEntity {
     private Long companyId;
     @Column(nullable = false)
     private String companyCode;
+    private String companyName;
     @Column(nullable = false)
     private Long companyAddressId;
     private Long president_id;
@@ -32,6 +33,18 @@ public class Company extends BaseTimeEntity {
     public Company(Long companyId, String companyCode, Long companyAddressId, Long president_id, String businessRegistrationNumber, LocalDateTime serviceStartDate, LocalDateTime serviceEndDate) {
         this.companyId = companyId;
         this.companyCode = companyCode;
+        this.companyAddressId = companyAddressId;
+        this.president_id = president_id;
+        this.businessRegistrationNumber = businessRegistrationNumber;
+        this.serviceStartDate = serviceStartDate;
+        this.serviceEndDate = serviceEndDate;
+    }
+
+    @Builder
+    public Company(Long companyId, String companyCode, String companyName, Long companyAddressId, Long president_id, String businessRegistrationNumber, LocalDateTime serviceStartDate, LocalDateTime serviceEndDate) {
+        this.companyId = companyId;
+        this.companyCode = companyCode;
+        this.companyName = companyName;
         this.companyAddressId = companyAddressId;
         this.president_id = president_id;
         this.businessRegistrationNumber = businessRegistrationNumber;
