@@ -2,11 +2,10 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
-import com.propertyservice.propertyservice.dto.company.ManagerForm;
+import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.service.ManagerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -49,9 +48,9 @@ public class ManagerController {
 
     // 회원가입
     @PostMapping("/sign-up")
-    public Response createManager(ManagerForm managerForm){
+    public Response createManager(@RequestBody ManagerSignUpForm managerSignUpForm){
         try{
-            return new Response(ResponseCode.SUCCESS, managerService.createManager(managerForm),"201");
+            return new Response(ResponseCode.SUCCESS, managerService.createManager(managerSignUpForm),"201");
         }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
