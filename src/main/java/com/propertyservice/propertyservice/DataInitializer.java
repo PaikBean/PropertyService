@@ -4,6 +4,8 @@ import com.propertyservice.propertyservice.repository.common.AddressLevel1Reposi
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
 import com.propertyservice.propertyservice.repository.company.CompanyRepository;
 import com.propertyservice.propertyservice.repository.company.DepartmentRepository;
+import com.propertyservice.propertyservice.repository.company.ManagerAddressRepository;
+import com.propertyservice.propertyservice.repository.company.ManagerRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,9 +40,9 @@ public class DataInitializer {
     }
 
     @Bean
-    public CommandLineRunner initalDummyData(JdbcTemplate jdbcTemplate, CompanyRepository companyRepository, DepartmentRepository departmentRepository) {
+    public CommandLineRunner initalDummyData(JdbcTemplate jdbcTemplate, CompanyRepository companyRepository, DepartmentRepository departmentRepository, ManagerRepository managerRepository, ManagerAddressRepository managerAddressRepository) {
         return args -> {
-            if(companyRepository.count() == 0 && departmentRepository.count() == 0){
+            if(companyRepository.count() == 0 && departmentRepository.count() == 0 && managerRepository.count() == 0 && managerAddressRepository.count() == 0){
                 try (InputStream inputStream = getClass().getResourceAsStream("/static/sql/insert_dummy_data.sql");
                      BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
