@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Manager extends BaseTimeEntity{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "manager_id")
     private Long managerId;
     @OneToOne(fetch = FetchType.LAZY)
@@ -30,7 +30,9 @@ public class Manager extends BaseTimeEntity{
     private String managerPosition;
     private String managerCode;
 
-    private Long managerStateId; //stateId Entity
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_state_id" )
+    private ManagerState managerStateId; //stateId Entity
     private Gender gender; // genderId;
     private String managerPhoneNumber;
     @OneToOne(fetch = FetchType.LAZY)
@@ -45,7 +47,7 @@ public class Manager extends BaseTimeEntity{
 
 
     @Builder
-    public Manager(Company company_id, Department department_id, String managerName, String managerRank, String managerPosition, String managerCode, Long managerStateId, Gender gender, String managerPhoneNumber, ManagerAddress managerAddressId, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount){
+    public Manager(Company company_id, Department department_id, String managerName, String managerRank, String managerPosition, String managerCode, ManagerState managerStateId, Gender gender, String managerPhoneNumber, ManagerAddress managerAddressId, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount){
         this.company_id = company_id;
         this.department_id = department_id;
         this.managerName = managerName;

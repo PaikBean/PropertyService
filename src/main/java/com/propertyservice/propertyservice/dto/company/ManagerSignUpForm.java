@@ -1,10 +1,7 @@
 package com.propertyservice.propertyservice.dto.company;
 
 import com.propertyservice.propertyservice.domain.common.Gender;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -20,13 +17,13 @@ public class ManagerSignUpForm {
     private String departmentName;
     private String managerRank;
     private String managerPosition;
-    private Long state;
+    private Long managerStateId;
     private String managerCode;
     private String managerEmail;
     private String managerPassword;
 
     @Builder
-    public ManagerSignUpForm(String companyCode ,String managerName, String managerPhoneNumber, Long managerAddressLevel1, Long managerAddressLevel2, String managerAddressLevel3, Gender gender, String departmentName, String managerRank, String managerPosition, Long state, String managerCode, String managerEmail, String managerPassword) {
+    public ManagerSignUpForm(String companyCode ,String managerName, String managerPhoneNumber, Long managerAddressLevel1, Long managerAddressLevel2, String managerAddressLevel3, Gender gender, String departmentName, String managerRank, String managerPosition, Long managerStateId, String managerCode, String managerEmail, String managerPassword) {
         this.companyCode = companyCode;
         this.managerName = managerName;
         this.managerPhoneNumber = managerPhoneNumber;
@@ -37,7 +34,7 @@ public class ManagerSignUpForm {
         this.departmentName = departmentName;
         this.managerRank = managerRank;
         this.managerPosition = managerPosition;
-        this.state = state;
+        this.managerStateId = managerStateId;
         this.managerCode = managerCode;
         this.managerEmail = managerEmail;
         this.managerPassword = managerPassword;

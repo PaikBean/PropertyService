@@ -2,13 +2,13 @@ package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.company.Manager;
 import com.propertyservice.propertyservice.domain.company.ManagerAddress;
+import com.propertyservice.propertyservice.domain.company.ManagerState;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
-import com.propertyservice.propertyservice.repository.company.CompanyRepository;
-import com.propertyservice.propertyservice.repository.company.DepartmentRepository;
-import com.propertyservice.propertyservice.repository.company.ManagerAddressRepository;
-import com.propertyservice.propertyservice.repository.company.ManagerRepository;
+import com.propertyservice.propertyservice.repository.common.ManagerStateRepository;
+import com.propertyservice.propertyservice.repository.company.*;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,21 +32,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagerService implements UserDetailsService {
 
-    private final CompanyRepository companyRepository;
-    private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
-    @Autowired
-    private ManagerRepository managerRepository;
-    @Autowired
-    private ManagerAddressRepository managerAddressRepository;
-    @Autowired
-    private CompanyService companyService;
-    @Autowired
-    private DepartmentService departmentService;
-    @Autowired
-    private AddressLevel1Repository addressLevel1Repository;
-    @Autowired
-    private AddressLevel2Respository addressLevel2Respository;
+    private final ManagerRepository managerRepository;
+    private final ManagerAddressRepository managerAddressRepository;
+    private final ManagerStateRepository managerStateRepository;
+    private final CompanyService companyService;
+    private final DepartmentService departmentService;
+    private final AddressLevel1Repository addressLevel1Repository;
+    private final AddressLevel2Respository addressLevel2Respository;
 
     /**
      * 사용자 id를 통해 정보 가져오기
@@ -83,6 +76,12 @@ public class ManagerService implements UserDetailsService {
         }
     }
 
+    public ManagerState searchStateById(Long managerStateId){
+        return managerStateRepository.findByManagerStateId(managerStateId).orElseThrow(
+                () -> new EntityNotFoundException("State Id 값 오류.")
+        );
+    }
+
     /**
      * 사용자 회원가입.
      * @param managerSignUpForm
@@ -97,7 +96,7 @@ public class ManagerService implements UserDetailsService {
                 .managerRank(managerSignUpForm.getManagerRank())
                 .managerPosition(managerSignUpForm.getManagerPosition())
                 .managerCode(managerSignUpForm.getManagerCode())
-                .managerStateId(managerSignUpForm.getState())
+                .managerStateId(searchStateById(managerSignUpForm.getManagerStateId()))
                 .gender(managerSignUpForm.getGender())
                 .managerPhoneNumber(managerSignUpForm.getManagerPhoneNumber())
                 .managerAddressId(managerAddressRepository.save(ManagerAddress.builder()
