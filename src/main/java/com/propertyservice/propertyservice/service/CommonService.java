@@ -23,7 +23,7 @@ public class CommonService {
     private final AddressLevel1Repository addressLevel1Repository;
     private final AddressLevel2Respository addressLevel2Respository;
     private final TransactionTypeRepository transactionTypeRepository;
-    private final GenderRepository genderRepository;
+//    private final GenderRepository genderRepository;
     private final ManagerStateRepository managerStateRepository;
 
     public List<AddressLevel1Dto> getAddressLevel1List() {
@@ -58,16 +58,16 @@ public class CommonService {
         return transactionTypeDtoList;
     }
 
-    public List<GenderDto> searchGenderList() {
-        List<GenderDto> genderDtoList = new ArrayList<>();
-        for (Gender gender : genderRepository.findAll()) {
-            genderDtoList.add(GenderDto.builder()
-                    .genderId(gender.getGenderId())
-                    .gender(gender.getGender())
-                    .build());
-        }
-        return genderDtoList;
-    }
+//    public List<GenderDto> searchGenderList() {
+//        List<GenderDto> genderDtoList = new ArrayList<>();
+//        for (Gender gender : genderRepository.findAll()) {
+//            genderDtoList.add(GenderDto.builder()
+//                    .genderId(gender.getGenderId())
+//                    .gender(gender.getGender())
+//                    .build());
+//        }
+//        return genderDtoList;
+//    }
 
     public List<ManagerStateDto> searhManagerStateList() {
         List<ManagerStateDto> managerStateDtoList = new ArrayList<>();
