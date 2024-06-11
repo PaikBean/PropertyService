@@ -32,9 +32,7 @@ public class CompanyService {
                 .companyId(company.getCompanyId())
                 .companyCode(company.getCompanyCode())
                 .companyName(company.getCompanyName())
-                .presidentName(managerRepository.findById(company.getPresident_id()).orElseThrow(
-                        () -> new EntityNotFoundException("대표자가 등록되지 않았습니다.")
-                ).getManagerName())
+                .presidentName(company.getPresidentName())
                 .businessRegistrationNumber(company.getBusinessRegistrationNumber())
                 .build();
     }
