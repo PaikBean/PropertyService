@@ -23,8 +23,11 @@ public class Company extends BaseTimeEntity {
     private String companyName;
     @Column(nullable = false)
     private Long companyAddressId;
+    @Column(nullable = false)
     private String presidentName;
-//    @Column(nullable = false) Todo : 사업자등록번호 검증 로직 추가 예정
+    @Column(nullable = false)
+    private String companyEmail;        // 대표 메일. Todo : 회사코드 신규, 재발급시 사용 예정
+    @Column(nullable = false)
     private String businessRegistrationNumber;
     private LocalDateTime serviceStartDate;
     private LocalDateTime serviceEndDate;
