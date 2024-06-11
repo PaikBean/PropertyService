@@ -33,12 +33,13 @@ public class Company extends BaseTimeEntity {
     private LocalDateTime serviceEndDate;
 
     @Builder
-    public Company(Long companyId, String companyCode, String companyName, Long companyAddressId, String presidentName, String businessRegistrationNumber, LocalDateTime serviceStartDate, LocalDateTime serviceEndDate) {
+    public Company(Long companyId, String companyCode, String companyName, Long companyAddressId, String presidentName, String companyEmail, String businessRegistrationNumber, LocalDateTime serviceStartDate, LocalDateTime serviceEndDate) {
         this.companyId = companyId;
         this.companyCode = companyCode;
         this.companyName = companyName;
         this.companyAddressId = companyAddressId;
         this.presidentName = presidentName;
+        this.companyEmail = companyEmail;
         this.businessRegistrationNumber = businessRegistrationNumber;
         this.serviceStartDate = serviceStartDate;
         this.serviceEndDate = serviceEndDate;
