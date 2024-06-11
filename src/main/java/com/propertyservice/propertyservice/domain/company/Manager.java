@@ -12,17 +12,17 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "mamager")
+@Table(name = "manager")
 @Entity
 public class Manager extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "manager_id")
     private Long managerId;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company_id;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department_id; // department Entity
     private String managerName;
@@ -30,7 +30,7 @@ public class Manager extends BaseTimeEntity{
     private String managerPosition;
     private String managerCode;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_state_id" )
     private ManagerState managerStateId; //stateId Entity
     private Gender gender; // genderId;
