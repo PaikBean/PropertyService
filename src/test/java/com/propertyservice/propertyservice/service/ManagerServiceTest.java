@@ -2,8 +2,7 @@ package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.common.Gender;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
