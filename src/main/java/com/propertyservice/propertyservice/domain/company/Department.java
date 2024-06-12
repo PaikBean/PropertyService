@@ -20,16 +20,16 @@ public class Department extends BaseTimeEntity {
     private Long departmentId;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "company_id")
-    private Company company;
+    private Company companyId;
     @Column(nullable = false)
     private String departmentName;
     @Column(nullable = false)
     private String departmentCode;
 
     @Builder
-    public Department(Long departmentId, Company company, String departmentName, String departmentCode) {
+    public Department(Long departmentId, Company companyId, String departmentName, String departmentCode) {
         this.departmentId = departmentId;
-        this.company = company;
+        this.companyId = companyId;
         this.departmentName = departmentName;
         this.departmentCode = departmentCode;
     }

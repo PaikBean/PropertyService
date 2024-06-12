@@ -4,6 +4,7 @@ import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.service.ManagerService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,18 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/manager/v1/")
+@RequiredArgsConstructor
 public class ManagerController {
-    @Autowired
-    private ManagerService managerService;
 
-//    @GetMapping("/login")
-//    public Response login(){
-//        try{
-//            return new Response(ResponseCode.SUCCESS, ,"200");
-//        }catch (Exception e){
-//            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
-//        }
-//    }
+    private final ManagerService managerService;
+
 
     //이메일 중복 조회
     //버튼으로 클릭조회
@@ -48,7 +42,7 @@ public class ManagerController {
 
     // 회원가입
     @PostMapping("/sign-up")
-    public Response createManager(@RequestBody ManagerSignUpForm managerSignUpForm){
+    public Response createManager(ManagerSignUpForm managerSignUpForm){
         try{
             return new Response(ResponseCode.SUCCESS, managerService.createManager(managerSignUpForm),"201");
         }catch (Exception e){
