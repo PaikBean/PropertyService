@@ -1,15 +1,25 @@
-import { Button, Grid, Stack, Typography } from '@mui/material'
+import { Grid, Stack, Typography } from '@mui/material'
 import InputBizNumber from '../textfield/InputBizNumber'
 import BasicDatePicker from '../datepicker/BasicDatePicker'
-import InputName from '../textfield/InputName'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import InputName2 from '../textfield/InputName2'
+import dayjs from 'dayjs'
+import SearchBtn from '../button/SearchBtn'
+import { useDispatch } from 'react-redux'
+import { fetchValidBizNumber } from '@/store/slices/registCompanySlice'
 
 const RegistCompanyFirstStep = ({ inputFirst, setInputFirst }) => {
+  const dispatch = useDispatch()
   const handleInputChange = (field, value) => {
     setInputFirst((prev) => ({
       ...prev,
       [field]: value,
     }))
+  }
+
+  const handleSearch = () => {
+    dispatch(fetchValidBizNumber(inputFirst))
   }
 
   return (
@@ -22,14 +32,27 @@ const RegistCompanyFirstStep = ({ inputFirst, setInputFirst }) => {
       />
       <Grid container spacing={2}>
         <Grid item xs={6}>
-          <BasicDatePicker label="등록일" />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <BasicDatePicker
+              label="등록일"
+              value={dayjs(inputFirst.bizStartDate)}
+              onChange={(value) => {
+                handleInputChange('bizStartDate', value.format('YYYYMMDD'))
+              }}
+            />
+          </LocalizationProvider>
         </Grid>
         <Grid item xs={6}>
-          <InputName2 label="대표자명" />
+          <InputName2
+            label="대표자명"
+            value={inputFirst.presidentName}
+            onChange={(e) => {
+              handleInputChange('presidentName', e.target.value)
+            }}
+          />
         </Grid>
       </Grid>
-
-      <Button>검색</Button>
+      <SearchBtn onClick={handleSearch} />
     </Stack>
   )
 }
