@@ -16,6 +16,8 @@ public class Client {
     @Column(name = "client_id")
     private Long clientId;
 
+    private long managerId; // 담당 매니저Id;
+
     private String clientName;
 
     private String clientPhoneNumber;
@@ -26,8 +28,11 @@ public class Client {
 
     private Long modifiedManagerId;
 
+
+
     @Builder
-    public Client(String clientName, String clientPhoneNumber, Long inflowTypeId, Long registrationManagerId, Long modifiedManagerId){
+    public Client(Long managerId, String clientName,String clientPhoneNumber, Long inflowTypeId, Long registrationManagerId, Long modifiedManagerId){
+        this.managerId = managerId;
         this.clientName = clientName;
         this.clientPhoneNumber = clientPhoneNumber;
         this.inflowTypeId =inflowTypeId;

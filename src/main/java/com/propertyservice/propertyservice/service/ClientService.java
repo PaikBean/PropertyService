@@ -1,10 +1,15 @@
 package com.propertyservice.propertyservice.service;
 
+import com.propertyservice.propertyservice.domain.client.Client;
+import com.propertyservice.propertyservice.domain.client.ClientRemark;
 import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.domain.property.Property;
+import com.propertyservice.propertyservice.dto.client.ClientLedgerForm;
 import com.propertyservice.propertyservice.dto.client.InflowTypeDto;
 import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateCondition;
 import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateDto;
+import com.propertyservice.propertyservice.repository.client.ClientRemarkRepository;
+import com.propertyservice.propertyservice.repository.client.ClientRepository;
 import com.propertyservice.propertyservice.repository.client.InflowTypeRepository;
 import com.propertyservice.propertyservice.repository.common.TransactionTypeRepository;
 import com.propertyservice.propertyservice.repository.property.PropertyRepository;
@@ -23,7 +28,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ClientService {
-
+    private final ClientRepository clientRepository;
+    private final ClientRemarkRepository clientRemarkRepository;
     private final InflowTypeRepository inflowTypeRepository;
     private final PropertyRepository propertyRepository;
     private final TransactionTypeRepository transactionTypeRepository;
@@ -65,5 +71,23 @@ public class ClientService {
             ).getTransactionTypeName(), property.getTradeFee());
         else
             return null;
+    }
+
+    public Long createClientLedger(ClientLedgerForm clientLedgerForm){
+        return   clientRepository.save(Client.builder()
+                .clientName(clientLedgerForm.getClientName())
+                .clientPhoneNumber(clientLedgerForm.getClientPhoneNumber())
+                .managerId(clientLedgerForm.getManagerId())
+                .inflowTypeId(clientLedgerForm.getInflowTypeId())
+                .registrationManagerId(clientLedgerForm.getManagerId()) // 등록자 id는 담당자 id로 init
+                .modifiedManagerId(clientLedgerForm.getManagerId()) // 수정자 id는 담당자 id로 init
+                .build()).getClientId();
+    }
+
+    public Long createClientRemark(Long clientId, String remark){
+        return  clientRemarkRepository.save(ClientRemark.builder()
+                .clientId(clientId)
+                .remark(remark)
+                .build()).getClientId();
     }
 }

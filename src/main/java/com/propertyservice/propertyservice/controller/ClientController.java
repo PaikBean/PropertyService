@@ -2,12 +2,14 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
+import com.propertyservice.propertyservice.dto.client.ClientLedgerForm;
 import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateCondition;
 import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateDto;
 import com.propertyservice.propertyservice.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,6 +51,22 @@ public class ClientController {
                     ? new Response(ResponseCode.SUCCESS, showingPropertyCandidateDtos, "204")
                     : new Response(ResponseCode.SUCCESS, showingPropertyCandidateDtos, "200");
         } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 고객 장
+     * @param clientLedgerForm
+     * @return
+     */
+    @PostMapping("/v1/client-ledger")
+    public Response createClientLedger(ClientLedgerForm clientLedgerForm){
+        try{
+            return clientLedgerForm.getRemark() == null
+                    ? new Response(ResponseCode.SUCCESS, clientService.createClientRemark(clientService.createClientLedger(clientLedgerForm), clientLedgerForm.getRemark()), "201")
+                    : new Response(ResponseCode.SUCCESS, clientService.createClientLedger(clientLedgerForm), "201");
+        }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
