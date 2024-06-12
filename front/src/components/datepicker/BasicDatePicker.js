@@ -1,17 +1,16 @@
-import { TextField } from '@mui/material'
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { DatePicker } from '@mui/x-date-pickers'
 
 const BasicDatePicker = ({ label, value, onChange }) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
-        label={label}
-        value={value}
-        onChange={onChange}
-        renderInput={(params) => <TextField {...params} />}
-      />
-    </LocalizationProvider>
+    <DatePicker
+      label={label}
+      value={value}
+      onChange={onChange}
+      format="YYYY.MM.DD"
+      slotProps={{
+        textField: { variant: 'outlined', error: false },
+      }}
+    />
   )
 }
 

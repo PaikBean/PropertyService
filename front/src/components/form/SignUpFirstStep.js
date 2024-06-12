@@ -5,7 +5,7 @@ import InputCompanyCode from '../textfield/InputCompanyCode'
 import CompanyName from '../textfield/CompanyName'
 import CompanyBizNum from '../textfield/CompanyBizNum'
 import CompanyPresidentName from '../textfield/CompanyPresidentName'
-import SearchCompanyBtn from '../button/SearchCompanyBtn'
+import SearchBtn from '../button/SearchBtn'
 import { fetchCompanyDetails } from '@/store/slices/companySlice'
 import { setCompanyInfo } from '@/store/slices/signUpSlice'
 const SignUpFirstStep = () => {
@@ -30,7 +30,7 @@ const SignUpFirstStep = () => {
           />
         </Grid>
         <Grid item xs={2}>
-          <SearchCompanyBtn onClick={handleSearch} />
+          <SearchBtn onClick={handleSearch} />
         </Grid>
       </Grid>
       <CompanyName value={companyInfo ? companyInfo.companyName : ''} />

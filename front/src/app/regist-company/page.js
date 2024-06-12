@@ -1,7 +1,9 @@
 'use client'
 import RegistCompanyFirstStep from '@/components/form/RegistCompanyFirstStep'
 import RegistCompanySecondStep from '@/components/form/RegistCompnaySecondStep'
+import { fetchRegistCompany } from '@/store/slices/registCompanySlice'
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -11,25 +13,48 @@ import {
   StepLabel,
   Stepper,
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 const steps = ['Validate Company', 'Basic Info']
 
 export default function ReisgtCompany() {
+  const dispatch = useDispatch()
   const [currentStep, setCurrentStep] = useState(0)
+  const [showAlert, setShowAlert] = useState(false)
+  const { validateData, registData } = useSelector(
+    (state) => state.registCompany
+  )
 
   const [inputFirst, setInputFirst] = useState({
     bizNumber: '',
-    bizStartDate: '',
+    bizStartDate: null,
     presidentName: '',
   })
   const [inputSecond, setInputSecond] = useState({
+    companyName: '',
     addressLevel1: null,
     addressLevel2: null,
     addressLevel3: '',
+    companyEmaill: '',
   })
 
+  useEffect(() => {
+    console.log(validateData)
+  }, [validateData])
+
+  useEffect(() => {
+    console.log(registData)
+  }, [registData])
+
   const handleNext = () => {
+    if (currentStep === 0 && !validateData.validateResult) {
+      setShowAlert(true)
+      setTimeout(() => {
+        setShowAlert(false)
+      }, 3000)
+      return
+    }
     setCurrentStep((prevStep) => prevStep + 1)
   }
 
@@ -38,6 +63,20 @@ export default function ReisgtCompany() {
   }
 
   const handleSubmit = async () => {
+    if (
+      !registData.bizNumber &&
+      !registData.presidentName &&
+      !registData.companyName &&
+      registData.companyEmaill
+    ) {
+      setShowAlert(true)
+      setTimeout(() => {
+        setShowAlert(false)
+      }, 3000)
+      return
+    }
+    dispatch(fetchRegistCompany(registData))
+    alert(registData.companyCode)
     return
   }
 
@@ -82,6 +121,11 @@ export default function ReisgtCompany() {
           }}
         >
           {getStepContent(currentStep)}
+          {showAlert ? (
+            <Alert severity="error" sx={{ mt: '20px' }}>
+              Check Your Input Value
+            </Alert>
+          ) : null}
         </Box>
         <Stepper activeStep={currentStep} alternativeLabel>
           {steps.map((label, index) => {
