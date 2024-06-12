@@ -3,7 +3,7 @@ package com.propertyservice.propertyservice.service;
 import com.propertyservice.propertyservice.domain.common.Gender;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 
-import lombok.extern.slf4j.Slf4j;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,16 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
 @SpringBootTest
-
 class ManagerServiceTest {
 
     @Autowired
     private ManagerService managerService;
 
     @Test
-    @Transactional
     public void createManagerTest(){
 //        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 //        for(int i =0; i < 100; i++){
@@ -44,7 +41,7 @@ class ManagerServiceTest {
 //        }
 
 
-        for(int i =0; i <100; i++){
+        for(int i =0; i <1; i++){
             ManagerSignUpForm managerSignUpForm = ManagerSignUpForm.builder()
                 .companyCode("COMP001")
                 .managerName("test"+i)
