@@ -4,7 +4,7 @@ import com.propertyservice.propertyservice.domain.client.Client;
 import com.propertyservice.propertyservice.domain.client.ClientRemark;
 import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.domain.property.Property;
-import com.propertyservice.propertyservice.dto.client.ClientLedgerForm;
+import com.propertyservice.propertyservice.dto.client.ClientDto;
 import com.propertyservice.propertyservice.dto.client.InflowTypeDto;
 import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateCondition;
 import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateDto;
@@ -73,14 +73,14 @@ public class ClientService {
             return null;
     }
 
-    public Long createClientLedger(ClientLedgerForm clientLedgerForm){
+    public Long createClientLedger(ClientDto clientDto){
         return   clientRepository.save(Client.builder()
-                .clientName(clientLedgerForm.getClientName())
-                .clientPhoneNumber(clientLedgerForm.getClientPhoneNumber())
-                .managerId(clientLedgerForm.getManagerId())
-                .inflowTypeId(clientLedgerForm.getInflowTypeId())
-                .registrationManagerId(clientLedgerForm.getManagerId()) // 등록자 id는 담당자 id로 init
-                .modifiedManagerId(clientLedgerForm.getManagerId()) // 수정자 id는 담당자 id로 init
+                .clientName(clientDto.getClientName())
+                .clientPhoneNumber(clientDto.getClientPhoneNumber())
+                .managerId(clientDto.getManagerId())
+                .inflowTypeId(clientDto.getInflowTypeId())
+                .registrationManagerId(clientDto.getManagerId()) // 등록자 id는 담당자 id로 init
+                .modifiedManagerId(clientDto.getManagerId()) // 수정자 id는 담당자 id로 init
                 .build()).getClientId();
     }
 

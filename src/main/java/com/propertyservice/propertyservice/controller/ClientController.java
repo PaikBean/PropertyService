@@ -2,7 +2,7 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
-import com.propertyservice.propertyservice.dto.client.ClientLedgerForm;
+import com.propertyservice.propertyservice.dto.client.ClientDto;
 import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateCondition;
 import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateDto;
 import com.propertyservice.propertyservice.service.ClientService;
@@ -57,15 +57,15 @@ public class ClientController {
 
     /**
      * 고객 장
-     * @param clientLedgerForm
+     * @param clientDto
      * @return
      */
-    @PostMapping("/v1/client-ledger")
-    public Response createClientLedger(ClientLedgerForm clientLedgerForm){
+    @PostMapping("/v1/client")
+    public Response createClient(ClientDto clientDto){
         try{
-            return clientLedgerForm.getRemark() == null
-                    ? new Response(ResponseCode.SUCCESS, clientService.createClientRemark(clientService.createClientLedger(clientLedgerForm), clientLedgerForm.getRemark()), "201")
-                    : new Response(ResponseCode.SUCCESS, clientService.createClientLedger(clientLedgerForm), "201");
+            return clientDto.getRemark() == null
+                    ? new Response(ResponseCode.SUCCESS, clientService.createClientRemark(clientService.createClientLedger(clientDto), clientDto.getRemark()), "201")
+                    : new Response(ResponseCode.SUCCESS, clientService.createClientLedger(clientDto), "201");
         }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }

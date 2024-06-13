@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ClientLedgerForm {
+public class ClientDto {
 
     private String clientName; // 고객이름
 
