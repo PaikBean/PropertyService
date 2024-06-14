@@ -4,13 +4,8 @@ import com.propertyservice.propertyservice.domain.client.Client;
 import com.propertyservice.propertyservice.domain.client.ClientRemark;
 import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.domain.property.Property;
-import com.propertyservice.propertyservice.dto.client.ClientDto;
-import com.propertyservice.propertyservice.dto.client.InflowTypeDto;
-import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateCondition;
-import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateDto;
-import com.propertyservice.propertyservice.repository.client.ClientRemarkRepository;
-import com.propertyservice.propertyservice.repository.client.ClientRepository;
-import com.propertyservice.propertyservice.repository.client.InflowTypeRepository;
+import com.propertyservice.propertyservice.dto.client.*;
+import com.propertyservice.propertyservice.repository.client.*;
 import com.propertyservice.propertyservice.repository.common.TransactionTypeRepository;
 import com.propertyservice.propertyservice.repository.property.PropertyRepository;
 import com.propertyservice.propertyservice.utils.SummaryPrice;
@@ -30,6 +25,7 @@ import java.util.List;
 public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientRemarkRepository clientRemarkRepository;
+//    private final ClientRepositoryCustom clientRepositoryCustom;
     private final InflowTypeRepository inflowTypeRepository;
     private final PropertyRepository propertyRepository;
     private final TransactionTypeRepository transactionTypeRepository;
@@ -73,14 +69,14 @@ public class ClientService {
             return null;
     }
 
-    public Long createClientLedger(ClientDto clientDto){
+    public Long createClientLedger(ClientForm clientForm){
         return   clientRepository.save(Client.builder()
-                .clientName(clientDto.getClientName())
-                .clientPhoneNumber(clientDto.getClientPhoneNumber())
-                .managerId(clientDto.getManagerId())
-                .inflowTypeId(clientDto.getInflowTypeId())
-                .registrationManagerId(clientDto.getManagerId()) // 등록자 id는 담당자 id로 init
-                .modifiedManagerId(clientDto.getManagerId()) // 수정자 id는 담당자 id로 init
+                .clientName(clientForm.getClientName())
+                .clientPhoneNumber(clientForm.getClientPhoneNumber())
+                .managerId(clientForm.getManagerId())
+                .inflowTypeId(clientForm.getInflowTypeId())
+                .registrationManagerId(clientForm.getManagerId()) // 등록자 id는 담당자 id로 init
+                .modifiedManagerId(clientForm.getManagerId()) // 수정자 id는 담당자 id로 init
                 .build()).getClientId();
     }
 
@@ -89,5 +85,15 @@ public class ClientService {
                 .clientId(clientId)
                 .remark(remark)
                 .build()).getClientId();
+    }
+
+    public List<ClientDto.ClientListResponseDto> searchClientList(ClientCondition.clientListCondition clientListCondition){
+//        List<Client> clientListResponseDtoList =
+//                clientRepository.findByClientPhoneNumberAndManagerId(
+//                        clientListCondition.getManagerId(), clientListCondition.getClientPhoneNumber()
+//                );
+
+        return clientRepository.searchClientList(clientListCondition.getManagerId(), clientListCondition.getClientPhoneNumber());
+
     }
 }

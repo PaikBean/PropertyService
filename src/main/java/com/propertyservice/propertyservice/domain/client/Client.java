@@ -16,7 +16,7 @@ public class Client {
     @Column(name = "client_id")
     private Long clientId;
 
-    private long managerId; // 담당 매니저Id;
+    private Long managerId; // 담당 매니저Id;
 
     private String clientName;
 

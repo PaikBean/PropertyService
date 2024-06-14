@@ -2,16 +2,11 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
-import com.propertyservice.propertyservice.dto.client.ClientDto;
-import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateCondition;
-import com.propertyservice.propertyservice.dto.client.ShowingPropertyCandidateDto;
+import com.propertyservice.propertyservice.dto.client.*;
 import com.propertyservice.propertyservice.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,17 +52,30 @@ public class ClientController {
 
     /**
      * 고객 장
-     * @param clientDto
+     * @param clientForm
      * @return
      */
     @PostMapping("/v1/client")
-    public Response createClient(ClientDto clientDto){
+    public Response createClient(@RequestBody ClientForm clientForm){
         try{
-            return clientDto.getRemark() == null
-                    ? new Response(ResponseCode.SUCCESS, clientService.createClientRemark(clientService.createClientLedger(clientDto), clientDto.getRemark()), "201")
-                    : new Response(ResponseCode.SUCCESS, clientService.createClientLedger(clientDto), "201");
+            return clientForm.getRemark() == null
+                    ? new Response(ResponseCode.SUCCESS, clientService.createClientRemark(clientService.createClientLedger(clientForm), clientForm.getRemark()), "201")
+                    : new Response(ResponseCode.SUCCESS, clientService.createClientLedger(clientForm), "201");
         }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+
+    @GetMapping("/v1/client-list")
+    public Response searchClientList(ClientCondition.clientListCondition clientListCondition){
+        try {
+            List<ClientDto.ClientListResponseDto> clientListResponseDtoList = clientService.searchClientList(clientListCondition);
+            return clientListResponseDtoList.isEmpty()
+                    ? new Response(ResponseCode.SUCCESS, clientListResponseDtoList, "204")
+                    : new Response(ResponseCode.SUCCESS, clientListResponseDtoList, "200");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "404");
         }
     }
 }
