@@ -1,8 +1,10 @@
 import { TextField } from '@mui/material'
 
-const InputEmail = (sx) => {
+const InputEmail = ({ value, onChange, sx }) => {
   return (
     <TextField
+      value={value}
+      onChange={onChange}
       sx={sx}
       id="email"
       label="Email Address"

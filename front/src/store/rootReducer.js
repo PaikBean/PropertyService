@@ -7,8 +7,10 @@ import addressReducer from './slices/addressSlice'
 import managerStateSlice from './slices/managerStateSlice'
 import departmentreducer from './slices/departmentSlice'
 import registCompanyReducer from './slices/registCompanySlice'
+import initialPasswordReducer from './slices/initialPasswordSlice'
 
 const rootReducer = combineReducers({
+  initialPassword: initialPasswordReducer,
   registCompany: registCompanyReducer,
   managerState: managerStateSlice,
   department: departmentreducer,

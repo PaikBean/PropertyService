@@ -23,6 +23,7 @@ import {
   setDetailInfo,
   setLoginInfo,
 } from '@/store/slices/signUpSlice'
+import { useRouter } from 'next/navigation'
 
 const steps = [
   'Validate Company',
@@ -32,6 +33,7 @@ const steps = [
 ]
 
 export default function SignUp() {
+  const router = useRouter
   const dispatch = useDispatch()
 
   const [currentStep, setCurrentStep] = useState(0)
@@ -84,6 +86,7 @@ export default function SignUp() {
       .then(() => {
         // alert('가입완료!')
         dispatch(clearSignup())
+        router.push('/')
       })
       .catch((error) => {
         // alert(`회원가입 실패: ${error}`)
