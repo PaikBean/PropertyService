@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/manager/v1/")
+@RequestMapping("/api/manager/")
 @RequiredArgsConstructor
 public class ManagerController {
 
@@ -20,7 +20,7 @@ public class ManagerController {
 
     //이메일 중복 조회
     //버튼으로 클릭조회
-    @GetMapping("/duplicate")
+    @GetMapping("/v1/duplicate")
     public Response checkEmail(@RequestParam(value = "email", defaultValue = "")String email){
         if(managerService.checkDuplicate(email))
             return new Response(ResponseCode.SUCCESS, false,"200"); // 이메일 사용가능
@@ -29,7 +29,7 @@ public class ManagerController {
     }
     // 이메일 중복 조회
     // onChanged 사용.
-    @GetMapping("/check-email")
+    @GetMapping("/v1/check-email")
     public Response checkChange(@RequestParam(value = "email", defaultValue = "")String email){
         // 에러가 발생해야 중복이 없다는 뜻.
         try {
@@ -41,8 +41,8 @@ public class ManagerController {
     }
 
     // 회원가입
-    @PostMapping("/sign-up")
-    public Response createManager(ManagerSignUpForm managerSignUpForm){
+    @PostMapping("/v1/sign-up")
+    public Response createManager(@RequestBody ManagerSignUpForm managerSignUpForm){
         try{
             return new Response(ResponseCode.SUCCESS, managerService.createManager(managerSignUpForm),"201");
         }catch (Exception e){

@@ -5,6 +5,7 @@ import com.propertyservice.propertyservice.domain.client.ClientRemark;
 import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.domain.property.Property;
 import com.propertyservice.propertyservice.dto.client.*;
+import com.propertyservice.propertyservice.dto.schedule.ScheduleSummaryDto;
 import com.propertyservice.propertyservice.repository.client.*;
 import com.propertyservice.propertyservice.repository.common.TransactionTypeRepository;
 import com.propertyservice.propertyservice.repository.property.PropertyRepository;
@@ -25,11 +26,10 @@ import java.util.List;
 public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientRemarkRepository clientRemarkRepository;
-//    private final ClientRepositoryCustom clientRepositoryCustom;
     private final InflowTypeRepository inflowTypeRepository;
     private final PropertyRepository propertyRepository;
     private final TransactionTypeRepository transactionTypeRepository;
-
+    private final ScheduleService scheduleService;
     public List<InflowTypeDto> searchInflowTypeList() {
         List<InflowTypeDto> inflowTypeDtoList = new ArrayList<>();
 
@@ -69,31 +69,58 @@ public class ClientService {
             return null;
     }
 
-    public Long createClientLedger(ClientForm clientForm){
-        return   clientRepository.save(Client.builder()
+    public Long createClient(ClientForm clientForm){
+        Client client =   clientRepository.save(Client.builder()
                 .clientName(clientForm.getClientName())
                 .clientPhoneNumber(clientForm.getClientPhoneNumber())
                 .managerId(clientForm.getManagerId())
                 .inflowTypeId(clientForm.getInflowTypeId())
                 .registrationManagerId(clientForm.getManagerId()) // 등록자 id는 담당자 id로 init
                 .modifiedManagerId(clientForm.getManagerId()) // 수정자 id는 담당자 id로 init
-                .build()).getClientId();
+                .build());
+        if(clientForm.getRemark() != null){
+            clientRemarkRepository.save(ClientRemark.builder()
+                    .clientId(client.getClientId())
+                    .remark(clientForm.getRemark())
+                    .build());
+        }
+        return client.getClientId();
     }
 
-    public Long createClientRemark(Long clientId, String remark){
+//    public Long createClientRemark(Long clientId, String remark){
+//        return  clientRemarkRepository.save(ClientRemark.builder()
+//                .clientId(clientId)
+//                .remark(remark)
+//                .build()).getClientId();
+//    }
+    public Long createClientRemark(ClientRemarkForm clientRemarkForm){
         return  clientRemarkRepository.save(ClientRemark.builder()
-                .clientId(clientId)
-                .remark(remark)
+                .clientId(clientRepository.findById(clientRemarkForm.getClientId()).orElseThrow( () ->
+                        new EntityNotFoundException("고객 정보가 없습니다.")).getClientId())
+                .remark(clientRemarkForm.getRemark())
                 .build()).getClientId();
     }
 
     public List<ClientDto.ClientListResponseDto> searchClientList(ClientCondition.clientListCondition clientListCondition){
-//        List<Client> clientListResponseDtoList =
-//                clientRepository.findByClientPhoneNumberAndManagerId(
-//                        clientListCondition.getManagerId(), clientListCondition.getClientPhoneNumber()
-//                );
-
         return clientRepository.searchClientList(clientListCondition.getManagerId(), clientListCondition.getClientPhoneNumber());
+    }
 
+    public ClientDetailDto searchClientDetailList(ClientCondition.clientDetailCondition clientDetailCondition){
+        //고객 일정
+        List<ScheduleSummaryDto> scheduleSummaryDtoList = scheduleService.searchScheduleList(clientDetailCondition.getClientId());
+
+        // 고객 매물
+        List<ShowingPropertySummaryDto> showingPropertySummaryDtoList = clientRepository.searchShowingPropertyList(clientDetailCondition.getClientId(), clientDetailCondition.getPropertyId());
+
+        // 고객 특이사항.
+        List<ClientRemarkDto> clientRemarkDtoList = clientRepository.searchClientRemark(clientDetailCondition.getClientId());
+
+        return ClientDetailDto.builder()
+                .clientId(clientDetailCondition.getClientId())
+                .propertyId(clientDetailCondition.getPropertyId())
+                //.scheduleList(scheduleSummaryDtoList)
+                .showingPropertyList(showingPropertySummaryDtoList)
+                .clientRemarkList(clientRemarkDtoList)
+                .build();
     }
 }

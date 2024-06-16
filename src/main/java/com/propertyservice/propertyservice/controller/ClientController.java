@@ -58,15 +58,18 @@ public class ClientController {
     @PostMapping("/v1/client")
     public Response createClient(@RequestBody ClientForm clientForm){
         try{
-            return clientForm.getRemark() == null
-                    ? new Response(ResponseCode.SUCCESS, clientService.createClientRemark(clientService.createClientLedger(clientForm), clientForm.getRemark()), "201")
-                    : new Response(ResponseCode.SUCCESS, clientService.createClientLedger(clientForm), "201");
+            return new Response(ResponseCode.SUCCESS, clientService.createClient(clientForm), "201");
+
         }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
 
-
+    /**
+     * 고객 목록 조회
+     * @param clientListCondition
+     * @return
+     */
     @GetMapping("/v1/client-list")
     public Response searchClientList(ClientCondition.clientListCondition clientListCondition){
         try {
@@ -75,7 +78,21 @@ public class ClientController {
                     ? new Response(ResponseCode.SUCCESS, clientListResponseDtoList, "204")
                     : new Response(ResponseCode.SUCCESS, clientListResponseDtoList, "200");
         }catch (Exception e){
-            return new Response(ResponseCode.FAIL, e.getMessage(), "404");
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 고객 상세 정보.
+     * @param clientDetailCondition
+     * @return
+     */
+    @GetMapping("/v1/client-detail")
+    public Response searchClientDetailList(ClientCondition.clientDetailCondition clientDetailCondition){
+        try{
+            return new Response(ResponseCode.SUCCESS, clientService.searchClientDetailList(clientDetailCondition), "204");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
 }

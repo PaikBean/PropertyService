@@ -1,5 +1,7 @@
 package com.propertyservice.propertyservice.repository.schedule;
 
+import com.propertyservice.propertyservice.domain.client.QClient;
+import com.propertyservice.propertyservice.domain.company.QManager;
 import com.propertyservice.propertyservice.domain.property.QProperty;
 import com.propertyservice.propertyservice.domain.schedule.QSchedule;
 import com.propertyservice.propertyservice.domain.schedule.QScheduleType;
@@ -19,7 +21,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
     private final JPAQueryFactory queryFactory;
     private final QProperty property = QProperty.property;
     private final QSchedule schedule = QSchedule.schedule;
+    private final QClient client =QClient.client;
     private final QScheduleType scheduleType = QScheduleType.scheduleType1;
+    private final QManager manager= QManager.manager;
     @Override
     public List<ScheduleSummaryDto> searchScheduleList(ScheduleCondition scheduleCondition) {
         return queryFactory
@@ -47,6 +51,30 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
                                 // Todo : client 엔티티 추가되면 client 조건 넣기
                         )
                 )
+                .fetch();
+    }
+
+    // ClientId로 일정 가져옴.
+    @Override
+    public List<ScheduleSummaryDto> searchScheduleList(Long clientId) {
+        return queryFactory
+                .select(
+                        new QScheduleSummaryDto(
+                                schedule.scheduleId,
+                                schedule.managerId,
+                                manager.managerName,// Todo : manager 엔티티 추가되면 manager Name 넣기
+                                client.clientId,// Todo : client 엔티티 추가되면 client Name 넣기
+                                client.clientName,
+                                schedule.scheduleType.scheduleTypeId,
+                                schedule.scheduleType.scheduleType,
+                                schedule.priority.stringValue(),
+                                schedule.scheduleDate
+                        )
+                )
+                .from(client)
+                .leftJoin(schedule).on(client.clientId.eq(schedule.clientId))
+                .leftJoin(manager).on(manager.managerId.eq(schedule.managerId))
+                .where(client.clientId.eq(clientId))
                 .fetch();
     }
 

@@ -86,7 +86,9 @@ public class ScheduleService {
     }
 
     public List<ScheduleSummaryDto> searchScheduleList(ScheduleCondition scheduleCondition) {
-        scheduleRepository.searchScheduleList(scheduleCondition);
-        return null;
+        return scheduleRepository.searchScheduleList(scheduleCondition);
+    }
+    public List<ScheduleSummaryDto> searchScheduleList(Long clientId) {
+        return scheduleRepository.searchScheduleList(clientId);
     }
 }
