@@ -113,4 +113,18 @@ public class ClientController {
         }
     }
 
+    /**
+     * 고객 특이사항 등록.
+     * @param clientRemarkForm
+     * @return
+     */
+    @PostMapping("/v1/client-remark")
+    public Response createClientRemark(@RequestBody ClientRemarkForm clientRemarkForm){
+        try{
+            return new Response(ResponseCode.SUCCESS, clientService.createClientRemark(clientRemarkForm), "201");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "404");
+        }
+    }
+
 }
