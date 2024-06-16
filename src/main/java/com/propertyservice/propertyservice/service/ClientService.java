@@ -155,7 +155,7 @@ public class ClientService {
         return ClientDetailDto.builder()
                 .clientId(clientDetailCondition.getClientId())
                 .propertyId(clientDetailCondition.getPropertyId())
-                //.scheduleList(scheduleSummaryDtoList)
+                .scheduleList(scheduleSummaryDtoList)
                 .showingPropertyList(showingPropertySummaryDtoList)
                 .clientRemarkList(clientRemarkDtoList)
                 .build();

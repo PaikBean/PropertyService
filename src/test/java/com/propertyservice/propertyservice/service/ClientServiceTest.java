@@ -84,6 +84,10 @@ class ClientServiceTest {
 
         clientService.createShowingProrperty(showingProrpertyForm);
     }
+    @Test
+    public void deleteShowingProrpertyTest(){
+        clientService.deleteShowingProperty(1L);
+    }
 
 
 }

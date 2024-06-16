@@ -63,11 +63,17 @@ public class ClientController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
+    /**
+     * 보여줄 매물 삭제.
+     * @param showingPropertyId
+     * @return
+     */
     @DeleteMapping("/v1/showing-property/{showingPropertyId}")
     public Response createShowingProperty(@PathVariable(name = "showingPropertyId")Long showingPropertyId){
         try {
             clientService.deleteShowingProperty(showingPropertyId);
-            return new Response(ResponseCode.SUCCESS, null, "200"); //
+            return new Response(ResponseCode.SUCCESS, null, "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
