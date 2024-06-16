@@ -1,5 +1,6 @@
 package com.propertyservice.propertyservice.domain.client;
 
+import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "client")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Client {
+public class Client extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
