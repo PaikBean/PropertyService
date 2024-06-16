@@ -128,4 +128,11 @@ public class ClientService {
     public List<ClientRemarkDto> searchClientRemarkList(Long clientId){
         return clientRepository.searchClientRemark(clientId);
     }
+
+    public void deleteClientRemark(Long clientRemarkId){
+        ClientRemark clientRemark = clientRemarkRepository.findById(clientRemarkId).orElseThrow(
+                () -> new EntityNotFoundException("해당 특이사항이 존재 하지 않습니다.")
+        );
+        clientRemarkRepository.delete(clientRemark);
+    }
 }

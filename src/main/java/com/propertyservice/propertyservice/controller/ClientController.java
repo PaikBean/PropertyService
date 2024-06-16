@@ -127,4 +127,13 @@ public class ClientController {
         }
     }
 
+    @DeleteMapping("/v1/client-remark/{clientRemarkId}")
+    public Response deleteClientRemark(@PathVariable(name = "clientRemarkId")Long clientRemarkId){
+        try{
+            return new Response(ResponseCode.SUCCESS, deleteClientRemark(clientRemarkId), "200");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "404");
+        }
+    }
+
 }
