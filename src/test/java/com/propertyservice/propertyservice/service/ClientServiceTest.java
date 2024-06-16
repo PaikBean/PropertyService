@@ -18,15 +18,16 @@ class ClientServiceTest {
     private  ClientService clientService;
     @Test
     public void createClientTest(){
-        ClientForm clientForm = new ClientForm();
-        clientForm.setClientName("test1");
-        clientForm.setClientPhoneNumber("010-1234-1234");
-        clientForm.setRemark("특이사항 있음");
-        clientForm.setInflowTypeId(1L);
-        clientForm.setManagerId(1L);
+        for(int i =0 ; i < 3; i++) {
+            ClientForm clientForm = new ClientForm();
+            clientForm.setClientName("test1");
+            clientForm.setClientPhoneNumber("010-1234-1234"+i);
+            clientForm.setRemark("특이사항 있음");
+            clientForm.setInflowTypeId(1L);
+            clientForm.setManagerId(1L);
 
-        clientService.createClientLedger(clientForm);
-        
+            clientService.createClient(clientForm);
+        }
         
     }
 
@@ -42,6 +43,15 @@ class ClientServiceTest {
             log.warn(clientListResponseDto.getClientName() + "   "+ clientListResponseDto.getManagerName());
         }
 
+    }
+
+    @Test
+    public void searchClientDetail(){
+        ClientCondition.clientDetailCondition clientDetailCondition = new ClientCondition.clientDetailCondition();
+        clientDetailCondition.setClientId(1L);
+        clientDetailCondition.setPropertyId(1L);
+
+        log.warn(clientService.searchClientDetailList(clientDetailCondition).getClientRemarkList().toString());
     }
 
 }
