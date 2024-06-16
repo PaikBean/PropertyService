@@ -33,6 +33,7 @@ public class ClientService {
     private final PropertyRepository propertyRepository;
     private final TransactionTypeRepository transactionTypeRepository;
     private final ScheduleService scheduleService;
+    private final ManagerService managerService;
     public List<InflowTypeDto> searchInflowTypeList() {
         List<InflowTypeDto> inflowTypeDtoList = new ArrayList<>();
 
@@ -76,10 +77,13 @@ public class ClientService {
         Client client =   clientRepository.save(Client.builder()
                 .clientName(clientForm.getClientName())
                 .clientPhoneNumber(clientForm.getClientPhoneNumber())
-                .managerId(clientForm.getManagerId())
-                .inflowTypeId(clientForm.getInflowTypeId())
-                .registrationManagerId(clientForm.getManagerId()) // 등록자 id는 담당자 id로 init
-                .modifiedManagerId(clientForm.getManagerId()) // 수정자 id는 담당자 id로 init
+                .managerId(managerService.searchManagerById(clientForm.getManagerId()))
+                .inflowTypeId(inflowTypeRepository.findById(clientForm.getInflowTypeId()).orElseThrow(
+                        () -> new IllegalStateException("inflowType 정보를 찾을 수 없습니다.")
+                    ).getId()
+                )
+                .registrationManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
+                .modifiedManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
                 .build());
         if(clientForm.getRemark() != null){
             clientRemarkRepository.save(ClientRemark.builder()
@@ -91,25 +95,37 @@ public class ClientService {
         for (Property property : clientForm.getPropertyList()){
             showingPropertyRepository.save(ShowingProperty.builder()
                             .clientId(client.getClientId())
-                            .propertyId(property.getPropertyId())
-                            .registrationManagerId(clientForm.getManagerId()) // 등록자 id는 담당자 id로 init
-                            .modifiedManagerId(clientForm.getManagerId()) // 수정자 id는 담당자 id로 init
+                            .propertyId(propertyRepository.findById(property.getPropertyId()).orElseThrow(
+                                    () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
+                                    ).getPropertyId()
+                            )
+                            .registrationManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
+                            .modifiedManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
                     .build());
         }
         return client.getClientId();
     }
 
-//    public Long createClientRemark(Long clientId, String remark){
-//        return  clientRemarkRepository.save(ClientRemark.builder()
-//                .clientId(clientId)
-//                .remark(remark)
-//                .build()).getClientId();
-//    }
     public Long createClientRemark(ClientRemarkForm clientRemarkForm){
         return  clientRemarkRepository.save(ClientRemark.builder()
                 .clientId(clientRepository.findById(clientRemarkForm.getClientId()).orElseThrow( () ->
                         new EntityNotFoundException("고객 정보가 없습니다.")).getClientId())
                 .remark(clientRemarkForm.getRemark())
+                .build()).getClientId();
+    }
+
+    public Long createShowingProrperty(ShowingProrpertyForm showingProrpertyForm ){
+        return showingPropertyRepository.save(ShowingProperty.builder()
+                        .clientId(clientRepository.findById(showingProrpertyForm.getClientId()).orElseThrow(
+                                () -> new EntityNotFoundException("고객 정보를 찾을수 없습니다.")
+                            ).getClientId()
+                        )
+                        .propertyId(propertyRepository.findById(showingProrpertyForm.getClientId()).orElseThrow(
+                                () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
+                            ).getPropertyId()
+                        )
+                        .registrationManagerId(managerService.searchManagerById(showingProrpertyForm.getManagerId()))
+                        .modifiedManagerId(managerService.searchManagerById(showingProrpertyForm.getManagerId()))
                 .build()).getClientId();
     }
 

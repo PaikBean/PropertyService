@@ -1,10 +1,7 @@
 package com.propertyservice.propertyservice.service;
 
-import com.propertyservice.propertyservice.dto.client.ClientCondition;
-import com.propertyservice.propertyservice.dto.client.ClientDto;
-import com.propertyservice.propertyservice.dto.client.ClientForm;
+import com.propertyservice.propertyservice.dto.client.*;
 
-import com.propertyservice.propertyservice.dto.client.ClientRemarkForm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +73,16 @@ class ClientServiceTest {
     public void deleteClientRemark(){
         clientService.deleteClientRemark(15L);
 
+    }
+
+    @Test
+    public void createShowingProrpertyTest(){
+        ShowingProrpertyForm showingProrpertyForm = new ShowingProrpertyForm();
+        showingProrpertyForm.setClientId(1L);
+        showingProrpertyForm.setPropertyId(1L);
+        showingProrpertyForm.setManagerId(1L);
+
+        clientService.createShowingProrperty(showingProrpertyForm);
     }
 
 

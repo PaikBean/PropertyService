@@ -59,7 +59,7 @@ public class ManagerService implements UserDetailsService {
      */
     public Long searchManagerByEmail(String managerEmail){
         return managerRepository.findByManagerEmail(managerEmail).orElseThrow(
-                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요.")).getManagerId(;
+                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요.")).getManagerId();
     }
 
     /**
@@ -69,7 +69,7 @@ public class ManagerService implements UserDetailsService {
      */
     public boolean checkDuplicate(String email){
         try{
-            Manager manager = searchManagerByEmail(email);
+            Long manager = searchManagerByEmail(email);
             return false;
         }catch (Exception e){
             return true;
@@ -129,7 +129,9 @@ public class ManagerService implements UserDetailsService {
     // 로그인.
     @Override
     public UserDetails loadUserByUsername(String managerEmail) throws UsernameNotFoundException {
-        Manager manager = searchManagerByEmail(managerEmail);
+        Manager manager = managerRepository.findByManagerEmail(managerEmail).orElseThrow(
+                () -> new EntityNotFoundException("사용자 정보가 존재하지 않습니다. /n 회원가입 후 이용해주세요.")
+        );
 
         //사용자 권한 USER로 설정.
         List<GrantedAuthority> authorities = new ArrayList<>();

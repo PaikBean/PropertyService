@@ -51,6 +51,21 @@ public class ClientController {
     }
 
     /**
+     * 보여줄 매물 등록.
+     * @param showingProrpertyForm
+     * @return
+     */
+    @PostMapping("/v1/showing-property")
+    public Response createShowingProperty(@RequestBody ShowingProrpertyForm showingProrpertyForm){
+        try {
+            return new Response(ResponseCode.SUCCESS, clientService.createShowingProrperty(showingProrpertyForm), "201");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+
+    /**
      * 고객 등록.
      * @param clientForm
      * @return
