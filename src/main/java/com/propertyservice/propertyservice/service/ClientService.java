@@ -105,6 +105,7 @@ public class ClientService {
         return clientRepository.searchClientList(clientListCondition.getManagerId(), clientListCondition.getClientPhoneNumber());
     }
 
+
     public ClientDetailDto searchClientDetailList(ClientCondition.clientDetailCondition clientDetailCondition){
         //고객 일정
         List<ScheduleSummaryDto> scheduleSummaryDtoList = scheduleService.searchScheduleList(clientDetailCondition.getClientId());
@@ -122,5 +123,9 @@ public class ClientService {
                 .showingPropertyList(showingPropertySummaryDtoList)
                 .clientRemarkList(clientRemarkDtoList)
                 .build();
+    }
+
+    public List<ClientRemarkDto> searchClientRemarkList(Long clientId){
+        return clientRepository.searchClientRemark(clientId);
     }
 }

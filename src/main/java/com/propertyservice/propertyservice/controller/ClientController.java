@@ -95,4 +95,22 @@ public class ClientController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
+    /**
+     * 고객 특이사항 목록 조회
+     * @param clientId
+     * @return
+     */
+    @GetMapping("/v1/client-remark-list/{clientId}")
+    public Response searchClientRemarkList(@PathVariable(name = "clientId")Long clientId){
+        try{
+            List<ClientRemarkDto> clientRemarkDtoList = clientService.searchClientRemarkList(clientId);
+            return clientRemarkDtoList.isEmpty()
+                    ? new Response(ResponseCode.SUCCESS, clientRemarkDtoList, "204")
+                    : new Response(ResponseCode.SUCCESS, clientRemarkDtoList, "200");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
 }
