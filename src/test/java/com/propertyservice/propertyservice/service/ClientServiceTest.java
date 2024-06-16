@@ -4,6 +4,7 @@ import com.propertyservice.propertyservice.dto.client.ClientCondition;
 import com.propertyservice.propertyservice.dto.client.ClientDto;
 import com.propertyservice.propertyservice.dto.client.ClientForm;
 
+import com.propertyservice.propertyservice.dto.client.ClientRemarkForm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +54,29 @@ class ClientServiceTest {
 
         log.warn(clientService.searchClientDetailList(clientDetailCondition).getClientRemarkList().toString());
     }
+
+    @Test
+    public void searchClientRemarkList(){
+        log.warn(String.valueOf(clientService.searchClientRemarkList(1L).size()));
+    }
+
+    @Test
+    public void createClientRemark(){
+        for(int i= 0; i < 5; i++){
+            ClientRemarkForm clientRemarkForm = new ClientRemarkForm();
+            clientRemarkForm.setClientId(1L);
+            clientRemarkForm.setRemark("test 특이사항"+i);
+
+            clientService.createClientRemark(clientRemarkForm);
+        }
+        searchClientRemarkList();
+    }
+
+    @Test
+    public void deleteClientRemark(){
+        clientService.deleteClientRemark(15L);
+
+    }
+
 
 }
