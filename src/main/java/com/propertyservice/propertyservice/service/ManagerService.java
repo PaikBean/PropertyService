@@ -46,9 +46,9 @@ public class ManagerService implements UserDetailsService {
      * @param managerId : 사용자 ID
      * @return manager
      */
-    public Manager searchManagerById(Long managerId){
+    public Long searchManagerById(Long managerId){
         return managerRepository.findByManagerId(managerId).orElseThrow(
-                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요."));
+                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요.")).getManagerId();
 
     }
 
@@ -57,9 +57,9 @@ public class ManagerService implements UserDetailsService {
      * @param managerEmail : 사용자 email
      * @return manager
      */
-    public Manager searchManagerByEmail(String managerEmail){
+    public Long searchManagerByEmail(String managerEmail){
         return managerRepository.findByManagerEmail(managerEmail).orElseThrow(
-                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요."));
+                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요.")).getManagerId(;
     }
 
     /**
