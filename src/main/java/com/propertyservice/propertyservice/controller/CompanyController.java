@@ -2,6 +2,7 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
+import com.propertyservice.propertyservice.dto.company.CompanyRegistryForm;
 import com.propertyservice.propertyservice.service.CompanyService;
 import com.propertyservice.propertyservice.utils.validation.ValidBizRegNumber;
 import com.propertyservice.propertyservice.utils.validation.dto.BizNumberValidateRequestForm;
@@ -48,6 +49,23 @@ public class CompanyController {
                     new Response(ResponseCode.SUCCESS, null, "204");            // 진위확인 결과 false
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "200");
+        }
+    }
+
+    /**
+     * 회사 등록
+     *
+     * @param companyRegistryForm
+     * @param bindingResult
+     * @return
+     */
+    @PostMapping("/v1/company")
+    public Response registerCompany(@RequestBody @Valid CompanyRegistryForm companyRegistryForm, BindingResult bindingResult) {
+        try {
+            companyService.registerCompany(companyRegistryForm);
+            return new Response(ResponseCode.SUCCESS, null, "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
 }

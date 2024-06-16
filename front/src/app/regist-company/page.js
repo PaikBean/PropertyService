@@ -13,12 +13,14 @@ import {
   StepLabel,
   Stepper,
 } from '@mui/material'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const steps = ['Validate Company', 'Basic Info']
 
 export default function ReisgtCompany() {
+  const router = useRouter
   const dispatch = useDispatch()
   const [currentStep, setCurrentStep] = useState(0)
   const [showAlert, setShowAlert] = useState(false)
@@ -77,6 +79,7 @@ export default function ReisgtCompany() {
     }
     dispatch(fetchRegistCompany(registData))
     alert(registData.companyCode)
+    router.push('/')
     return
   }
 
