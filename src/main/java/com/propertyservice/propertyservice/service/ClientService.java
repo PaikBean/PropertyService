@@ -56,6 +56,27 @@ public class ClientService {
         return showingPropertyCandidateDtoList;
     }
 
+    public Long createShowingProrperty(ShowingProrpertyForm showingProrpertyForm ){
+        return showingPropertyRepository.save(ShowingProperty.builder()
+                .clientId(clientRepository.findById(showingProrpertyForm.getClientId()).orElseThrow(
+                                () -> new EntityNotFoundException("고객 정보를 찾을수 없습니다.")
+                        ).getClientId()
+                )
+                .propertyId(propertyRepository.findById(showingProrpertyForm.getClientId()).orElseThrow(
+                                () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
+                        ).getPropertyId()
+                )
+                .registrationManagerId(managerService.searchManagerById(showingProrpertyForm.getManagerId()))
+                .modifiedManagerId(managerService.searchManagerById(showingProrpertyForm.getManagerId()))
+                .build()).getClientId();
+    }
+    public void deleteShowingProperty(Long showingPropertyId){
+        ShowingProperty showingProperty = showingPropertyRepository.findById(showingPropertyId).orElseThrow(
+                () -> new EntityNotFoundException("보여줄 매물 정보를 찾을 수 없습니다.")
+        );
+        showingPropertyRepository.delete(showingProperty);
+    }
+
     private String getSummaryPrice(Property property) {
         if (property.getTransactionTypeId() == 1 || property.getTransactionTypeId() == 4)
             return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
@@ -114,20 +135,7 @@ public class ClientService {
                 .build()).getClientId();
     }
 
-    public Long createShowingProrperty(ShowingProrpertyForm showingProrpertyForm ){
-        return showingPropertyRepository.save(ShowingProperty.builder()
-                        .clientId(clientRepository.findById(showingProrpertyForm.getClientId()).orElseThrow(
-                                () -> new EntityNotFoundException("고객 정보를 찾을수 없습니다.")
-                            ).getClientId()
-                        )
-                        .propertyId(propertyRepository.findById(showingProrpertyForm.getClientId()).orElseThrow(
-                                () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
-                            ).getPropertyId()
-                        )
-                        .registrationManagerId(managerService.searchManagerById(showingProrpertyForm.getManagerId()))
-                        .modifiedManagerId(managerService.searchManagerById(showingProrpertyForm.getManagerId()))
-                .build()).getClientId();
-    }
+
 
     public List<ClientDto.ClientListResponseDto> searchClientList(ClientCondition.clientListCondition clientListCondition){
         return clientRepository.searchClientList(clientListCondition.getManagerId(), clientListCondition.getClientPhoneNumber());

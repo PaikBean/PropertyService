@@ -63,6 +63,15 @@ public class ClientController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+    @DeleteMapping("/v1/showing-property/{showingPropertyId}")
+    public Response createShowingProperty(@PathVariable(name = "showingPropertyId")Long showingPropertyId){
+        try {
+            clientService.deleteShowingProperty(showingPropertyId);
+            return new Response(ResponseCode.SUCCESS, null, "200"); //
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 
 
     /**
@@ -145,7 +154,8 @@ public class ClientController {
     @DeleteMapping("/v1/client-remark/{clientRemarkId}")
     public Response deleteClientRemark(@PathVariable(name = "clientRemarkId")Long clientRemarkId){
         try{
-            return new Response(ResponseCode.SUCCESS, deleteClientRemark(clientRemarkId), "200");
+            clientService.deleteClientRemark(clientRemarkId);
+            return new Response(ResponseCode.SUCCESS, null, "200");
         }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "404");
         }
