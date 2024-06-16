@@ -4,6 +4,8 @@ import com.propertyservice.propertyservice.domain.client.Client;
 import com.propertyservice.propertyservice.domain.client.ClientRemark;
 import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.domain.property.Property;
+
+import com.propertyservice.propertyservice.domain.property.ShowingProperty;
 import com.propertyservice.propertyservice.dto.client.*;
 import com.propertyservice.propertyservice.dto.schedule.ScheduleSummaryDto;
 import com.propertyservice.propertyservice.repository.client.*;
@@ -26,6 +28,7 @@ import java.util.List;
 public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientRemarkRepository clientRemarkRepository;
+    private final ShowingPropertyRepository showingPropertyRepository;
     private final InflowTypeRepository inflowTypeRepository;
     private final PropertyRepository propertyRepository;
     private final TransactionTypeRepository transactionTypeRepository;
@@ -82,6 +85,15 @@ public class ClientService {
             clientRemarkRepository.save(ClientRemark.builder()
                     .clientId(client.getClientId())
                     .remark(clientForm.getRemark())
+                    .build());
+        }
+
+        for (Property property : clientForm.getPropertyList()){
+            showingPropertyRepository.save(ShowingProperty.builder()
+                            .clientId(client.getClientId())
+                            .propertyId(property.getPropertyId())
+                            .registrationManagerId(clientForm.getManagerId()) // 등록자 id는 담당자 id로 init
+                            .modifiedManagerId(clientForm.getManagerId()) // 수정자 id는 담당자 id로 init
                     .build());
         }
         return client.getClientId();
