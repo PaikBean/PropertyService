@@ -8,6 +8,7 @@ import com.propertyservice.propertyservice.dto.company.DepartmentForm;
 import com.propertyservice.propertyservice.repository.company.CompanyRepository;
 import com.propertyservice.propertyservice.repository.company.ManagerRepository;
 import com.propertyservice.propertyservice.repository.property.CompanyAddressRepository;
+import com.propertyservice.propertyservice.utils.CodeGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,7 @@ public class CompanyService {
                         .addressLevel3(companyRegistryForm.getCompanyAddressLevel3())
                 .build());
         Company company = companyRepository.save(Company.builder()
+                .companyCode(CodeGenerator.generateCompanyCode(companyAddress.getAddressLevel1Id().toString(), companyAddress.getAddressLevel2Id().toString(), companyRegistryForm.getBizNumber()))
                 .companyName(companyRegistryForm.getCompanyName())
                 .companyAddressId(companyAddress.getCompanyAddressId())
                 .presidentName(companyRegistryForm.getPresidentName())
