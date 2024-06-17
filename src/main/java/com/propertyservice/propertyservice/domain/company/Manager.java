@@ -2,6 +2,7 @@ package com.propertyservice.propertyservice.domain.company;
 
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
 import com.propertyservice.propertyservice.domain.common.Gender;
+import com.propertyservice.propertyservice.domain.common.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -44,10 +45,11 @@ public class Manager extends BaseTimeEntity{
     private String managerEmail; // Login Email;
     private String managerPassword;
     private Integer passwordErrorCount;
+    private Role role;
 
 
     @Builder
-    public Manager(Company company_id, Department department_id, String managerName, String managerRank, String managerPosition, String managerCode, ManagerState managerStateId, Gender gender, String managerPhoneNumber, ManagerAddress managerAddressId, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount){
+    public Manager(Company company_id, Department department_id, String managerName, String managerRank, String managerPosition, String managerCode, ManagerState managerStateId, Gender gender, String managerPhoneNumber, ManagerAddress managerAddressId, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount, Role role){
         this.company_id = company_id;
         this.department_id = department_id;
         this.managerName = managerName;
@@ -63,6 +65,7 @@ public class Manager extends BaseTimeEntity{
         this.managerEmail = managerEmail;
         this.managerPassword = managerPassword;
         this.passwordErrorCount =passwordErrorCount;
+        this.role = role;
     }
 
 }

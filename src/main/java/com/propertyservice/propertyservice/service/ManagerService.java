@@ -1,8 +1,10 @@
 package com.propertyservice.propertyservice.service;
 
+import com.propertyservice.propertyservice.domain.common.Role;
 import com.propertyservice.propertyservice.domain.company.Manager;
 import com.propertyservice.propertyservice.domain.company.ManagerAddress;
 import com.propertyservice.propertyservice.domain.company.ManagerState;
+import com.propertyservice.propertyservice.dto.company.LoginFormDto;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
@@ -109,6 +111,7 @@ public class ManagerService implements UserDetailsService {
                 .managerEmail(managerSignUpForm.getManagerEmail())
                 .managerPassword(passwordEncoder.encode(managerSignUpForm.getManagerPassword()))
                 .passwordErrorCount(0)
+                .role(Role.COM_USER)
                 .build()).getManagerId();
     }
 
@@ -126,10 +129,13 @@ public class ManagerService implements UserDetailsService {
         ).getAddressLevel2Id();
     }
 
+
     // 로그인.
+    // security Login
     @Override
-    public UserDetails loadUserByUsername(String managerEmail) throws UsernameNotFoundException {
-        Manager manager = managerRepository.findByManagerEmail(managerEmail).orElseThrow(
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("managerEmail  " + username);
+        Manager manager = managerRepository.findByManagerEmail(username).orElseThrow(
                 () -> new EntityNotFoundException("사용자 정보가 존재하지 않습니다. /n 회원가입 후 이용해주세요.")
         );
 
@@ -139,4 +145,5 @@ public class ManagerService implements UserDetailsService {
 
         return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
     }
+
 }
