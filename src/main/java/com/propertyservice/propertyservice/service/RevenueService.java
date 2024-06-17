@@ -2,7 +2,9 @@ package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.company.Manager;
 import com.propertyservice.propertyservice.domain.revenue.RevenueLedger;
+import com.propertyservice.propertyservice.dto.revenue.RevenueCondition;
 import com.propertyservice.propertyservice.dto.revenue.RevenueForm;
+import com.propertyservice.propertyservice.dto.revenue.RevenueTotalDto;
 import com.propertyservice.propertyservice.repository.company.ManagerRepository;
 import com.propertyservice.propertyservice.repository.revenue.RevenueRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -45,5 +47,13 @@ public class RevenueService {
                         .commission(revenueForm.getCommission())
                         .remark(revenueForm.getRemark())
                 .build());
+    }
+
+    public RevenueTotalDto searchRevenueList(RevenueCondition revenueCondition) {
+        return RevenueTotalDto.builder()
+                .totalCount(revenueRepository.totalCount(revenueCondition))
+                .totalCommission(revenueRepository.totalCommission(revenueCondition))
+                .revenueDtoList(revenueRepository.searchRevenueList(revenueCondition))
+                .build();
     }
 }

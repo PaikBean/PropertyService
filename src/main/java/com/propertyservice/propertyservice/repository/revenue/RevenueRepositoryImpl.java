@@ -14,6 +14,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -53,9 +54,9 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                                 transactionType.transactionTypeName,
                                 new CaseBuilder()
                                         .when(revenueLedger.transactionTypeId.eq(1L).or(revenueLedger.transactionTypeId.eq(4L)))
-                                            .then(Expressions.stringTemplate("CONCAT({0}, '/', {1})", revenueLedger.deposit, revenueLedger.monthlyFee))
+                                        .then(Expressions.stringTemplate("CONCAT({0}, '/', {1})", revenueLedger.deposit, revenueLedger.monthlyFee))
                                         .when(revenueLedger.transactionTypeId.eq(2L).or(revenueLedger.transactionTypeId.eq(3L)))
-                                            .then(revenueLedger.jeonseFee.stringValue())
+                                        .then(revenueLedger.jeonseFee.stringValue())
                                         .otherwise("")
                                         .as("price"),
                                 revenueLedger.commission,
@@ -84,6 +85,64 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                         contractEndDateLoe(revenueCondition.getContractEndDate())
                 )
                 .fetch();
+    }
+
+    @Override
+    public BigDecimal totalCommission(RevenueCondition revenueCondition) {
+        return queryFactory
+                .select(
+                        revenueLedger.commission.sum().coalesce(BigDecimal.ZERO)
+                )
+                .from(revenueLedger)
+                .join(manager).on(
+                        revenueLedger.managerId.eq(manager)
+                )
+                .join(addressLevel1).on(
+                        revenueLedger.addressLevel1Id.eq(addressLevel1.addressLevel1Id)
+                )
+                .join(addressLevel2).on(
+                        revenueLedger.addressLevel2Id.eq(addressLevel2.addressLevel2Id)
+                )
+                .join(transactionType).on(
+                        revenueLedger.transactionTypeId.eq(transactionType.transactionTypeId)
+                )
+                .where(
+                        managerIdEq(revenueCondition.getManagerId()),
+                        ownerNameContains(revenueCondition.getOwnerName()),
+                        addressLevel1Eq(revenueCondition.getAddressL1Id()),
+                        addressLevel2Eq(revenueCondition.getAddressL2Id()),
+                        contractStartDateGoe(revenueCondition.getContractStartDate()),
+                        contractEndDateLoe(revenueCondition.getContractEndDate())
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public Long totalCount(RevenueCondition revenueCondition) {
+        return queryFactory
+                .select(revenueLedger.count())
+                .from(revenueLedger)
+                .join(manager).on(
+                        revenueLedger.managerId.eq(manager)
+                )
+                .join(addressLevel1).on(
+                        revenueLedger.addressLevel1Id.eq(addressLevel1.addressLevel1Id)
+                )
+                .join(addressLevel2).on(
+                        revenueLedger.addressLevel2Id.eq(addressLevel2.addressLevel2Id)
+                )
+                .join(transactionType).on(
+                        revenueLedger.transactionTypeId.eq(transactionType.transactionTypeId)
+                )
+                .where(
+                        managerIdEq(revenueCondition.getManagerId()),
+                        ownerNameContains(revenueCondition.getOwnerName()),
+                        addressLevel1Eq(revenueCondition.getAddressL1Id()),
+                        addressLevel2Eq(revenueCondition.getAddressL2Id()),
+                        contractStartDateGoe(revenueCondition.getContractStartDate()),
+                        contractEndDateLoe(revenueCondition.getContractEndDate())
+                )
+                .fetchOne();
     }
 
     private BooleanExpression managerIdEq(Long managerId) {

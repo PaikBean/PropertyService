@@ -43,7 +43,7 @@ public class RevenueController {
     @GetMapping("/v1/revenue-ledger-list")
     public Response searchRevenueList(RevenueCondition revenueCondition){
         try {
-            return new Response(ResponseCode.SUCCESS, revenueRepository.searchRevenueList(revenueCondition), "200");
+            return new Response(ResponseCode.SUCCESS, revenueService.searchRevenueList(revenueCondition), "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
