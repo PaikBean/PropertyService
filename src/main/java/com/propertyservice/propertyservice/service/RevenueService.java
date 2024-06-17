@@ -56,4 +56,8 @@ public class RevenueService {
                 .revenueDtoList(revenueRepository.searchRevenueList(revenueCondition))
                 .build();
     }
+
+    public void deleteRevenue(Long revenueId) {
+        revenueRepository.deleteById(revenueId);
+    }
 }
