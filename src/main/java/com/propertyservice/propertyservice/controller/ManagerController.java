@@ -2,11 +2,11 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
+import com.propertyservice.propertyservice.dto.company.LoginFormDto;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.service.ManagerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -45,6 +45,20 @@ public class ManagerController {
     public Response createManager(@RequestBody ManagerSignUpForm managerSignUpForm){
         try{
             return new Response(ResponseCode.SUCCESS, managerService.createManager(managerSignUpForm),"201");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 로그인.
+     * @param loginFormDto
+     * @return
+     */
+    @PostMapping("/v1/login")
+    public Response login(@RequestBody LoginFormDto loginFormDto){
+        try{
+            return new Response(ResponseCode.SUCCESS, null,"200");
         }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
