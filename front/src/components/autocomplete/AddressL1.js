@@ -5,14 +5,15 @@ import { useDispatch, useSelector } from 'react-redux'
 
 const AddressL1 = ({ value, onChange }) => {
   const dispatch = useDispatch()
-  const { addressL1Options, level1Status, level1Error, addressL1 } =
-    useSelector((state) => state.address)
+  const { addressL1Options, L1status, L1error, addressL1 } = useSelector(
+    (state) => state.address
+  )
 
   useEffect(() => {
-    if (level1Status === 'idle') {
+    if (L1status === 'idle') {
       dispatch(fetchAddressesLevel1())
     }
-  }, [level1Status, dispatch])
+  }, [L1status, dispatch])
 
   const handleAddressChange = (event, value) => {
     dispatch(setAddressL1(value ? value.addressLevel1Id : ''))

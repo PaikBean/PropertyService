@@ -27,10 +27,10 @@ const addressSlice = createSlice({
     addressL2Options: null,
     addressL1: null,
     addressL2: null,
-    level1Status: 'idle',
-    level2Status: 'idle',
-    level1Error: null,
-    level1Error: null,
+    L1status: 'idle',
+    L2status: 'idle',
+    L1error: null,
+    L2error: null,
   },
   reducers: {
     setAddressL1: (state, action) => {

@@ -5,8 +5,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 const AddressL2 = ({ value, onChange }) => {
   const dispatch = useDispatch()
-  const { addressL2Options, level2Status, level2Error, addressL1 } =
-    useSelector((state) => state.address)
+  const { addressL2Options, L2status, L2error, addressL1 } = useSelector(
+    (state) => state.address
+  )
 
   useEffect(() => {
     dispatch(fetchAddressesLevel2(addressL1))
