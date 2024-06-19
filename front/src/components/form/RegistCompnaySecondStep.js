@@ -23,11 +23,13 @@ const RegistCompanySecondStep = ({ inputSecond, setInputSecond }) => {
         }}
       />
       <AddressL1
+        value={inputSecond.addressLevel1} // Add this line
         onChange={(value) => {
           handleInputChange('addressLevel1', value)
         }}
       />
       <AddressL2
+        value={inputSecond.addressLevel2} // Add this line
         addressLevel1={inputSecond.addressLevel1}
         onChange={(value) => {
           handleInputChange('addressLevel2', value)

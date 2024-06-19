@@ -30,11 +30,13 @@ const SignUpSecondStep = ({ inputSecond, setInputSecond }) => {
         }
       />
       <AddressL1
+        value={inputSecond.managerAddressLevel1} // Add this line
         onChange={(value) => {
           handleInputChange('managerAddressLevel1', value)
         }}
       />
       <AddressL2
+        value={inputSecond.managerAddressLevel2} // Add this line
         addressLevel1={inputSecond.managerAddressLevel1}
         onChange={(value) => {
           handleInputChange('managerAddressLevel2', value)
