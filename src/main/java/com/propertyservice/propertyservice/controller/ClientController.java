@@ -157,6 +157,11 @@ public class ClientController {
         }
     }
 
+    /**
+     * 고객 특이사항 제거
+     * @param clientRemarkId
+     * @return
+     */
     @DeleteMapping("/v1/client-remark/{clientRemarkId}")
     public Response deleteClientRemark(@PathVariable(name = "clientRemarkId")Long clientRemarkId){
         try{

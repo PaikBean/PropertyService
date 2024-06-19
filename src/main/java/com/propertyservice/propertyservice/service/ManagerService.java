@@ -4,7 +4,6 @@ import com.propertyservice.propertyservice.domain.common.Role;
 import com.propertyservice.propertyservice.domain.company.Manager;
 import com.propertyservice.propertyservice.domain.company.ManagerAddress;
 import com.propertyservice.propertyservice.domain.company.ManagerState;
-import com.propertyservice.propertyservice.dto.company.LoginFormDto;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
@@ -13,7 +12,6 @@ import com.propertyservice.propertyservice.repository.company.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -134,14 +132,14 @@ public class ManagerService implements UserDetailsService {
     // security Login
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         System.out.println("managerEmail  " + username);
         Manager manager = managerRepository.findByManagerEmail(username).orElseThrow(
                 () -> new EntityNotFoundException("사용자 정보가 존재하지 않습니다. /n 회원가입 후 이용해주세요.")
         );
-
         //사용자 권한 USER로 설정.
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("USER"));
+        authorities.add(new SimpleGrantedAuthority("COM_USER"));
 
         return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
     }

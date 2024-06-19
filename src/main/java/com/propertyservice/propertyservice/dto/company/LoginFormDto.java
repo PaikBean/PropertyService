@@ -8,13 +8,12 @@ public class LoginFormDto {
     // 혹시 몰라서 작성함.
     // security 작동안 할 경우 사용.
 
-    private String managerEmail;
-    private String managerPassword;
+    private String username;
+    private String password;
 
     @Builder
-    public LoginFormDto(String managerEmail, String managerPassword){
-        this.managerEmail = managerEmail;
-        this.managerPassword = managerPassword;
+    public LoginFormDto(String username, String password){
+        this.username = username;
+        this.password = password;
     }
-
 }
