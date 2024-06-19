@@ -39,6 +39,10 @@ const addressSlice = createSlice({
     setAddressL2: (state, action) => {
       state.addressL2 = action.payload
     },
+    clearAddress: (state, action) => {
+      state.addressL2 = null
+      state.addressL1 = null
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -69,6 +73,6 @@ const addressSlice = createSlice({
   },
 })
 
-export const { setAddressL1, setAddressL2 } = addressSlice.actions
+export const { setAddressL1, setAddressL2, clearAddress } = addressSlice.actions
 
 export default addressSlice.reducer

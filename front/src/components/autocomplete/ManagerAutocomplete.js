@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 const { Autocomplete, TextField } = require('@mui/material')
 
-const ManagerAutocomplete = ({ onChange }) => {
+const ManagerAutocomplete = ({ value, onChange }) => {
   const dispatch = useDispatch()
   const { options, status, error } = useSelector((state) => state.manager)
 
@@ -12,7 +12,7 @@ const ManagerAutocomplete = ({ onChange }) => {
     if (status === 'idle') {
       dispatch(fetchManagerList())
     }
-  })
+  }, [dispatch, status])
 
   const handleChange = (event, value) => {
     onChange(value ? value.managerId : '')
@@ -20,6 +20,11 @@ const ManagerAutocomplete = ({ onChange }) => {
 
   return (
     <Autocomplete
+      value={
+        options
+          ? options.find((option) => option.managerId === value) || null
+          : null
+      }
       options={options || []}
       getOptionLabel={(options) => options.managerName || ''}
       onChange={handleChange}

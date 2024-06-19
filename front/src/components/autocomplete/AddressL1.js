@@ -3,7 +3,7 @@ import { Autocomplete, TextField } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const AddressL1 = ({ onChange }) => {
+const AddressL1 = ({ value, onChange }) => {
   const dispatch = useDispatch()
   const { addressL1Options, level1Status, level1Error, addressL1 } =
     useSelector((state) => state.address)
@@ -21,6 +21,13 @@ const AddressL1 = ({ onChange }) => {
 
   return (
     <Autocomplete
+      value={
+        addressL1Options
+          ? addressL1Options.find(
+              (option) => option.addressLevel1Id === value
+            ) || null
+          : null
+      }
       options={addressL1Options || []}
       getOptionLabel={(addressL1Options) =>
         addressL1Options.addressLevel1 || ''

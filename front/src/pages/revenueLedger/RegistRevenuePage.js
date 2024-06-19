@@ -4,8 +4,8 @@ import ManagerAutocomplete from '@/components/autocomplete/ManagerAutocomplete'
 import InputADdressL3 from '@/components/textfield/InputAddressL3'
 import InputName2 from '@/components/textfield/InputName2'
 import SaveToolbar from '@/components/toolbar/SaveToolbar'
-import { Box, Grid, Stack } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { Alert, Box, Grid, Snackbar, Stack } from '@mui/material'
+import { useState } from 'react'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import BasicDatePicker from '@/components/datepicker/BasicDatePicker'
@@ -13,9 +13,10 @@ import dayjs from 'dayjs'
 import RemarkTextField from '@/components/textfield/RemarkTextField'
 import CommisionFeeForm from '@/components/form/CommisionFeeForm'
 import TrasactionTypePriceForm from '@/components/form/TransactionTypePriceForm'
+import { fetchRegistRevenue } from './api/fetchRegistRevenue'
 
-const RegistRevenuePage = () => {
-  const [registData, setRegistData] = useState({
+const RegistRevenuePage = ({ initMainPage }) => {
+  const initialData = {
     managerId: null,
     ownerName: '',
     clientName: '',
@@ -35,7 +36,13 @@ const RegistRevenuePage = () => {
     },
     commision: null,
     remark: '',
-  })
+  }
+
+  const [registData, setRegistData] = useState(initialData)
+
+  const [openSuccessSnackbar, setOpenSuccessSnackbar] = useState(false)
+  const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleInputChange = (field, value) => {
     if (field === 'transactionType') {
@@ -67,9 +74,32 @@ const RegistRevenuePage = () => {
     }
   }
 
-  const handleSave = () => {
-    alert('저장')
+  const handleSave = async () => {
+    try {
+      const result = await fetchRegistRevenue(registData)
+      setOpenSuccessSnackbar(true)
+      setRegistData(initialData)
+    } catch (error) {
+      setErrorMessage(error.message)
+      setOpenErrorSnackbar(true)
+    }
     return
+  }
+
+  const handleSuccessSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    openSuccessSnackbar ? setOpenSuccessSnackbar(false) : null
+  }
+
+  const handleErrorSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    openErrorSnackbar ? setOpenErrorSnackbar(false) : null
   }
 
   return (
@@ -80,6 +110,7 @@ const RegistRevenuePage = () => {
           <Grid container gap={5} sx={{ width: '70%' }}>
             <Grid item xs={2.5}>
               <ManagerAutocomplete
+                value={registData.managerId} // Add this line
                 onChange={(value) => {
                   handleInputChange('managerId', value)
                 }}
@@ -107,6 +138,7 @@ const RegistRevenuePage = () => {
           <Grid container gap={5} sx={{ width: '70%' }}>
             <Grid item xs={2.5}>
               <AddressL1
+                value={registData.addressL1} // Add this line
                 onChange={(value) => {
                   handleInputChange('addressL1', value)
                 }}
@@ -114,6 +146,7 @@ const RegistRevenuePage = () => {
             </Grid>
             <Grid item xs={3}>
               <AddressL2
+                value={registData.addressL2} // Add this line
                 addressLevel1={registData.addressL1}
                 onChange={(value) => {
                   handleInputChange('addressL2', value)
@@ -175,6 +208,34 @@ const RegistRevenuePage = () => {
           </Grid>
         </Stack>
       </Stack>
+      <Snackbar
+        open={openSuccessSnackbar}
+        autoHideDuration={5000}
+        onClose={handleSuccessSnackbarClose}
+      >
+        <Alert
+          onClose={handleSuccessSnackbarClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          매출 저장 완료
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={openErrorSnackbar}
+        autoHideDuration={5000}
+        onClose={handleErrorSnackbarClose}
+      >
+        <Alert
+          onClose={handleErrorSnackbarClose}
+          severity="error"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }
