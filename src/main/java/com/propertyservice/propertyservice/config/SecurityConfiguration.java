@@ -1,5 +1,6 @@
 package com.propertyservice.propertyservice.config;
 
+import com.propertyservice.propertyservice.jwt.JWTFilter;
 import com.propertyservice.propertyservice.jwt.LoginFilter;
 import com.propertyservice.propertyservice.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -51,11 +52,15 @@ public class SecurityConfiguration {
         // 현재는 모든 사이트 접근을 허용.
         http.authorizeHttpRequests((auth) -> auth
                 //.requestMatchers("/login", "/sign-up", "/main").permitAll()
+                .requestMatchers("/admin").hasRole("COM_USER")
                 .anyRequest().permitAll());
 
         // usernamePasswordAuthenticationFilter 등록.
         // addFilterAt : 정해진 위치에 필터를 등록.
         http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), tokenProvider), UsernamePasswordAuthenticationFilter.class);
+
+        //jwtfilter 추가.
+        http.addFilterBefore(new JWTFilter(tokenProvider), LoginFilter.class);
 
         // 세션 설정.
         // stateless : http와 같은 client의 이전 상태를 관리하지 않음.

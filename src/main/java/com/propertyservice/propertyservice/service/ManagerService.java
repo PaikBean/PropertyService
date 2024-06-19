@@ -139,7 +139,7 @@ public class ManagerService implements UserDetailsService {
         );
         //사용자 권한 USER로 설정.
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("USER"));
+        authorities.add(new SimpleGrantedAuthority("COM_USER"));
 
         return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
     }

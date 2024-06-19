@@ -28,10 +28,7 @@ public class TokenProvider {
     @Value("${spring.jwt.secret}")
     private String secret;
 
-    /**
-     * key를 HMAC-SHA알고리즘을 사용하여 byte 배열로 decode함.
-     * @return
-     */
+   //key를 HMAC-SHA알고리즘을 사용하여 byte 배열로 decode함.
     private SecretKey getLoginKey(){
         byte[] keyBytes;
         if(checkEncoding()) {
@@ -46,10 +43,7 @@ public class TokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    /**
-     * base64 인코딩 check
-     * @return
-     */
+    //base64 인코딩 check
     public boolean checkEncoding(){
         String encodedKey = encodingKey(this.secret);
 
@@ -57,21 +51,20 @@ public class TokenProvider {
         return  pattern.matcher(encodedKey).find();
     }
 
-    /**
-     * key 인코딩.
-     * @param key
-     * @return
-     */
+   // key 인코딩
     public String encodingKey(String key){
         return Base64.getEncoder().encodeToString(key.getBytes());
     }
 
+    // token을 통해 username 가져오기.
     public String getUsername(String token){
         return Jwts.parser().verifyWith(getLoginKey()).build().parseSignedClaims(token).getPayload().get("username", String.class);
     }
+    // token을 통해 role 가져오기.
     public String getRole(String token){
         return Jwts.parser().verifyWith(getLoginKey()).build().parseSignedClaims(token).getPayload().get("role", String.class);
     }
+    // token을 통해 만기일 가져오기.
     public Boolean isExpired(String token){
         return Jwts.parser().verifyWith(getLoginKey()).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
