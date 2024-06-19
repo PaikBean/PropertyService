@@ -3,6 +3,7 @@ package com.propertyservice.propertyservice.config;
 import com.propertyservice.propertyservice.jwt.JWTFilter;
 import com.propertyservice.propertyservice.jwt.LoginFilter;
 import com.propertyservice.propertyservice.jwt.TokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -68,6 +73,25 @@ public class SecurityConfiguration {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 
+        // cors 설정.
+        http.cors((cors) -> cors
+                .configurationSource(new CorsConfigurationSource() {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                        // 1. Cors설정 객체 생성.
+                        CorsConfiguration configuration = new CorsConfiguration();
+
+                        // 2. 설정 등록.
+                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // 포트 허용
+                        configuration.setAllowedMethods(Collections.singletonList("*")); // get,post 등등 모든 메소드 허용
+                        configuration.setAllowCredentials(true); // Credentials 사용하면 허용.
+                        configuration.setAllowedHeaders(Collections.singletonList("*")); // 헤더 허용.
+                        configuration.setMaxAge(3600L);
+                        configuration.setExposedHeaders(Collections.singletonList("Authorization")); // 백엔드에서 프론트로 토큰 값 보내는 것을 허용.
+
+                        return configuration;
+                    }
+                }));
 
         return http.build();
     }
