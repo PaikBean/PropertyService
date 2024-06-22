@@ -7,13 +7,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
+import java.io.NotActiveException;
 import java.util.Collections;
 
 @Slf4j
@@ -25,7 +24,7 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader("Authorization");
-        log.info(authorization);
+        log.info("JWTFilter : " + authorization);
 
         // token이 null이거나 Bearer로 시작하지 않을 때.
         if(authorization == null || !authorization.startsWith("Bearer ")){
@@ -34,8 +33,7 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = authorization.split(" ")[1];
-        log.info("JWTFilter start");
+        String token = getToken(authorization);
 
         // 1. 소멸시간 검증
         if(tokenProvider.isExpired(token)){
@@ -48,11 +46,14 @@ public class JWTFilter extends OncePerRequestFilter {
         // 2. username, role 추출.
         String username = tokenProvider.getUsername(token);
         String role = tokenProvider.getRole(token);
+        if(username == null || role ==null || username.equals("") || role.equals("")){
+            throw new NotActiveException("Token isn`t userId or rule");
+        }
 
 
         // 3. 정보 객체 담기
         User user = new User(username, "123123", Collections.singleton(new SimpleGrantedAuthority(role)));
-        System.out.println(user.toString());
+        System.out.println("user 객체 : "  + user.toString());
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
         // 4. securityContextHolder에 등록. ( user 세션 생성.)
@@ -60,5 +61,11 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 5. 다음 필터 이동
         filterChain.doFilter(request, response);
+
+
+    }
+
+    public String getToken(String authorization){
+        return authorization.split(" ")[1];
     }
 }

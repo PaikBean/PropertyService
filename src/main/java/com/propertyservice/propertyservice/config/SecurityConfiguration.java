@@ -96,30 +96,4 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-
-    // JWT를 사용하지 않았을 때.
-    /*
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-
-        http.csrf(AbstractHttpConfigurer::disable);
-
-        http.formLogin(form -> form
-                .loginPage("/")                             //로그인 페이지
-                .loginProcessingUrl("/")
-                //.defaultSuccessUrl("/")                   //성공시 이동될 페이지
-                .usernameParameter("managerEmail")                 //로그인시 id
-                .passwordParameter("managerPassword")              //로그인시 password
-                .failureHandler(customAuthFailureHandler)   //로그인 실패 핸들러
-                .successHandler(customAuthSueccessHandler)  //로그인 성공 핸들러
-        );
-        http.logout(form -> form
-                .logoutSuccessUrl("/")
-                .logoutRequestMatcher(new AntPathRequestMatcher("/"))   //로그아웃시 다른 URL 재정의.
-                .invalidateHttpSession(true) // 세션 초기화 (구현하다가 필요없음 제거할 예정)
-        );
-
-        return http.build();
-    }
-     */
 }

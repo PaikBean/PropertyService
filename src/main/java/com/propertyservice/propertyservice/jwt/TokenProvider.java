@@ -1,23 +1,15 @@
 package com.propertyservice.propertyservice.jwt;
 
-import com.propertyservice.propertyservice.domain.common.Role;
-import com.propertyservice.propertyservice.service.ManagerService;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.Date;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -40,7 +32,7 @@ public class TokenProvider {
             String encodingSecret = encodingKey(this.secret);
             keyBytes = Decoders.BASE64.decode(encodingSecret);
         }
-        return Keys.hmacShaKeyFor(keyBytes);
+        return new SecretKeySpec(keyBytes, Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
     //base64 인코딩 check
