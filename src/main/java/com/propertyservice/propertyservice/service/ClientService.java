@@ -112,17 +112,18 @@ public class ClientService {
                     .remark(clientForm.getRemark())
                     .build());
         }
-
-        for (Property property : clientForm.getPropertyList()){
-            showingPropertyRepository.save(ShowingProperty.builder()
-                            .clientId(client.getClientId())
-                            .propertyId(propertyRepository.findById(property.getPropertyId()).orElseThrow(
-                                    () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
-                                    ).getPropertyId()
-                            )
-                            .registrationManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
-                            .modifiedManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
-                    .build());
+        if(clientForm.getPropertyList()!= null) {
+            for (Property property : clientForm.getPropertyList()) {
+                showingPropertyRepository.save(ShowingProperty.builder()
+                        .clientId(client.getClientId())
+                        .propertyId(propertyRepository.findById(property.getPropertyId()).orElseThrow(
+                                        () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
+                                ).getPropertyId()
+                        )
+                        .registrationManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
+                        .modifiedManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
+                        .build());
+            }
         }
         return client.getClientId();
     }

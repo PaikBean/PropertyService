@@ -13,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,11 @@ public class CompanyService {
     public Company searchCompany(String companyCode){
         return companyRepository.findByCompanyCode(companyCode).orElseThrow(
                 ()->new EntityNotFoundException("회사코드가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
+    }
+    public Long searchCompany(Long companyId){
+        return companyRepository.findById(companyId).orElseThrow(
+                () -> new EntityNotFoundException("회사가 존재하지 않습니다.")
+        ).getCompanyId();
     }
 
     public CompanySimpleDto searchCompanyByCompanyCode(String companyCode) {
