@@ -1,5 +1,13 @@
 const columns = [
   {
+    field: 'revenueId',
+    headerName: '매출Id',
+    flex: 1,
+    headerAlign: 'center',
+    align: 'center',
+    headerClassName: 'revenu-header-css',
+  },
+  {
     field: 'managerName',
     headerName: '담당자',
     flex: 1,
@@ -24,10 +32,10 @@ const columns = [
     headerClassName: 'revenu-header-css',
   },
   {
-    field: 'propertyAddress',
+    field: 'address',
     headerName: '주소',
     headerAlign: 'center',
-    flex: 5,
+    flex: 4,
     headerClassName: 'revenu-header-css',
   },
   {
@@ -47,6 +55,14 @@ const columns = [
     headerClassName: 'revenu-header-css',
   },
   {
+    field: 'transactionType',
+    headerName: '거래유형',
+    flex: 1,
+    headerAlign: 'cashValue',
+    align: 'center',
+    headerClassName: 'revenu-header-css',
+  },
+  {
     field: 'price',
     headerName: '가격',
     flex: 1,
@@ -55,8 +71,8 @@ const columns = [
     headerClassName: 'revenu-header-css',
   },
   {
-    field: 'commision',
-    headerName: '수수료',
+    field: 'commission',
+    headerName: '중개 수수료',
     flex: 1,
     headerAlign: 'center',
     align: 'center',

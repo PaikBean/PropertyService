@@ -9,9 +9,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs'
 import TransactionType from '@/components/autocomplete/TransactionType'
 import SearchBtn from '@/components/button/SearchBtn'
-import { DataGrid } from '@mui/x-data-grid'
 import columns from './columns'
 import CustomDataGrid from '@/components/datagrid/CustomDataGrid'
+import { fetchRevenueList } from './api/fetchSearchRevenueList'
 
 const { Box, Stack, Grid, Typography } = require('@mui/material')
 
@@ -36,13 +36,24 @@ const RevenueListPage = () => {
     }))
   }
 
-  const handleSearch = () => {
-    return
+  const handleSearch = async () => {
+    try {
+      console.log(searchCondition)
+      const response = await fetchRevenueList(searchCondition)
+      if (response.responseCode === 'SUCCESS') {
+        setRows(response.data.revenueDtoList)
+        setTotalAmount(response.data.totalCommission)
+      } else {
+        console.error('Failed to fetch revenue list:', response.message)
+      }
+    } catch (error) {
+      console.error('Error fetching revenue list:', error)
+    }
   }
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stack spacing={5}>
+      <Stack spacing={3}>
         <SingleToolbar text="매출 장부 목록" />
         <Stack spacing={3}>
           <Grid container gap={3}>
@@ -124,7 +135,17 @@ const RevenueListPage = () => {
               },
             }}
           >
-            <CustomDataGrid rows={rows} columns={columns} />
+            <CustomDataGrid
+              rows={rows}
+              columns={columns}
+              height={'68vh'}
+              columnVisibilityModel={{
+                revenueId: false,
+              }}
+              showAll={false}
+              pageSize={10}
+              rowHeight={48}
+            />
           </Grid>
         </Stack>
       </Stack>
