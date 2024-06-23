@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Getter
 public class RevenueDto {
-    private Long revenueId;
+    private Long id;
     private String managerName;
     private String ownerName;
     private String clientName;
@@ -21,7 +21,7 @@ public class RevenueDto {
 
     @QueryProjection
     public RevenueDto(Long revenueId, String managerName, String ownerName, String clientName, String address, String contractStartDate, String contractEndDate, String transactionType, String price, BigDecimal commission, String remark) {
-        this.revenueId = revenueId;
+        this.id = revenueId;
         this.managerName = managerName;
         this.ownerName = ownerName;
         this.clientName = clientName;

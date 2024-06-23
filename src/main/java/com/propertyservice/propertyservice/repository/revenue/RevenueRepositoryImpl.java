@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @RequiredArgsConstructor
 public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
     private final JPAQueryFactory queryFactory;
@@ -78,11 +80,11 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 )
                 .where(
                         managerIdEq(revenueCondition.getManagerId()),
-                        ownerNameContains(revenueCondition.getOwnerName()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),
                         contractStartDateGoe(revenueCondition.getContractStartDate()),
-                        contractEndDateLoe(revenueCondition.getContractEndDate())
+                        contractEndDateLoe(revenueCondition.getContractEndDate()),
+                        transactionTypeEq(revenueCondition.getTransactionType())
                 )
                 .fetch();
     }
@@ -108,11 +110,11 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 )
                 .where(
                         managerIdEq(revenueCondition.getManagerId()),
-                        ownerNameContains(revenueCondition.getOwnerName()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),
                         contractStartDateGoe(revenueCondition.getContractStartDate()),
-                        contractEndDateLoe(revenueCondition.getContractEndDate())
+                        contractEndDateLoe(revenueCondition.getContractEndDate()),
+                        transactionTypeEq(revenueCondition.getTransactionType())
                 )
                 .fetchOne();
     }
@@ -136,11 +138,11 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 )
                 .where(
                         managerIdEq(revenueCondition.getManagerId()),
-                        ownerNameContains(revenueCondition.getOwnerName()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),
                         contractStartDateGoe(revenueCondition.getContractStartDate()),
-                        contractEndDateLoe(revenueCondition.getContractEndDate())
+                        contractEndDateLoe(revenueCondition.getContractEndDate()),
+                        transactionTypeEq(revenueCondition.getTransactionType())
                 )
                 .fetchOne();
     }
@@ -162,18 +164,18 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
     }
 
     private BooleanExpression contractStartDateGoe(String contractStartDate) {
-        if (contractStartDate == null) {
-            return null;
-        }
-        LocalDateTime startDate = LocalDateTime.parse(contractStartDate + "000000", DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        return revenueLedger.contractStartDate.goe(startDate);
+        return hasText(contractStartDate)
+                ? revenueLedger.contractStartDate.goe(LocalDateTime.parse(contractStartDate + "000000", DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
+                : null;
     }
 
     private BooleanExpression contractEndDateLoe(String contractEndDate) {
-        if (contractEndDate == null) {
-            return null;
-        }
-        LocalDateTime endDate = LocalDateTime.parse(contractEndDate + "000000", DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        return revenueLedger.contractEndDate.loe(endDate);
+        return hasText(contractEndDate)
+                ? revenueLedger.contractStartDate.loe(LocalDateTime.parse(contractEndDate + "000000", DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
+                : null;
+    }
+
+    private BooleanExpression transactionTypeEq(Long transactionTypeId) {
+        return transactionTypeId != null ? revenueLedger.transactionTypeId.eq(transactionTypeId) : null;
     }
 }

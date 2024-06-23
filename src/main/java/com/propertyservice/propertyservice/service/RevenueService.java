@@ -50,6 +50,7 @@ public class RevenueService {
     }
 
     public RevenueTotalDto searchRevenueList(RevenueCondition revenueCondition) {
+        log.info(revenueCondition.toString());
         return RevenueTotalDto.builder()
                 .totalCount(revenueRepository.totalCount(revenueCondition))
                 .totalCommission(revenueRepository.totalCommission(revenueCondition))
