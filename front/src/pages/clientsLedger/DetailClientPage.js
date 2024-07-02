@@ -55,8 +55,8 @@ const DetailClientPage = () => {
           <Grid item xs={3}>
             <Stack spacing={1}>
               <Grid container gap={1}>
-                <Grid item xs={8}>
-                  <Stack spacing={1}>
+                <Grid item xs={8.5}>
+                  <Stack spacing={2}>
                     <InputName2
                       label="고객"
                       value={searchCondition.clientName}
@@ -65,6 +65,9 @@ const DetailClientPage = () => {
                       }}
                       sx={{
                         '.MuiInputBase-input': { height: '10px' },
+                        '.MuiInputLabel-root': {
+                          top: '-6px',
+                        },
                       }}
                       name="clientName"
                     />
@@ -78,13 +81,16 @@ const DetailClientPage = () => {
                       }
                       sx={{
                         '.MuiInputBase-input': { height: '10px' },
+                        '.MuiInputLabel-root': {
+                          top: '-6px',
+                        },
                       }}
                       name="clientPhoneNumber"
                     />
                   </Stack>
                 </Grid>
                 <Grid item xs={3} display="flex" alignItems="center">
-                  <SearchBtn onClick={handleSearch} />
+                  <SearchBtn onClick={handleSearch} height="100px" />
                 </Grid>
               </Grid>
               <Grid item>
