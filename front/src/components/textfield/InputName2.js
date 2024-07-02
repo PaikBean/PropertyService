@@ -1,13 +1,13 @@
 const { TextField } = require('@mui/material')
 
-const InputName2 = ({ label, value, onChange, sx }) => {
+const InputName2 = ({ label, value, onChange, name = 'name', sx }) => {
   return (
     <TextField
       label={label}
       value={value}
       onChange={onChange}
       sx={sx}
-      name="name"
+      name={name}
       fullWidth
     />
   )
