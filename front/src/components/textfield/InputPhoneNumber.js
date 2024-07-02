@@ -15,7 +15,6 @@ const InputPhoneNumber = ({ value, onChange, name = 'tel', sx }) => {
       label="Phone Number"
       id="phone-number"
       placeholder="000-0000-0000"
-      required
       fullWidth
       variant="outlined"
       type="tel"
