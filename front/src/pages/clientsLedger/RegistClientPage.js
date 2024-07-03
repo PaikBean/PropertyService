@@ -14,9 +14,9 @@ import RemoveIcon from '@mui/icons-material/Remove'
 import { Alert, Grid, IconButton, Snackbar, Typography } from '@mui/material'
 import { Box, Stack } from '@mui/system'
 import { useEffect, useState } from 'react'
-import propertyColumns from './PropertyColumns'
 import { fetchSearchProperties } from './api/fetchSearchProperties'
 import { fetchRegistClient } from './api/fetchRegistClient'
+import propertyColumns from './columns/PropertyColumns'
 
 const RegistClientPage = () => {
   const initialData = {
@@ -134,7 +134,7 @@ const RegistClientPage = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stack spacing={5}>
+      <Stack spacing={4}>
         <SaveToolbar text="고객 등록" onClick={handleSave}></SaveToolbar>
         <Stack gap={3}>
           <Grid container gap={5} sx={{ width: '70%' }}>

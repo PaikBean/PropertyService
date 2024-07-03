@@ -9,9 +9,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs'
 import TransactionType from '@/components/autocomplete/TransactionType'
 import SearchBtn from '@/components/button/SearchBtn'
-import columns from './columns'
+
 import CustomDataGrid from '@/components/datagrid/CustomDataGrid'
 import { fetchRevenueList } from './api/fetchSearchRevenueList'
+import columns from './columns/columns'
 
 const { Box, Stack, Grid, Typography } = require('@mui/material')
 

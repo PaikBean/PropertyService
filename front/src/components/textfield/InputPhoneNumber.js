@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material'
 import { formatPhoneNumber } from '@/utils/formatter/formatPhoneNumber'
 
-const InputPhoneNumber = ({ value, onChange, name = 'tel', sx }) => {
+const InputPhoneNumber = ({ value, onChange, name = 'tel', sx, readOnly }) => {
   const handleChange = (event) => {
     const formattedPhoneNumber = formatPhoneNumber(event.target.value)
     onChange(formattedPhoneNumber) // 상위 컴포넌트의 핸들러를 호출합니다.
@@ -20,6 +20,9 @@ const InputPhoneNumber = ({ value, onChange, name = 'tel', sx }) => {
       type="tel"
       // autoComplete="tel"
       name={name}
+      InputProps={{
+        readOnly: readOnly, // readOnly 속성 설정
+      }}
     />
   )
 }

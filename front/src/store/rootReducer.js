@@ -11,8 +11,10 @@ import initialPasswordReducer from './slices/initialPasswordSlice'
 import managerReducer from './slices/managerSlice'
 import transactionTypeReducer from './slices/transactionTypeSlice'
 import inflowTypeReducer from './slices/inflowTypeSlice'
+import scheduleTypeReducer from './slices/scheduleTypeSlice'
 
 const rootReducer = combineReducers({
+  scheduleType: scheduleTypeReducer,
   inflowType: inflowTypeReducer,
   transactionType: transactionTypeReducer,
   manager: managerReducer,
