@@ -16,6 +16,8 @@ import { fetchSearchClients } from './api/fetchSearchClients'
 import { fetchSearchClient } from './api/fetchSearchClient'
 import scheduleColumns from './columns/ScheduleColumns'
 import AddScheduleModal from '@/components/modal/AddScheduleModal'
+import AddRemarkModal from '@/components/modal/AddRemarkModal'
+import AddPropertyModal from '@/components/modal/AddPropertyModal'
 
 const DetailClientPage = () => {
   const initialSearchCondition = {
@@ -47,6 +49,8 @@ const DetailClientPage = () => {
   const [selectedRemarkRowIds, setSelectedRemarkRowIds] = useState([])
 
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false)
+  const [isPropertyModalOpen, setIsPropertyModalOpen] = useState(false)
+  const [isRemarkModalOpen, setIsRemarkModalOpen] = useState(false)
 
   useEffect(() => {
     const fetchClientData = async () => {
@@ -65,6 +69,18 @@ const DetailClientPage = () => {
     }
     fetchClientData()
   }, [clientId])
+
+  useEffect(() => {
+    // Todo : 스케쥴 재검색 해야함.
+  }, [isScheduleModalOpen])
+
+  useEffect(() => {
+    // Todo : 보여줄 목록 재검색 해야함.
+  }, [isPropertyModalOpen])
+
+  useEffect(() => {
+    // Todo : 특이사항 재검색 해야함.
+  }, [isRemarkModalOpen])
 
   const handleSearchInputChange = (field, value) => {
     setSearchCondition((prev) => ({
@@ -128,7 +144,9 @@ const DetailClientPage = () => {
   }
 
   const handleCloseModal = () => {
-    setIsScheduleModalOpen(false)
+    isScheduleModalOpen ? setIsScheduleModalOpen(false) : null
+    isPropertyModalOpen ? setIsPropertyModalOpen(false) : null
+    isRemarkModalOpen ? setIsRemarkModalOpen(false) : null
   }
 
   return (
@@ -339,7 +357,12 @@ const DetailClientPage = () => {
                   justifyContent="center"
                 >
                   <Stack direction="column" spacing={2}>
-                    <IconButton onClick={() => {}} size="large">
+                    <IconButton
+                      onClick={() => {
+                        setIsPropertyModalOpen(!isPropertyModalOpen)
+                      }}
+                      size="large"
+                    >
                       <AddIcon fontSize="large" />
                     </IconButton>
                     <IconButton onClick={handleDeletePropertyRows} size="large">
@@ -373,7 +396,12 @@ const DetailClientPage = () => {
                   justifyContent="center"
                 >
                   <Stack direction="column" spacing={2}>
-                    <IconButton onClick={() => {}} size="large">
+                    <IconButton
+                      onClick={() => {
+                        setIsRemarkModalOpen(!isRemarkModalOpen)
+                      }}
+                      size="large"
+                    >
                       <AddIcon fontSize="large" />
                     </IconButton>
                     <IconButton onClick={handleDeleteRemarkRows} size="large">
@@ -389,7 +417,17 @@ const DetailClientPage = () => {
       <AddScheduleModal
         open={isScheduleModalOpen}
         handleClose={handleCloseModal}
-        clientId={clientId}
+        data={clientId}
+      />
+      <AddPropertyModal
+        open={isPropertyModalOpen}
+        handleClose={handleCloseModal}
+        data={clientId}
+      />
+      <AddRemarkModal
+        open={isRemarkModalOpen}
+        handleClose={handleCloseModal}
+        data={{ clientId: clientId, managerId: searchData.managerId }}
       />
     </Box>
   )
