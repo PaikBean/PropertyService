@@ -293,7 +293,7 @@ const RegistClientPage = () => {
           variant="filled"
           sx={{ width: '100%' }}
         >
-          매출 저장 완료
+          고객 저장 완료
         </Alert>
       </Snackbar>
       <Snackbar
