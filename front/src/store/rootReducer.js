@@ -12,8 +12,10 @@ import managerReducer from './slices/managerSlice'
 import transactionTypeReducer from './slices/transactionTypeSlice'
 import inflowTypeReducer from './slices/inflowTypeSlice'
 import scheduleTypeReducer from './slices/scheduleTypeSlice'
+import propertyTypeReducer from './slices/propertyTypeSlice'
 
 const rootReducer = combineReducers({
+  PropertyType: propertyTypeReducer,
   scheduleType: scheduleTypeReducer,
   inflowType: inflowTypeReducer,
   transactionType: transactionTypeReducer,

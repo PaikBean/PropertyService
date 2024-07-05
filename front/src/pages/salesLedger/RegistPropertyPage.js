@@ -13,6 +13,7 @@ import CommisionFeeForm from '@/components/form/CommisionFeeForm'
 import TrasactionTypePriceForm from '@/components/form/TransactionTypePriceForm'
 import RemarkTextField from '@/components/textfield/RemarkTextField'
 import ManagerAutocomplete from '@/components/autocomplete/ManagerAutocomplete'
+import PropertyType from '@/components/autocomplete/PropertyType'
 
 const RegistPropertyPage = () => {
   const initialSearchCondition = {
@@ -264,7 +265,13 @@ const RegistPropertyPage = () => {
                   />
                 </Grid>
                 <Grid item xs={2}>
-                  <div>상업용/주거용</div>
+                  <PropertyType
+                    value={registData.propertyTypeId} // Add this line
+                    onChange={(value) => {
+                      handleInputChange('propertyTypeId', value)
+                    }}
+                    label="주용도"
+                  />
                 </Grid>
               </Grid>
               <Grid container gap={5}>
