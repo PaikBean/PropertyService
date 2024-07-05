@@ -279,7 +279,7 @@ const DetailPropertyPage = () => {
                   columns={PropertyListColumns}
                   height={'47vh'}
                   columnVisibilityModel={{
-                    remarkId: false,
+                    propertyId: false,
                   }}
                   onRowSelectionModelChange={handleBuildingRemarkRows}
                   showAll={true}

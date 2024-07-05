@@ -1,7 +1,7 @@
 const PropertyListColumns = [
   {
     field: 'propertyId',
-    headerName: '건물Id',
+    headerName: '매물Id',
     flex: 0,
     headerAlign: 'center',
     align: 'center',
