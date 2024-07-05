@@ -218,7 +218,7 @@ const RegistPropertyPage = () => {
               </Grid>
             </Stack>
           </Grid>
-          <Grid item xs={7.5}>
+          <Grid item xs={8.5}>
             <Stack spacing={3}>
               <Grid container gap={5}>
                 <Grid item xs={2}>
