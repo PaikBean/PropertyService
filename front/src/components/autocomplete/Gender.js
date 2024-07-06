@@ -1,6 +1,6 @@
 import { Autocomplete, TextField } from '@mui/material'
 
-const Gender = ({ value, onChange }) => {
+const Gender = ({ value, onChange, sx, readOnly = false }) => {
   const genderOptions = [
     { label: 'Male', value: 'MALE' },
     { label: 'Female', value: 'FEMALE' },
@@ -14,7 +14,18 @@ const Gender = ({ value, onChange }) => {
       onChange={(event, newValue) => {
         onChange(newValue ? newValue.value : null)
       }}
-      renderInput={(params) => <TextField {...params} label="Gender" />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Gender"
+          InputProps={{
+            ...params.InputProps,
+            readOnly: readOnly,
+          }}
+        />
+      )}
+      disabled={readOnly}
+      sx={sx}
     />
   )
 }

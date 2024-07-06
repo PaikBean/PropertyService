@@ -6,7 +6,7 @@ const isValidEmail = (email) => {
   return emailRegex.test(email)
 }
 
-const InputSignUpEmail = ({ value, onChange, sx }) => {
+const InputSignUpEmail = ({ value, onChange, sx, readOnly = false }) => {
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -23,6 +23,9 @@ const InputSignUpEmail = ({ value, onChange, sx }) => {
       sx={sx}
       value={value}
       onChange={handleChange}
+      InputProps={{
+        readOnly: readOnly, // readOnly 속성 설정
+      }}
       id="email"
       label="Email Address"
       name="email"
