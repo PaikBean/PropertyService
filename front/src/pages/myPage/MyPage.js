@@ -4,7 +4,19 @@ import InputName2 from '@/components/textfield/InputName2'
 import InputPhoneNumber from '@/components/textfield/InputPhoneNumber'
 import InputSignUpEmail from '@/components/textfield/InputSignUpEmail'
 import SaveTogleToolbar from '@/components/toolbar/SaveTogleToolbar'
-import { Box, Grid, IconButton, Stack, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Dialog,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material'
 import { useState } from 'react'
 
 const MyPage = () => {
@@ -26,6 +38,8 @@ const MyPage = () => {
   const [mode, setMode] = useState(false)
   const [managerInfo, setManagerInfo] = useState(initialData)
 
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+
   const handleInputChange = (field, value) => {
     setManagerInfo((prev) => ({
       ...prev,
@@ -34,6 +48,16 @@ const MyPage = () => {
   }
 
   const handleSave = () => {}
+
+  const confirmDelete = () => {
+    setIsDeleteDialogOpen(true)
+  }
+
+  const handleDeleteAccount = () => {
+    // 실제 삭제 작업을 여기서 수행합니다.
+    alert('탈퇴됨')
+    setIsDeleteDialogOpen(false)
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -119,6 +143,15 @@ const MyPage = () => {
                       },
                     }}
                   />
+                </Grid>
+              </Grid>
+              <Grid container gap={5}>
+                <Grid item xs={8}>
+                  {mode ? (
+                    <Button color="error" onClick={confirmDelete}>
+                      회원탈퇴
+                    </Button>
+                  ) : null}
                 </Grid>
               </Grid>
             </Stack>
@@ -244,6 +277,25 @@ const MyPage = () => {
           </Grid>
         </Grid>
       </Stack>
+      <Dialog
+        open={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'회원 탈퇴'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsDeleteDialogOpen(false)}>취소</Button>
+          <Button onClick={handleDeleteAccount} color="primary" autoFocus>
+            삭제
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
