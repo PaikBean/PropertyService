@@ -1,6 +1,6 @@
 import { Button } from '@mui/material'
 
-const DeleteBtn = ({ onClick }) => {
+const DeleteBtn = ({ onClick, label = '삭제' }) => {
   return (
     <Button
       onClick={onClick}
@@ -13,7 +13,7 @@ const DeleteBtn = ({ onClick }) => {
         },
       }}
     >
-      삭제
+      {label}
     </Button>
   )
 }

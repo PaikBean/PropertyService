@@ -11,7 +11,14 @@ import RemarkTextField from '@/components/textfield/RemarkTextField'
 import SaveToolbar from '@/components/toolbar/SaveToolbar'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
-import { Alert, Grid, IconButton, Snackbar, Typography } from '@mui/material'
+import {
+  Alert,
+  Divider,
+  Grid,
+  IconButton,
+  Snackbar,
+  Typography,
+} from '@mui/material'
 import { Box, Stack } from '@mui/system'
 import { useEffect, useState } from 'react'
 import { fetchSearchProperties } from './api/fetchSearchProperties'
@@ -134,9 +141,11 @@ const RegistClientPage = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stack spacing={4}>
+      <Stack spacing={2}>
         <SaveToolbar text="고객 등록" onClick={handleSave}></SaveToolbar>
-        <Stack gap={3}>
+        <Divider></Divider>
+        <Stack spacing={3}>
+          <Divider sx={{ width: '100%', borderColor: 'white' }}></Divider>
           <Grid container gap={5} sx={{ width: '70%' }}>
             <Grid item xs={2.5}>
               <InputName2
@@ -236,7 +245,7 @@ const RegistClientPage = () => {
                   <CustomDataGrid
                     rows={searchRows}
                     columns={propertyColumns}
-                    height={'45vh'}
+                    height={'43vh'}
                     columnVisibilityModel={{
                       propertyId: false,
                     }}
@@ -268,7 +277,7 @@ const RegistClientPage = () => {
               <CustomDataGrid
                 rows={showingRows}
                 columns={propertyColumns}
-                height={'52.8vh'}
+                height={'50.8vh'}
                 columnVisibilityModel={{
                   propertyId: false,
                 }}

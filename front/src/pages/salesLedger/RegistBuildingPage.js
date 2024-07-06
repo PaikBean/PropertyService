@@ -5,7 +5,7 @@ import InputName2 from '@/components/textfield/InputName2'
 import InputPhoneNumber from '@/components/textfield/InputPhoneNumber'
 import RemarkTextField from '@/components/textfield/RemarkTextField'
 import SaveToolbar from '@/components/toolbar/SaveToolbar'
-import { Alert, Box, Grid, Snackbar, Stack } from '@mui/material'
+import { Alert, Box, Divider, Grid, Snackbar, Stack } from '@mui/material'
 import { useState } from 'react'
 import { fetchRegistBuilding } from './api/fetchRegistBuilding'
 
@@ -63,9 +63,11 @@ const ResgistBuildingPage = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stack spacing={5}>
+      <Stack spacing={2}>
         <SaveToolbar text="건물 등록" onClick={handleSave}></SaveToolbar>
-        <Stack gap={3}>
+        <Divider></Divider>
+        <Stack spacing={3}>
+          <Divider sx={{ width: '100%', borderColor: 'white' }}></Divider>
           <Grid container gap={5} sx={{ width: '70%' }}>
             <Grid item xs={2.5}>
               <InputName2

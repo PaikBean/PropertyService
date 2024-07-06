@@ -14,7 +14,7 @@ import CustomDataGrid from '@/components/datagrid/CustomDataGrid'
 import { fetchRevenueList } from './api/fetchSearchRevenueList'
 import columns from './columns/columns'
 
-const { Box, Stack, Grid, Typography } = require('@mui/material')
+const { Box, Stack, Grid, Typography, Divider } = require('@mui/material')
 
 const RevenueListPage = () => {
   const initialData = {
@@ -54,9 +54,11 @@ const RevenueListPage = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stack spacing={3}>
+      <Stack spacing={2}>
         <SingleToolbar text="매출 장부 목록" />
+        <Divider></Divider>
         <Stack spacing={3}>
+          <Divider sx={{ width: '100%', borderColor: 'white' }}></Divider>
           <Grid container gap={3}>
             <Grid item xs={1}>
               <ManagerAutocomplete
@@ -139,7 +141,7 @@ const RevenueListPage = () => {
             <CustomDataGrid
               rows={rows}
               columns={columns}
-              height={'68vh'}
+              height={'65vh'}
               columnVisibilityModel={{
                 revenueId: false,
               }}

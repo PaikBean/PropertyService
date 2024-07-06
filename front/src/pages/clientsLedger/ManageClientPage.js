@@ -3,7 +3,7 @@ import CustomDataGrid from '@/components/datagrid/CustomDataGrid'
 import InputName2 from '@/components/textfield/InputName2'
 import InputPhoneNumber from '@/components/textfield/InputPhoneNumber'
 import SaveTogleToolbar from '@/components/toolbar/SaveTogleToolbar'
-import { Box, Grid, IconButton, Stack } from '@mui/material'
+import { Box, Divider, Grid, IconButton, Stack } from '@mui/material'
 import { useEffect, useState } from 'react'
 import clientColumns from './columns/ClientColumns'
 import { fetchSearchClients } from './api/fetchSearchClients'
@@ -104,7 +104,7 @@ const ManageClientPage = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stack spacing={4}>
+      <Stack spacing={2}>
         <SaveTogleToolbar
           text={'고객 관리'}
           onChange={() => {
@@ -112,190 +112,196 @@ const ManageClientPage = () => {
           }}
           onClick={handleSave}
         ></SaveTogleToolbar>
-        <Grid
-          container
-          gap={2}
-          sx={{
-            '& .revenu-header-css': {
-              backgroundColor: 'lightgrey',
-            },
-          }}
-        >
-          <Grid item xs={3}>
-            <Stack spacing={1}>
-              <Grid container gap={1}>
-                <Grid item xs={8.5}>
-                  <Stack spacing={2}>
-                    <InputName2
-                      label="고객"
-                      value={searchCondition.clientName}
-                      onChange={(e) => {
-                        handleSearchInputChange('clientName', e.target.value)
-                      }}
-                      sx={{
-                        '.MuiInputBase-input': { height: '10px' },
-                        '.MuiInputLabel-root': {
-                          top: '-6px',
-                        },
-                      }}
-                      name="clientName"
-                    />
-                    <InputPhoneNumber
-                      value={searchCondition.clientPhoneNumber}
-                      onChange={(formattedPhoneNumber) =>
-                        handleSearchInputChange(
-                          'clientPhoneNumber',
-                          formattedPhoneNumber
-                        )
-                      }
-                      sx={{
-                        '.MuiInputBase-input': { height: '10px' },
-                        '.MuiInputLabel-root': {
-                          top: '-6px',
-                        },
-                      }}
-                      name="clientPhoneNumber"
-                    />
-                  </Stack>
+        <Stack spacing={4}>
+          <Divider></Divider>
+          <Grid
+            container
+            gap={2}
+            sx={{
+              '& .revenu-header-css': {
+                backgroundColor: 'lightgrey',
+              },
+            }}
+          >
+            <Grid item xs={3}>
+              <Stack spacing={1}>
+                <Grid container gap={1}>
+                  <Grid item xs={8.5}>
+                    <Stack spacing={2}>
+                      <InputName2
+                        label="고객"
+                        value={searchCondition.clientName}
+                        onChange={(e) => {
+                          handleSearchInputChange('clientName', e.target.value)
+                        }}
+                        sx={{
+                          '.MuiInputBase-input': { height: '10px' },
+                          '.MuiInputLabel-root': {
+                            top: '-6px',
+                          },
+                        }}
+                        name="clientName"
+                      />
+                      <InputPhoneNumber
+                        value={searchCondition.clientPhoneNumber}
+                        onChange={(formattedPhoneNumber) =>
+                          handleSearchInputChange(
+                            'clientPhoneNumber',
+                            formattedPhoneNumber
+                          )
+                        }
+                        sx={{
+                          '.MuiInputBase-input': { height: '10px' },
+                          '.MuiInputLabel-root': {
+                            top: '-6px',
+                          },
+                        }}
+                        name="clientPhoneNumber"
+                      />
+                    </Stack>
+                  </Grid>
+                  <Grid item xs={3} display="flex" alignItems="center">
+                    <SearchBtn onClick={handleSearch} height="100px" />
+                  </Grid>
                 </Grid>
-                <Grid item xs={3} display="flex" alignItems="center">
-                  <SearchBtn onClick={handleSearch} height="100px" />
-                </Grid>
-              </Grid>
-              <Grid item>
-                <CustomDataGrid
-                  rows={clientRows}
-                  columns={clientColumns}
-                  height={'65.5vh'}
-                  columnVisibilityModel={{
-                    clientId: false,
-                  }}
-                  showAll={true}
-                  onRowSelectionModelChange={handleSelectClientRow}
-                  pageSize={10}
-                  rowHeight={48}
-                />
-              </Grid>
-            </Stack>
-          </Grid>
-          <Grid item xs={8.5}>
-            <Stack spacing={2}>
-              <Grid container gap={5}>
-                <Grid item xs={2}>
-                  <InputName2
-                    label="고객"
-                    value={searchData.clientName}
-                    onChange={(e) => {
-                      handleInputChange('clientName', e.target.value)
-                    }}
-                    name="clientName"
-                    readOnly={!mode}
-                    sx={{
-                      '& .MuiInputBase-root': {
-                        backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
-                        cursor: !mode ? 'not-allowed' : '', // 커서 변경
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <InputName2
-                    label="유입경로"
-                    value={searchData.inflowType}
-                    onChange={(e) => {
-                      handleInputChange('inflowType', e.target.value)
-                    }}
-                    name="clientName"
-                    readOnly={!mode}
-                    sx={{
-                      '& .MuiInputBase-root': {
-                        backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
-                        cursor: !mode ? 'not-allowed' : '', // 커서 변경
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <InputPhoneNumber
-                    value={searchData.clientPhoneNumber}
-                    onChange={(formattedPhoneNumber) =>
-                      handleInputChange(
-                        'clientPhoneNumber',
-                        formattedPhoneNumber
-                      )
-                    }
-                    name="clientPhoneNumber"
-                    readOnly={!mode}
-                    sx={{
-                      '& .MuiInputBase-root': {
-                        backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
-                        cursor: !mode ? 'not-allowed' : '', // 커서 변경
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <InputName2
-                    label="담당 매니저"
-                    value={searchData.picManger}
-                    onChange={(e) => {
-                      handleInputChange('picManger', e.target.value)
-                    }}
-                    name="clientName"
-                    readOnly={!mode}
-                    sx={{
-                      '& .MuiInputBase-root': {
-                        backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
-                        cursor: !mode ? 'not-allowed' : '', // 커서 변경
-                      },
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              <Grid sx={{ borderTop: '2px solid Black' }} />
-              <Grid container>
-                <Grid item xs={11}>
+                <Grid item>
                   <CustomDataGrid
-                    rows={remarkRows}
-                    columns={remarkColumns}
-                    height={'67vh'}
+                    rows={clientRows}
+                    columns={clientColumns}
+                    height={'63vh'}
                     columnVisibilityModel={{
-                      remarkId: false,
+                      clientId: false,
                     }}
-                    checkboxSelection={true}
-                    onRowSelectionModelChange={handleRemarkRows}
                     showAll={true}
+                    onRowSelectionModelChange={handleSelectClientRow}
                     pageSize={10}
                     rowHeight={48}
                   />
                 </Grid>
-                <Grid
-                  xs={1}
-                  item
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  {mode && (
-                    <Stack direction="column" spacing={2}>
-                      <IconButton
-                        onClick={() => {
-                          setIsRemarkModalOpen(!isRemarkModalOpen)
-                        }}
-                        size="large"
-                      >
-                        <AddIcon fontSize="large" />
-                      </IconButton>
-                      <IconButton onClick={handleDeleteRemarkRows} size="large">
-                        <RemoveIcon fontSize="large" />
-                      </IconButton>
-                    </Stack>
-                  )}
+              </Stack>
+            </Grid>
+            <Grid item xs={8.5}>
+              <Stack spacing={2}>
+                <Grid container gap={5}>
+                  <Grid item xs={2}>
+                    <InputName2
+                      label="고객"
+                      value={searchData.clientName}
+                      onChange={(e) => {
+                        handleInputChange('clientName', e.target.value)
+                      }}
+                      name="clientName"
+                      readOnly={!mode}
+                      sx={{
+                        '& .MuiInputBase-root': {
+                          backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
+                          cursor: !mode ? 'not-allowed' : '', // 커서 변경
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <InputName2
+                      label="유입경로"
+                      value={searchData.inflowType}
+                      onChange={(e) => {
+                        handleInputChange('inflowType', e.target.value)
+                      }}
+                      name="clientName"
+                      readOnly={!mode}
+                      sx={{
+                        '& .MuiInputBase-root': {
+                          backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
+                          cursor: !mode ? 'not-allowed' : '', // 커서 변경
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <InputPhoneNumber
+                      value={searchData.clientPhoneNumber}
+                      onChange={(formattedPhoneNumber) =>
+                        handleInputChange(
+                          'clientPhoneNumber',
+                          formattedPhoneNumber
+                        )
+                      }
+                      name="clientPhoneNumber"
+                      readOnly={!mode}
+                      sx={{
+                        '& .MuiInputBase-root': {
+                          backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
+                          cursor: !mode ? 'not-allowed' : '', // 커서 변경
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <InputName2
+                      label="담당 매니저"
+                      value={searchData.picManger}
+                      onChange={(e) => {
+                        handleInputChange('picManger', e.target.value)
+                      }}
+                      name="clientName"
+                      readOnly={!mode}
+                      sx={{
+                        '& .MuiInputBase-root': {
+                          backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
+                          cursor: !mode ? 'not-allowed' : '', // 커서 변경
+                        },
+                      }}
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Stack>
+                <Grid sx={{ borderTop: '1.5px solid Black' }} />
+                <Grid container>
+                  <Grid item xs={11}>
+                    <CustomDataGrid
+                      rows={remarkRows}
+                      columns={remarkColumns}
+                      height={'65vh'}
+                      columnVisibilityModel={{
+                        remarkId: false,
+                      }}
+                      checkboxSelection={true}
+                      onRowSelectionModelChange={handleRemarkRows}
+                      showAll={true}
+                      pageSize={10}
+                      rowHeight={48}
+                    />
+                  </Grid>
+                  <Grid
+                    xs={1}
+                    item
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    {mode && (
+                      <Stack direction="column" spacing={2}>
+                        <IconButton
+                          onClick={() => {
+                            setIsRemarkModalOpen(!isRemarkModalOpen)
+                          }}
+                          size="large"
+                        >
+                          <AddIcon fontSize="large" />
+                        </IconButton>
+                        <IconButton
+                          onClick={handleDeleteRemarkRows}
+                          size="large"
+                        >
+                          <RemoveIcon fontSize="large" />
+                        </IconButton>
+                      </Stack>
+                    )}
+                  </Grid>
+                </Grid>
+              </Stack>
+            </Grid>
           </Grid>
-        </Grid>
+        </Stack>
       </Stack>
       <AddRemarkModal
         open={isRemarkModalOpen}
