@@ -17,6 +17,7 @@ PropertyService 프로젝트에 구성된 프론트 엔드 서버입니다.
 
 - Node.js (권장 버전 14.x 이상)
 - npm (권장 버전 6.x 이상)
+- PropertyService Back-end 서버 (다수 컴포넌트의 기본 데이터가 의존됩니다.)
 
 ## 시작하기
 
@@ -40,6 +41,7 @@ PropertyService 프로젝트에 구성된 프론트 엔드 서버입니다.
    npm run dev
    ```
    이제 [http://localhost:3000](http://localhost:3000)에서 애플리케이션이 실행 중인지 확인할 수 있습니다.
+   > 정상적인 Front-end 서버의 구동을 위해 PropertyService Back-end 서버의 구동이 필요합니다. Back-end 서버의 구동은 PropertyService의 README를 참고하시기 바랍니다.
 
 ## 사용 가능한 스크립트
 
