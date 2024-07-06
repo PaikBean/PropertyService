@@ -163,6 +163,7 @@ const RegistClientPage = () => {
                 onChange={(value) => {
                   handleInputChange('inflowTypeId', value)
                 }}
+                label="유입 경로"
               />
             </Grid>
             <Grid item xs={2.5}>
@@ -172,6 +173,7 @@ const RegistClientPage = () => {
                   handleInputChange('clientPhoneNumber', formattedPhoneNumber)
                 }
                 name="clientPhoneNumber"
+                label="고객 전화번호"
               />
             </Grid>
             <Grid item xs={2.5}>
@@ -180,6 +182,7 @@ const RegistClientPage = () => {
                 onChange={(value) => {
                   handleInputChange('managerId', value)
                 }}
+                label="담당 매니저"
               />
             </Grid>
           </Grid>
@@ -211,6 +214,7 @@ const RegistClientPage = () => {
                       onChange={(value) => {
                         handleSearchConditionInputChange('addressL1', value)
                       }}
+                      label="시/도"
                     />
                   </Grid>
                   <Grid item xs={4}>
@@ -220,6 +224,7 @@ const RegistClientPage = () => {
                       onChange={(value) => {
                         handleSearchConditionInputChange('addressL2', value)
                       }}
+                      label="시/구/동"
                     />
                   </Grid>
                   <Grid item xs={2}>

@@ -116,6 +116,7 @@ const RegistRevenuePage = ({ initMainPage }) => {
                 onChange={(value) => {
                   handleInputChange('managerId', value)
                 }}
+                label="담당 매니저"
               />
             </Grid>
             <Grid item xs={2.5}>
@@ -144,6 +145,7 @@ const RegistRevenuePage = ({ initMainPage }) => {
                 onChange={(value) => {
                   handleInputChange('addressL1', value)
                 }}
+                label="시/도"
               />
             </Grid>
             <Grid item xs={3}>
@@ -153,6 +155,7 @@ const RegistRevenuePage = ({ initMainPage }) => {
                 onChange={(value) => {
                   handleInputChange('addressL2', value)
                 }}
+                label="시/구/동"
               />
             </Grid>
             <Grid item xs={5}>
@@ -161,6 +164,7 @@ const RegistRevenuePage = ({ initMainPage }) => {
                 onChange={(e) => {
                   handleInputChange('addressL3', e.target.value)
                 }}
+                label="상세 주소"
               />
             </Grid>
           </Grid>

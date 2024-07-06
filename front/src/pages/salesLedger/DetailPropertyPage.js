@@ -124,6 +124,7 @@ const DetailPropertyPage = () => {
                           top: '-6px',
                         },
                       }}
+                      label="시/도"
                     />
                   </Grid>
                   <Grid item xs={7}>
@@ -139,6 +140,7 @@ const DetailPropertyPage = () => {
                           top: '-6px',
                         },
                       }}
+                      label="시/구/동"
                     />
                   </Grid>
                 </Grid>
@@ -222,6 +224,7 @@ const DetailPropertyPage = () => {
                           cursor: 'not-allowed', // 커서 변경
                         },
                       }}
+                      label="임대인 전화번호"
                     />
                   </Grid>
                   <Grid item xs={6.5}>

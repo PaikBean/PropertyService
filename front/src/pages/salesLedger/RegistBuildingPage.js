@@ -94,6 +94,7 @@ const ResgistBuildingPage = () => {
                   handleInputChange('ownerPhoneNumber', formattedPhoneNumber)
                 }
                 name="ownerPhoneNumber"
+                label="임대인 전화번호"
               />
             </Grid>
           </Grid>
@@ -104,6 +105,7 @@ const ResgistBuildingPage = () => {
                 onChange={(value) => {
                   handleInputChange('buildingAddressLevel1', value)
                 }}
+                label="시/도"
               />
             </Grid>
             <Grid item xs={3}>
@@ -113,6 +115,7 @@ const ResgistBuildingPage = () => {
                 onChange={(value) => {
                   handleInputChange('buildingAddressLevel2', value)
                 }}
+                label="시/구/동"
               />
             </Grid>
             <Grid item xs={4}>
@@ -121,6 +124,7 @@ const ResgistBuildingPage = () => {
                 onChange={(e) => {
                   handleInputChange('buildingAddressLevel3', e.target.value)
                 }}
+                label="상세주소"
               />
             </Grid>
           </Grid>

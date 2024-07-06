@@ -107,6 +107,7 @@ const MyPage = () => {
                           cursor: !mode ? 'not-allowed' : '', // 커서 변경
                         },
                       }}
+                      label="성별"
                     />
                   </Grid>
                 </Grid>
@@ -128,6 +129,7 @@ const MyPage = () => {
                           cursor: !mode ? 'not-allowed' : 'inherit', // 커서 변경
                         },
                       }}
+                      label="전화번호"
                     />
                   </Grid>
                 </Grid>
@@ -145,6 +147,7 @@ const MyPage = () => {
                           cursor: 'not-allowed', // 커서 변경
                         },
                       }}
+                      label="E-Mail Address"
                     />
                   </Grid>
                 </Grid>
@@ -237,6 +240,7 @@ const MyPage = () => {
                     />
                   </Grid>
                 </Grid>
+                <Divider></Divider>
                 <Grid container alignItems="center" gap={2}>
                   <Grid item>
                     <Typography>담당 매물:</Typography>

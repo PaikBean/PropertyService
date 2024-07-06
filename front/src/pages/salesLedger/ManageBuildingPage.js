@@ -135,6 +135,7 @@ const ManageBuildingPage = () => {
                           top: '-6px',
                         },
                       }}
+                      label="시/도"
                     />
                   </Grid>
                   <Grid item xs={7}>
@@ -150,6 +151,7 @@ const ManageBuildingPage = () => {
                           top: '-6px',
                         },
                       }}
+                      label="시/구/동"
                     />
                   </Grid>
                 </Grid>
@@ -231,7 +233,7 @@ const ManageBuildingPage = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={2.5}>
+                  <Grid item xs={5}>
                     <InputPhoneNumber
                       value={buildingData.ownerPhoneNumber}
                       onChange={(formattedPhoneNumber) =>
@@ -248,6 +250,7 @@ const ManageBuildingPage = () => {
                         },
                       }}
                       name="ownerPhoneNumber"
+                      label="임대인 전화번호"
                     />
                   </Grid>
                 </Grid>
@@ -265,6 +268,7 @@ const ManageBuildingPage = () => {
                           cursor: !mode ? 'not-allowed' : '', // 커서 변경
                         },
                       }}
+                      label="시/도"
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -281,6 +285,7 @@ const ManageBuildingPage = () => {
                           cursor: !mode ? 'not-allowed' : '', // 커서 변경
                         },
                       }}
+                      label="시/구/동"
                     />
                   </Grid>
                   <Grid item xs={4}>
@@ -299,6 +304,7 @@ const ManageBuildingPage = () => {
                           cursor: !mode ? 'not-allowed' : '', // 커서 변경
                         },
                       }}
+                      label="상세 주소"
                     />
                   </Grid>
                 </Grid>

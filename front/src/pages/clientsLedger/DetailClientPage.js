@@ -198,6 +198,7 @@ const DetailClientPage = () => {
                           },
                         }}
                         name="clientPhoneNumber"
+                        label="고객 전화번호"
                       />
                     </Stack>
                   </Grid>

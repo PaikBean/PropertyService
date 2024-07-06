@@ -218,6 +218,7 @@ const ManageCompanyPage = () => {
                     </Grid>
                   </Grid>
                 </Grid>
+                <Divider></Divider>
                 <Grid container gap={5}>
                   <Grid container>
                     <Grid item xs={11}>
@@ -259,6 +260,7 @@ const ManageCompanyPage = () => {
                             <Typography> 원</Typography>
                           </Grid>
                         </Grid>
+                        <Divider></Divider>
                       </Stack>
                     </Grid>
                     <Grid

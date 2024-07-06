@@ -1,12 +1,18 @@
 const { TextField } = require('@mui/material')
 
-const InputADdressL3 = ({ value, onChange, sx, readOnly = false }) => {
+const InputADdressL3 = ({
+  value,
+  onChange,
+  sx,
+  readOnly = false,
+  label = 'Address Level3',
+}) => {
   return (
     <TextField
       sx={sx}
       value={value}
       onChange={onChange}
-      label="Address Level 3"
+      label={label}
       id="address-level-3"
       required
       fullWidth

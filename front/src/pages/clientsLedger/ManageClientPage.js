@@ -157,6 +157,7 @@ const ManageClientPage = () => {
                           },
                         }}
                         name="clientPhoneNumber"
+                        label="고객 전화번호"
                       />
                     </Stack>
                   </Grid>
@@ -234,6 +235,7 @@ const ManageClientPage = () => {
                           cursor: !mode ? 'not-allowed' : '', // 커서 변경
                         },
                       }}
+                      label="고객 전화번호"
                     />
                   </Grid>
                   <Grid item xs={2}>

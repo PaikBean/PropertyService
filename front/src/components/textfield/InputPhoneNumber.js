@@ -1,7 +1,14 @@
 import { TextField } from '@mui/material'
 import { formatPhoneNumber } from '@/utils/formatter/formatPhoneNumber'
 
-const InputPhoneNumber = ({ value, onChange, name = 'tel', sx, readOnly }) => {
+const InputPhoneNumber = ({
+  value,
+  onChange,
+  name = 'tel',
+  sx,
+  readOnly,
+  label = 'Phone Number',
+}) => {
   const handleChange = (event) => {
     const formattedPhoneNumber = formatPhoneNumber(event.target.value)
     onChange(formattedPhoneNumber) // 상위 컴포넌트의 핸들러를 호출합니다.
@@ -12,7 +19,7 @@ const InputPhoneNumber = ({ value, onChange, name = 'tel', sx, readOnly }) => {
       sx={sx}
       value={value}
       onChange={handleChange}
-      label="Phone Number"
+      label={label}
       id="phone-number"
       placeholder="000-0000-0000"
       fullWidth

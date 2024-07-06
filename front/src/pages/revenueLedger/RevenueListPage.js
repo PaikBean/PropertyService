@@ -66,6 +66,7 @@ const RevenueListPage = () => {
                 onChange={(value) => {
                   handleInputChange('managerId', value)
                 }}
+                label="담당 매니저"
               />
             </Grid>
             <Grid item xs={1.5}>
@@ -74,6 +75,7 @@ const RevenueListPage = () => {
                 onChange={(value) => {
                   handleInputChange('addressL1', value)
                 }}
+                label="시/도"
               />
             </Grid>
             <Grid item xs={1.5}>
@@ -83,6 +85,7 @@ const RevenueListPage = () => {
                 onChange={(value) => {
                   handleInputChange('addressL2', value)
                 }}
+                label="시/구/동"
               />
             </Grid>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
