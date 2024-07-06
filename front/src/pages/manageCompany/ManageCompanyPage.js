@@ -10,6 +10,8 @@ import BasicDatePicker from '@/components/datepicker/BasicDatePicker'
 import dayjs from 'dayjs'
 import ManagerColumns from './columns/ManagerColumns'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import AddDepartmentModal from '@/components/modal/AddDepartmentModal'
+import HandleDepartmentMember from '@/components/modal/HandleDepartmentMemeber'
 
 const ManageCompanyPage = () => {
   const initDepartmentInfo = {
@@ -34,6 +36,14 @@ const ManageCompanyPage = () => {
   const [departmentRows, setDepartmentRows] = useState([])
   const [managerRows, setManagerRows] = useState([])
 
+  const [isAddDepartmentkModalOpen, setIsAddDepartmentModalOpen] =
+    useState(false)
+
+  const [
+    isHandleDepartmentMemberModalOpen,
+    setIsHandleDepartmentMemberModalOpen,
+  ] = useState(false)
+
   const handleSave = () => {}
 
   const handleAddDepartment = () => {}
@@ -41,6 +51,13 @@ const ManageCompanyPage = () => {
   const handleSelectDepartmentRow = () => {}
 
   const handleSearchInputChange = () => {}
+
+  const handleCloseModal = () => {
+    isAddDepartmentkModalOpen ? setIsAddDepartmentModalOpen(false) : null
+    isHandleDepartmentMemberModalOpen
+      ? setIsHandleDepartmentMemberModalOpen(false)
+      : null
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -68,7 +85,9 @@ const ManageCompanyPage = () => {
                 <Grid item>
                   <Button
                     variant="contained"
-                    onClick={handleAddDepartment}
+                    onClick={() => {
+                      setIsAddDepartmentModalOpen(!isAddDepartmentkModalOpen)
+                    }}
                     sx={{
                       height: 35,
                       marginBottom: '1.5px',
@@ -204,7 +223,15 @@ const ManageCompanyPage = () => {
                     justifyContent="flex-end"
                     alignItems="flex-end"
                   >
-                    <IconButton onClick={() => {}} size="large" sx={{ mb: -2 }}>
+                    <IconButton
+                      onClick={() => {
+                        setIsHandleDepartmentMemberModalOpen(
+                          !isHandleDepartmentMemberModalOpen
+                        )
+                      }}
+                      size="large"
+                      sx={{ mb: -2 }}
+                    >
                       <ManageAccountsIcon fontSize="large" />
                     </IconButton>
                   </Grid>
@@ -228,6 +255,16 @@ const ManageCompanyPage = () => {
           </Grid>
         </Grid>
       </Stack>
+      <AddDepartmentModal
+        open={isAddDepartmentkModalOpen}
+        handleClose={handleCloseModal}
+        data={{ departmentId: departmentId }}
+      />
+      <HandleDepartmentMember
+        open={isHandleDepartmentMemberModalOpen}
+        handleClose={handleCloseModal}
+        data={{ departmentId: departmentId }}
+      />
     </Box>
   )
 }
