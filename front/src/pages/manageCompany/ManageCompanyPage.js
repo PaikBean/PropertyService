@@ -1,6 +1,18 @@
 import CustomDataGrid2 from '@/components/datagrid/CustomDataGrid2'
 import SaveTogleToolbar from '@/components/toolbar/SaveTogleToolbar'
-import { Box, Button, Grid, IconButton, Stack, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material'
 import { useEffect, useState } from 'react'
 import DepartmentColumn from './columns/DepartmentColumn'
 import InputName2 from '@/components/textfield/InputName2'
@@ -12,6 +24,7 @@ import ManagerColumns from './columns/ManagerColumns'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import AddDepartmentModal from '@/components/modal/AddDepartmentModal'
 import HandleDepartmentMember from '@/components/modal/HandleDepartmentMemeber'
+import DeleteBtn from '@/components/button/DeleteBtn'
 
 const ManageCompanyPage = () => {
   const initDepartmentInfo = {
@@ -44,6 +57,8 @@ const ManageCompanyPage = () => {
     setIsHandleDepartmentMemberModalOpen,
   ] = useState(false)
 
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+
   const handleSave = () => {}
 
   const handleAddDepartment = () => {}
@@ -57,6 +72,16 @@ const ManageCompanyPage = () => {
     isHandleDepartmentMemberModalOpen
       ? setIsHandleDepartmentMemberModalOpen(false)
       : null
+  }
+
+  const handleDelete = () => {
+    setIsDeleteDialogOpen(true)
+  }
+
+  const confirmDelete = () => {
+    // 실제 삭제 작업을 여기서 수행합니다.
+    alert('부서 삭제됨')
+    setIsDeleteDialogOpen(false)
   }
 
   return (
@@ -172,6 +197,19 @@ const ManageCompanyPage = () => {
                     }}
                   />
                 </Grid>
+                <Grid
+                  item
+                  xs={true}
+                  container
+                  justifyContent="flex-end"
+                  alignItems="top"
+                >
+                  <Grid item flexDirection="column" justifyContent="flex-start">
+                    {mode ? (
+                      <DeleteBtn onClick={handleDelete} label={'부서 삭제'} />
+                    ) : null}
+                  </Grid>
+                </Grid>
               </Grid>
               <Grid container gap={5}>
                 <Grid container>
@@ -220,20 +258,23 @@ const ManageCompanyPage = () => {
                     item
                     xs={1}
                     display="flex"
+                    // flexDirection="column"
                     justifyContent="flex-end"
                     alignItems="flex-end"
                   >
-                    <IconButton
-                      onClick={() => {
-                        setIsHandleDepartmentMemberModalOpen(
-                          !isHandleDepartmentMemberModalOpen
-                        )
-                      }}
-                      size="large"
-                      sx={{ mb: -2 }}
-                    >
-                      <ManageAccountsIcon fontSize="large" />
-                    </IconButton>
+                    <Grid item>
+                      <IconButton
+                        onClick={() => {
+                          setIsHandleDepartmentMemberModalOpen(
+                            !isHandleDepartmentMemberModalOpen
+                          )
+                        }}
+                        size="large"
+                        sx={{ mb: -2 }}
+                      >
+                        <ManageAccountsIcon fontSize="large" />
+                      </IconButton>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
@@ -265,6 +306,25 @@ const ManageCompanyPage = () => {
         handleClose={handleCloseModal}
         data={{ departmentId: departmentId }}
       />
+      <Dialog
+        open={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'삭제 확인'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            정말로 부서를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsDeleteDialogOpen(false)}>취소</Button>
+          <Button onClick={confirmDelete} color="primary" autoFocus>
+            삭제
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
