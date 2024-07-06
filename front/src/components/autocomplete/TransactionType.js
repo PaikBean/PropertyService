@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 const { Autocomplete, TextField } = require('@mui/material')
 
-const TransactionType = ({ value, onChange }) => {
+const TransactionType = ({ value, onChange, sx, readOnly = false }) => {
   const dispatch = useDispatch()
   const { options, status, error } = useSelector(
     (state) => state.transactionType
@@ -31,7 +31,18 @@ const TransactionType = ({ value, onChange }) => {
       options={options || []}
       getOptionLabel={(options) => options.transactionTypeName || ''}
       onChange={handleChange}
-      renderInput={(params) => <TextField {...params} label="거래유형" />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="거래유형"
+          InputProps={{
+            ...params.InputProps,
+            readOnly: readOnly,
+          }}
+        />
+      )}
+      disabled={readOnly}
+      sx={sx}
     />
   )
 }

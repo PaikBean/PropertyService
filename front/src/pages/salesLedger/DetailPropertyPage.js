@@ -4,7 +4,7 @@ import SearchBtn from '@/components/button/SearchBtn'
 import CustomDataGrid2 from '@/components/datagrid/CustomDataGrid2'
 import InputName2 from '@/components/textfield/InputName2'
 import SingleToolbar from '@/components/toolbar/SingleToolbar'
-import { Box, Grid, IconButton, Stack } from '@mui/material'
+import { Box, Button, Grid, IconButton, Stack } from '@mui/material'
 import { useEffect, useState } from 'react'
 import BuildingColumns from './columns/BuilidngColumns'
 import InputPhoneNumber from '@/components/textfield/InputPhoneNumber'
@@ -12,6 +12,7 @@ import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import BuildingRemarkColumns from './columns/BuildingRemarkColumns'
 import PropertyListColumns from './columns/PropertyListColumns'
+import DetailPropertyModal from '@/components/modal/DetailPropertyModal'
 
 const DetailPropertyPage = () => {
   const initialSearchCondition = {
@@ -64,6 +65,10 @@ const DetailPropertyPage = () => {
   const handleBuildingRemarkRows = () => {}
 
   const handleDeleteBuildingRemarkRows = () => {}
+
+  const handleCloseModal = () => {
+    isPropertyModalOpen ? setIsPropertyModalOpen(false) : null
+  }
 
   const handleSearchInputChange = (field, value) => {
     setSearchCondition((prev) => ({
@@ -291,6 +296,10 @@ const DetailPropertyPage = () => {
           </Grid>
         </Grid>
       </Stack>
+      <DetailPropertyModal
+        open={isPropertyModalOpen}
+        handleClose={handleCloseModal}
+      ></DetailPropertyModal>
     </Box>
   )
 }

@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material'
 
-const CashTransWonTextField = ({ value }) => {
+const CashTransWonTextField = ({ value, readOnly }) => {
   const formatNumberToKoreanCurrency = (numberValue) => {
     // 숫자를 '만', '억', '조' 등의 한국어 단위로 변환합니다.
     const trillion = Math.floor(numberValue / 1_0000_0000_0000)
@@ -21,7 +21,13 @@ const CashTransWonTextField = ({ value }) => {
     <TextField
       value={formatNumberToKoreanCurrency(value)}
       variant="outlined"
-      sx={{ width: 220 }}
+      sx={{
+        width: 220,
+        '& .MuiInputBase-root': {
+          backgroundColor: readOnly ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
+          cursor: readOnly ? 'not-allowed' : '', // 커서 변경
+        },
+      }}
       readOnly={true}
       InputProps={{
         readOnly: true,

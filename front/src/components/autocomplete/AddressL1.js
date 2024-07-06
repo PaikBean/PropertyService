@@ -3,7 +3,7 @@ import { Autocomplete, TextField } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const AddressL1 = ({ value, onChange, sx }) => {
+const AddressL1 = ({ value, onChange, sx, readOnly = false }) => {
   const dispatch = useDispatch()
   const { addressL1Options, L1status, L1error, addressL1 } = useSelector(
     (state) => state.address
@@ -35,8 +35,16 @@ const AddressL1 = ({ value, onChange, sx }) => {
       }
       onChange={handleAddressChange}
       renderInput={(params) => (
-        <TextField {...params} label="Address Level 1" />
+        <TextField
+          {...params}
+          label="Address Level 1"
+          InputProps={{
+            ...params.InputProps,
+            readOnly: readOnly,
+          }}
+        />
       )}
+      disabled={readOnly}
       sx={sx}
     />
   )

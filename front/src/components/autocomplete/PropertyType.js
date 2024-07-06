@@ -3,7 +3,7 @@ import { Autocomplete, TextField } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const PropertyType = ({ value, onChange }) => {
+const PropertyType = ({ value, onChange, sx, readOnly = false }) => {
   const dispatch = useDispatch()
   const { options, status, error } = useSelector((state) => state.PropertyType)
 
@@ -26,7 +26,18 @@ const PropertyType = ({ value, onChange }) => {
       options={options || []}
       getOptionLabel={(options) => options.PropertyType || ''}
       onChange={handleChange}
-      renderInput={(params) => <TextField {...params} label="주용도" />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="주용도"
+          InputProps={{
+            ...params.InputProps,
+            readOnly: readOnly,
+          }}
+        />
+      )}
+      disabled={readOnly}
+      sx={sx}
     />
   )
 }

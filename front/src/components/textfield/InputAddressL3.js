@@ -1,6 +1,6 @@
 const { TextField } = require('@mui/material')
 
-const InputADdressL3 = ({ value, onChange, sx }) => {
+const InputADdressL3 = ({ value, onChange, sx, readOnly = false }) => {
   return (
     <TextField
       sx={sx}
@@ -13,6 +13,9 @@ const InputADdressL3 = ({ value, onChange, sx }) => {
       variant="outlined"
       type="addressLevel3"
       autoComplete="addressLevel3"
+      InputProps={{
+        readOnly: readOnly, // readOnly 속성 설정
+      }}
     />
   )
 }

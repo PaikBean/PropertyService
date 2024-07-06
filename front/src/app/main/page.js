@@ -151,12 +151,12 @@ export default function Main() {
               >
                 <ListItemText primary="매물 상세" />
               </ListItemButton>
-              <ListItemButton
+              {/* <ListItemButton
                 onClick={handleMenuClick('ManageProperty')}
                 sx={{ pl: 8, py: 0.5 }}
               >
                 <ListItemText primary="매물 관리" />
-              </ListItemButton>
+              </ListItemButton> */}
               <ListItemButton
                 onClick={handleMenuClick('RegistProperty')}
                 sx={{ pl: 8, py: 0.5 }}
@@ -247,7 +247,7 @@ export default function Main() {
         {activeMenu === 'ManageCompany' && <ManageCompanyPage />}
         {activeMenu === 'Schedule' && <SchedulePage />}
         {activeMenu === 'DetailProperty' && <DetailPropertyPage />}
-        {activeMenu === 'ManageProperty' && <ManagePropertyPage />}
+        {/* {activeMenu === 'ManageProperty' && <ManagePropertyPage />} */}
         {activeMenu === 'RegistProperty' && <RegistPropertyPage />}
         {activeMenu === 'ManageBuilding' && <ManageBuildingPage />}
         {activeMenu === 'RegistBuildng' && <ResgistBuildingPage />}

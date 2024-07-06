@@ -2,7 +2,7 @@ import { Button, Grid, Stack, Typography } from '@mui/material'
 import CashTextField from '../textfield/CashTextField'
 import CashTransWonTextField from '../textfield/CashTransWonTextField'
 
-const TrasactionTypePriceForm = ({ value, onChange }) => {
+const TrasactionTypePriceForm = ({ value, onChange, readOnly }) => {
   const renderInputs = () => {
     switch (value.transactionType) {
       case 1: // 월세
@@ -12,14 +12,19 @@ const TrasactionTypePriceForm = ({ value, onChange }) => {
               label="보증금"
               value={value.deposit}
               onChange={(e) => onChange('deposit', e.target.value)}
+              readOnly={readOnly}
             />
-            <CashTransWonTextField value={value.deposit} />
+            <CashTransWonTextField value={value.deposit} readOnly={readOnly} />
             <CashTextField
               label="월세"
               value={value.monthlyFee}
               onChange={(e) => onChange('monthlyFee', e.target.value)}
+              readOnly={readOnly}
             />
-            <CashTransWonTextField value={value.monthlyFee} />
+            <CashTransWonTextField
+              value={value.monthlyFee}
+              readOnly={readOnly}
+            />
           </Grid>
         )
       case 4: // 단기
@@ -29,14 +34,22 @@ const TrasactionTypePriceForm = ({ value, onChange }) => {
               label="단기 보증금"
               value={value.shortemDeposit}
               onChange={(e) => onChange('shortemDeposit', e.target.value)}
+              readOnly={readOnly}
             />
-            <CashTransWonTextField value={value.shortemDeposit} />
+            <CashTransWonTextField
+              value={value.shortemDeposit}
+              readOnly={readOnly}
+            />
             <CashTextField
               label="단기 월세"
               value={value.shortemMonthlyFee}
               onChange={(e) => onChange('shortemMonthlyFee', e.target.value)}
+              readOnly={readOnly}
             />
-            <CashTransWonTextField value={value.shortemMonthlyFee} />
+            <CashTransWonTextField
+              value={value.shortemMonthlyFee}
+              readOnly={readOnly}
+            />
           </Grid>
         )
       case 2: // 전세
@@ -46,8 +59,12 @@ const TrasactionTypePriceForm = ({ value, onChange }) => {
               label="전세금"
               value={value.jeonseFee}
               onChange={(e) => onChange('jeonseFee', e.target.value)}
+              readOnly={readOnly}
             />
-            <CashTransWonTextField value={value.jeonseFee} />
+            <CashTransWonTextField
+              value={value.jeonseFee}
+              readOnly={readOnly}
+            />
           </Grid>
         )
       case 3: // 매매
@@ -57,8 +74,9 @@ const TrasactionTypePriceForm = ({ value, onChange }) => {
               label="매매금"
               value={value.tradeFee}
               onChange={(e) => onChange('tradeFee', e.target.value)}
+              readOnly={readOnly}
             />
-            <CashTransWonTextField value={value.tradeFee} />
+            <CashTransWonTextField value={value.tradeFee} readOnly={readOnly} />
           </Grid>
         )
       default:
@@ -82,6 +100,7 @@ const TrasactionTypePriceForm = ({ value, onChange }) => {
                 value.transactionType === 1 ? '#456358' : '#d0d0d0',
               boxShadow: 'none',
             },
+            pointerEvents: readOnly ? 'none' : 'auto',
           }}
         >
           월세
@@ -98,6 +117,7 @@ const TrasactionTypePriceForm = ({ value, onChange }) => {
                 value.transactionType === 2 ? '#456358' : '#d0d0d0',
               boxShadow: 'none',
             },
+            pointerEvents: readOnly ? 'none' : 'auto',
           }}
         >
           전세
@@ -114,6 +134,7 @@ const TrasactionTypePriceForm = ({ value, onChange }) => {
                 value.transactionType === 3 ? '#456358' : '#d0d0d0',
               boxShadow: 'none',
             },
+            pointerEvents: readOnly ? 'none' : 'auto',
           }}
         >
           매매
@@ -130,6 +151,7 @@ const TrasactionTypePriceForm = ({ value, onChange }) => {
                 value.transactionType === 4 ? '#456358' : '#d0d0d0',
               boxShadow: 'none',
             },
+            pointerEvents: readOnly ? 'none' : 'auto',
           }}
         >
           단기

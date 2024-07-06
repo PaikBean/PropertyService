@@ -204,6 +204,7 @@ const ManageBuildingPage = () => {
                     onChange={(e) => {
                       handleInputChange('ownerName', e.target.value)
                     }}
+                    readOnly={!mode}
                     sx={{
                       '& .MuiInputBase-root': {
                         backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
@@ -219,6 +220,7 @@ const ManageBuildingPage = () => {
                     onChange={(e) => {
                       handleInputChange('ownerRelation', e.target.value)
                     }}
+                    readOnly={!mode}
                     sx={{
                       '& .MuiInputBase-root': {
                         backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
@@ -236,6 +238,7 @@ const ManageBuildingPage = () => {
                         formattedPhoneNumber
                       )
                     }
+                    readOnly={!mode}
                     sx={{
                       '& .MuiInputBase-root': {
                         backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
@@ -253,6 +256,7 @@ const ManageBuildingPage = () => {
                     onChange={(value) => {
                       handleInputChange('buildingAddressLevel1', value)
                     }}
+                    readOnly={!mode}
                     sx={{
                       '& .MuiInputBase-root': {
                         backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
@@ -268,6 +272,7 @@ const ManageBuildingPage = () => {
                     onChange={(value) => {
                       handleInputChange('buildingAddressLevel2', value)
                     }}
+                    readOnly={!mode}
                     sx={{
                       '& .MuiInputBase-root': {
                         backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
@@ -282,6 +287,7 @@ const ManageBuildingPage = () => {
                     onChange={(e) => {
                       handleInputChange('buildingAddressLevel3', e.target.value)
                     }}
+                    readOnly={!mode}
                     sx={{
                       '& .MuiInputBase-root': {
                         backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
