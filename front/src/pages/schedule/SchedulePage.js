@@ -21,6 +21,8 @@ import BasicDatePicker from '@/components/datepicker/BasicDatePicker'
 import dayjs from 'dayjs'
 import Priority from '@/components/autocomplete/Priority'
 import RemarkTextField from '@/components/textfield/RemarkTextField'
+import AddScheduleModal2 from '@/components/modal/AddScheduleModal2'
+import Clients from '@/components/autocomplete/Clients'
 
 const SchedulePage = () => {
   const initScheduleInfo = {
@@ -37,6 +39,8 @@ const SchedulePage = () => {
   const [mode, setMode] = useState(false)
 
   const [scheduleInfo, setScheduleInfo] = useState(initScheduleInfo)
+
+  const [isAddScheduleModalOpen, setIsAddScheduleModalOpen] = useState(false)
 
   const [events, setEvents] = useState([
     { id: '1', title: 'Event 1', date: '2024-07-10', eventId: 1 },
@@ -61,9 +65,15 @@ const SchedulePage = () => {
     }))
   }
 
-  const hanleAddSchedule = () => {}
+  const hanleAddSchedule = () => {
+    setIsAddScheduleModalOpen(!isAddScheduleModalOpen)
+  }
 
   const handleSave = () => {}
+
+  const handleCloseModal = () => {
+    setIsAddScheduleModalOpen ? setIsAddScheduleModalOpen(false) : null
+  }
 
   return (
     <Box
@@ -173,6 +183,19 @@ const SchedulePage = () => {
                   },
                 }}
               />
+              <Clients
+                value={scheduleInfo.clientId}
+                onChange={(value) => {
+                  handleInputChange('clientId', value)
+                }}
+                readOnly={!mode}
+                sx={{
+                  '& .MuiInputBase-root': {
+                    backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
+                    cursor: !mode ? 'not-allowed' : 'inherit', // 커서 변경
+                  },
+                }}
+              />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <BasicDatePicker
                   label="일자"
@@ -229,6 +252,11 @@ const SchedulePage = () => {
           </Stack>
         </Grid>
       </Grid>
+      <AddScheduleModal2
+        open={isAddScheduleModalOpen}
+        handleClose={handleCloseModal}
+        data={{}}
+      />
     </Box>
   )
 }

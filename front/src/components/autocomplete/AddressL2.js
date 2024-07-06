@@ -40,6 +40,7 @@ const AddressL2 = ({ value, onChange, sx, readOnly = false }) => {
           }}
         />
       )}
+      disabled={readOnly}
       sx={sx}
     />
   )
