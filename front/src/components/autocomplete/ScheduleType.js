@@ -3,7 +3,7 @@ import { Autocomplete, TextField } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const ScheduleType = ({ value, onChange }) => {
+const ScheduleType = ({ value, onChange, sx, readOnly = false }) => {
   const dispatch = useDispatch()
   const { options, status, error } = useSelector((state) => state.scheduleType)
 
@@ -26,7 +26,18 @@ const ScheduleType = ({ value, onChange }) => {
       options={options || []}
       getOptionLabel={(options) => options.scheduleType || ''}
       onChange={handleChange}
-      renderInput={(params) => <TextField {...params} label="일정 유형" />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="일정 유형"
+          InputProps={{
+            ...params.InputProps,
+            readOnly: readOnly,
+          }}
+        />
+      )}
+      disabled={readOnly}
+      sx={sx}
     />
   )
 }
