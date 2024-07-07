@@ -12,13 +12,38 @@ import FindPasswordLink from '@/components/typography/FindPasswordLink'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser } from '@/store/slices/authSlice'
 import RegistCompanyLink from '@/components/typography/RegistCompanyLink'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Home() {
   const router = useRouter() // useRouter 훅으로 router 객체를 가져옵니다.
   const dispatch = useDispatch()
   const { user, status, error } = useSelector((state) => state.auth)
   const [loading, setLoading] = useState(false)
+
+  const [theme, setTheme] = useState(null)
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      const { createTheme } = await import('@mui/material/styles')
+      setTheme(createTheme())
+    }
+    loadTheme()
+  }, [])
+
+  if (!theme)
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          backgroundColor: '#f5f5f5',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    )
 
   const handleSubmit = async (event) => {
     event.preventDefault()
