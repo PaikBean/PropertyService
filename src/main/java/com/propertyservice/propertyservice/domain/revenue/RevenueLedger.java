@@ -3,9 +3,8 @@ package com.propertyservice.propertyservice.domain.revenue;
 
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
 import com.propertyservice.propertyservice.domain.company.Company;
-import com.propertyservice.propertyservice.domain.company.Manager;
+import com.propertyservice.propertyservice.domain.manager.Manager;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

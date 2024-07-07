@@ -2,14 +2,9 @@ package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.common.Gender;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
-
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ManagerServiceTest {
@@ -47,7 +42,8 @@ class ManagerServiceTest {
                 .managerName("test"+i)
                 .managerPhoneNumber("010-0000-0000"+i)
                 .gender(Gender.MALE)
-                .departmentName("Sales")
+//                .departmentName("Sales")
+                    .departmentId(null)
                 .managerRank("사원")
                 .managerPosition("개발")
                 .managerStateId(1L)
@@ -55,9 +51,9 @@ class ManagerServiceTest {
                 .managerEmail("test"+i+"@test.com")
                 .managerPassword("123123")
 
-                .managerAddressLevel1(1L)
-                .managerAddressLevel2(1L)
-                .managerAddressLevel3("asd")
+//                .managerAddressLevel1(1L)
+//                .managerAddressLevel2(1L)
+//                .managerAddressLevel3("asd")
                 .build();
             managerService.createManager(managerSignUpForm);
         }

@@ -1,6 +1,6 @@
 package com.propertyservice.propertyservice.service;
 
-import com.propertyservice.propertyservice.domain.company.Manager;
+import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.domain.revenue.RevenueLedger;
 import com.propertyservice.propertyservice.dto.revenue.RevenueCondition;
 import com.propertyservice.propertyservice.dto.revenue.RevenueForm;

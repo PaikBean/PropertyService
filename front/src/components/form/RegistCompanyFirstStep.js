@@ -8,8 +8,14 @@ import dayjs from 'dayjs'
 import SearchBtn from '../button/SearchBtn'
 import { useDispatch } from 'react-redux'
 import { fetchValidBizNumber } from '@/store/slices/registCompanySlice'
+import { useEffect } from 'react'
 
-const RegistCompanyFirstStep = ({ inputFirst, setInputFirst }) => {
+const RegistCompanyFirstStep = ({
+  inputFirst,
+  setInputFirst,
+  onClick,
+  readOnly,
+}) => {
   const dispatch = useDispatch()
   const handleInputChange = (field, value) => {
     setInputFirst((prev) => ({
@@ -23,11 +29,18 @@ const RegistCompanyFirstStep = ({ inputFirst, setInputFirst }) => {
   }
 
   return (
-    <Stack gap={5} width="50%">
+    <Stack gap={5} width="80%">
       <InputBizNumber
         value={inputFirst.bizNumber}
         onChange={(e) => {
           handleInputChange('bizNumber', e.target.value)
+        }}
+        readOnly={readOnly}
+        sx={{
+          '& .MuiInputBase-root': {
+            backgroundColor: readOnly ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
+            cursor: readOnly ? 'not-allowed' : 'inherit', // 커서 변경
+          },
         }}
       />
       <Grid container spacing={2}>
@@ -39,6 +52,7 @@ const RegistCompanyFirstStep = ({ inputFirst, setInputFirst }) => {
               onChange={(value) => {
                 handleInputChange('bizStartDate', value.format('YYYYMMDD'))
               }}
+              readOnly={readOnly}
             />
           </LocalizationProvider>
         </Grid>
@@ -49,10 +63,18 @@ const RegistCompanyFirstStep = ({ inputFirst, setInputFirst }) => {
             onChange={(e) => {
               handleInputChange('presidentName', e.target.value)
             }}
+            readOnly={readOnly}
+            sx={{
+              '& .MuiInputBase-root': {
+                backgroundColor: readOnly ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
+                cursor: readOnly ? 'not-allowed' : 'inherit', // 커서 변경
+              },
+            }}
           />
         </Grid>
       </Grid>
-      <SearchBtn onClick={handleSearch} />
+      {/* <SearchBtn onClick={handleSearch} /> */}
+      <SearchBtn onClick={onClick} />
     </Stack>
   )
 }

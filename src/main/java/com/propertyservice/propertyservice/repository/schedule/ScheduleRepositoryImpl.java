@@ -1,7 +1,7 @@
 package com.propertyservice.propertyservice.repository.schedule;
 
 import com.propertyservice.propertyservice.domain.client.QClient;
-import com.propertyservice.propertyservice.domain.company.QManager;
+import com.propertyservice.propertyservice.domain.manager.QManager;
 import com.propertyservice.propertyservice.domain.property.QProperty;
 import com.propertyservice.propertyservice.domain.schedule.QSchedule;
 import com.propertyservice.propertyservice.domain.schedule.QScheduleType;

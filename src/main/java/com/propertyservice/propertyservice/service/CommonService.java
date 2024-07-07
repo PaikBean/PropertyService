@@ -1,18 +1,24 @@
 package com.propertyservice.propertyservice.service;
 
-import com.propertyservice.propertyservice.domain.common.*;
-import com.propertyservice.propertyservice.domain.company.ManagerState;
-import com.propertyservice.propertyservice.dto.common.AddressLevel1Dto;
-import com.propertyservice.propertyservice.dto.common.AddressLevel2Dto;
-import com.propertyservice.propertyservice.dto.common.TransactionTypeDto;
-import com.propertyservice.propertyservice.repository.common.*;
+import com.propertyservice.propertyservice.domain.common.AddressLevel1;
+import com.propertyservice.propertyservice.domain.common.AddressLevel2;
+import com.propertyservice.propertyservice.domain.common.Gender;
+import com.propertyservice.propertyservice.domain.common.TransactionType;
+import com.propertyservice.propertyservice.domain.manager.ManagerState;
+import com.propertyservice.propertyservice.dto.common.*;
+import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
+import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
+import com.propertyservice.propertyservice.repository.common.ManagerStateRepository;
+import com.propertyservice.propertyservice.repository.common.TransactionTypeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -69,17 +75,21 @@ public class CommonService {
 //        return genderDtoList;
 //    }
 
-    public List<ManagerStateDto> searhManagerStateList() {
+    public List<ManagerStateDto> searchManagerStateList() {
         List<ManagerStateDto> managerStateDtoList = new ArrayList<>();
         for (ManagerState managerState : managerStateRepository.findAll()) {
             managerStateDtoList.add(ManagerStateDto.builder()
-                    .mangerStateId(managerState.getManagerStateId())
+                    .managerStateId(managerState.getManagerStateId())
                     .managerState(managerState.getManagerState())
                     .build());
         }
         return managerStateDtoList;
     }
 
-    ;
+    public List<GenderDto> searchGenderList() {
+        return Arrays.stream(Gender.values())
+                .map(gender -> new GenderDto(gender.name(), gender.getLabel()))
+                .collect(Collectors.toList());
+    }
 }
 

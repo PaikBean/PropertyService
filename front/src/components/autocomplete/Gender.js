@@ -1,37 +1,31 @@
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Autocomplete, TextField } from '@mui/material'
+import { fetchGenderList } from '@/store/slices/genderSlice'
 
-const Gender = ({
-  value,
-  onChange,
-  sx,
-  readOnly = false,
-  label = 'Gender',
-}) => {
-  const genderOptions = [
-    { label: 'Male', value: 'MALE' },
-    { label: 'Female', value: 'FEMALE' },
-  ]
+const Gender = ({ value, onChange, label = '성별' }) => {
+  const dispatch = useDispatch()
+  const { options, status, error } = useSelector((state) => state.genderList) // gender state 전체를 가져옵니다
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchGenderList())
+    }
+  }, [dispatch, status])
+
+  const handleChange = (event, newValue) => {
+    onChange(newValue ? newValue.name : '')
+  }
 
   return (
     <Autocomplete
-      options={genderOptions}
-      getOptionLabel={(option) => option.label}
-      value={genderOptions.find((option) => option.value === value) || null}
-      onChange={(event, newValue) => {
-        onChange(newValue ? newValue.value : null)
-      }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label={label}
-          InputProps={{
-            ...params.InputProps,
-            readOnly: readOnly,
-          }}
-        />
-      )}
-      disabled={readOnly}
-      sx={sx}
+      value={
+        options ? options.find((option) => option.name === value) || null : null
+      }
+      options={options || []}
+      getOptionLabel={(option) => option.label || ''}
+      onChange={handleChange}
+      renderInput={(params) => <TextField {...params} label={label} />}
     />
   )
 }

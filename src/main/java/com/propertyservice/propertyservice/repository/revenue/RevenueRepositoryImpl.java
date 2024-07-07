@@ -3,7 +3,7 @@ package com.propertyservice.propertyservice.repository.revenue;
 import com.propertyservice.propertyservice.domain.common.QAddressLevel1;
 import com.propertyservice.propertyservice.domain.common.QAddressLevel2;
 import com.propertyservice.propertyservice.domain.common.QTransactionType;
-import com.propertyservice.propertyservice.domain.company.QManager;
+import com.propertyservice.propertyservice.domain.manager.QManager;
 import com.propertyservice.propertyservice.domain.revenue.QRevenueLedger;
 import com.propertyservice.propertyservice.dto.revenue.QRevenueDto;
 import com.propertyservice.propertyservice.dto.revenue.RevenueCondition;

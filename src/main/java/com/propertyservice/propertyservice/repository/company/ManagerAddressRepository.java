@@ -1,6 +1,6 @@
 package com.propertyservice.propertyservice.repository.company;
 
-import com.propertyservice.propertyservice.domain.company.ManagerAddress;
+import com.propertyservice.propertyservice.domain.manager.ManagerAddress;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

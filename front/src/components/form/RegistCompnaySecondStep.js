@@ -1,11 +1,26 @@
+import { useEffect, useState } from 'react'
 import AddressL1 from '../autocomplete/AddressL1'
 import AddressL2 from '../autocomplete/AddressL2'
+import Gender from '../autocomplete/Gender'
+import ManagerState from '../autocomplete/ManagerState'
+import CheckSignUpPassword from '../textfield/CheckSignUpPassword'
 import InputADdressL3 from '../textfield/InputAddressL3'
+import InputEmail from '../textfield/InputEmail'
 import InputName2 from '../textfield/InputName2'
+import InputPhoneNumber from '../textfield/InputPhoneNumber'
+import InputSignUpEmail from '../textfield/InputSignUpEmail'
+import InputSignUpPassword from '../textfield/InputSignUpPassword'
+import { fetchDuplicateEmail } from '@/app/test-page/api/fetchDuplicateEmail'
 
-const { Stack } = require('@mui/material')
+const { Stack, Grid, Button, Alert } = require('@mui/material')
 
-const RegistCompanySecondStep = ({ inputSecond, setInputSecond }) => {
+const RegistCompanySecondStep = ({
+  inputSecond,
+  setInputSecond,
+  stepFlag,
+  handleValidEmail,
+}) => {
+  const [checkError, setCheckError] = useState(false)
   const handleInputChange = (field, value) => {
     setInputSecond((prev) => ({
       ...prev,
@@ -13,33 +28,128 @@ const RegistCompanySecondStep = ({ inputSecond, setInputSecond }) => {
     }))
   }
 
+  useEffect(() => {
+    setCheckError(
+      inputSecond.checkPassword.length > 0 &&
+        inputSecond.presidentPassword !== inputSecond.checkPassword
+    )
+  }, [inputSecond.presidentPassword, inputSecond.checkPassword])
+
   return (
-    <Stack gap={5} width="50%">
-      <InputName2
-        label="회사명"
-        value={inputSecond.companyName}
+    <Stack spacing={2} width="70%">
+      <Grid container gap={1} justifyContent={'space-between'}>
+        <Grid item xs={4}>
+          <InputName2
+            label="대표자명"
+            value={inputSecond.presidentName}
+            onChange={(e) => {
+              handleInputChange('presidentName', e.target.value)
+            }}
+          />
+        </Grid>
+        <Grid item xs={7.5}>
+          <InputPhoneNumber
+            value={inputSecond.presidentPhoneNumber}
+            onChange={(formattedPhoneNumber) =>
+              handleInputChange('presidentPhoneNumber', formattedPhoneNumber)
+            }
+            name="presidentPhoneNumber"
+            label="대표자 전화번호"
+          />
+        </Grid>
+      </Grid>
+      <Grid container gap={1} justifyContent={'space-between'}>
+        <Grid item xs={5.8}>
+          <InputName2
+            label="직급"
+            value={inputSecond.presidentRank}
+            onChange={(e) => {
+              handleInputChange('presidentRank', e.target.value)
+            }}
+          />
+        </Grid>
+        <Grid item xs={5.8}>
+          <InputName2
+            label="직무"
+            value={inputSecond.presidentPosition}
+            onChange={(e) => {
+              handleInputChange('presidentPosition', e.target.value)
+            }}
+          />
+        </Grid>
+      </Grid>
+      <Grid container gap={1} justifyContent={'space-between'}>
+        <Grid item xs={5.8}>
+          <ManagerState
+            value={inputSecond.presidentStateId} // Add this line
+            onChange={(value) => {
+              handleInputChange('presidentStateId', value)
+            }}
+            label="근무 상태"
+          />
+        </Grid>
+        <Grid item xs={5.8}>
+          <Gender
+            value={inputSecond.presidentGender}
+            onChange={(value) => {
+              handleInputChange('presidentGender', value)
+            }}
+            label="성별"
+          />
+        </Grid>
+      </Grid>
+      <Grid container gap={1} justifyContent={'space-between'}>
+        <Grid item xs={9.5}>
+          <InputSignUpEmail
+            value={inputSecond.presidentEmail}
+            onChange={(e) => {
+              handleInputChange('presidentEmail', e.target.value)
+            }}
+            label="대표자 이메일"
+          />
+        </Grid>
+        <Grid item xs={2}>
+          <Button
+            onClick={handleValidEmail}
+            fullWidth
+            variant="contained"
+            sx={{
+              height: '55px',
+              backgroundColor: '#56866fec',
+              '&:hover': {
+                backgroundColor: '#56866f',
+              },
+            }}
+          >
+            중복 확인
+          </Button>
+        </Grid>
+      </Grid>
+      {inputSecond.duplicateEmail ? (
+        stepFlag.secondEmail ? (
+          <Alert>중복 확인되었습니다.</Alert>
+        ) : (
+          <Alert severity="error">등록된 이메일 입니다.</Alert>
+        )
+      ) : null}
+      <InputSignUpPassword
+        value={inputSecond.presidentPassword}
         onChange={(e) => {
-          handleInputChange('companyName', e.target.value)
+          handleInputChange('presidentPassword', e.target.value)
         }}
       />
-      <AddressL1
-        value={inputSecond.addressLevel1} // Add this line
-        onChange={(value) => {
-          handleInputChange('addressLevel1', value)
-        }}
-      />
-      <AddressL2
-        value={inputSecond.addressLevel2} // Add this line
-        addressLevel1={inputSecond.addressLevel1}
-        onChange={(value) => {
-          handleInputChange('addressLevel2', value)
-        }}
-      />
-      <InputADdressL3
-        value={inputSecond.addressLevel3}
+      <CheckSignUpPassword
+        value={inputSecond.checkPassword}
         onChange={(e) => {
-          handleInputChange('addressLevel3', e.target.value)
+          handleInputChange('checkPassword', e.target.value)
+          handleInputChange(
+            'checkResult',
+            inputSecond.presidentPassword &&
+              e.target.value &&
+              inputSecond.presidentPassword === e.target.value
+          )
         }}
+        error={checkError}
       />
     </Stack>
   )

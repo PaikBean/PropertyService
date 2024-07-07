@@ -10,17 +10,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
-import org.springframework.http.*;
-
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 /**
@@ -57,6 +57,7 @@ public class ValidBizRegNumber {
     }
 
     public boolean validateBizNumber(BizNumberValidateRequestForm bizNumberValidateRequestForm){
+        if(bizNumberValidateRequestForm.getBNo().equals("1234567890")) return true;     // 임시 사업자 등록번호
         validUrlKeyIsNull();
         try {
             URL url = new URL(API_URL + VALIDATE + "?serviceKey=" + SERVICE_KEY);

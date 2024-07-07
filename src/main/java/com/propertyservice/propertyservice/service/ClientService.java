@@ -4,7 +4,6 @@ import com.propertyservice.propertyservice.domain.client.Client;
 import com.propertyservice.propertyservice.domain.client.ClientRemark;
 import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.domain.property.Property;
-
 import com.propertyservice.propertyservice.domain.property.ShowingProperty;
 import com.propertyservice.propertyservice.dto.client.*;
 import com.propertyservice.propertyservice.dto.schedule.ScheduleSummaryDto;

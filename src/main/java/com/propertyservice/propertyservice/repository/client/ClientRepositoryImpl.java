@@ -2,20 +2,12 @@ package com.propertyservice.propertyservice.repository.client;
 
 import com.propertyservice.propertyservice.domain.client.QClient;
 import com.propertyservice.propertyservice.domain.client.QClientRemark;
-import com.propertyservice.propertyservice.domain.company.QManager;
+import com.propertyservice.propertyservice.domain.manager.QManager;
 import com.propertyservice.propertyservice.domain.property.QProperty;
 import com.propertyservice.propertyservice.domain.property.QPropertyRemark;
 import com.propertyservice.propertyservice.domain.property.QShowingProperty;
-import com.propertyservice.propertyservice.domain.schedule.QSchedule;
 import com.propertyservice.propertyservice.dto.client.*;
-import com.propertyservice.propertyservice.dto.schedule.ScheduleCondition;
-import com.propertyservice.propertyservice.dto.schedule.ScheduleSummaryDto;
-import com.propertyservice.propertyservice.repository.property.PropertyRepositoryCustom;
-import com.propertyservice.propertyservice.repository.schedule.ScheduleRepositoryCustom;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 

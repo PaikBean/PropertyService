@@ -67,6 +67,33 @@ public class CommonController {
         }
     }
 
+    /**
+     * 근무 상태 목록 조회
+     * @return
+     */
+    @GetMapping("/v1/manager-state-list")
+    public Response searchManagerStateList() {
+        try {
+            return new Response(ResponseCode.SUCCESS, commonService.searchManagerStateList(), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 성별 목록 조회
+     *
+     * @return
+     */
+        @GetMapping("/v1/gender-list")
+    public Response searchGenderList() {
+        try {
+            return new Response(ResponseCode.SUCCESS, commonService.searchGenderList(), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
 //    @GetMapping("/v1/gender-list")
 //    public Response searchGenderList() {
 //        try {

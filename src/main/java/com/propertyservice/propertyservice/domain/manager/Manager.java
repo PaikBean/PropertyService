@@ -1,8 +1,10 @@
-package com.propertyservice.propertyservice.domain.company;
+package com.propertyservice.propertyservice.domain.manager;
 
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
 import com.propertyservice.propertyservice.domain.common.Gender;
 import com.propertyservice.propertyservice.domain.common.Role;
+import com.propertyservice.propertyservice.domain.company.Company;
+import com.propertyservice.propertyservice.domain.company.Department;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -36,9 +38,6 @@ public class Manager extends BaseTimeEntity{
     private ManagerState managerStateId; //stateId Entity
     private Gender gender; // genderId;
     private String managerPhoneNumber;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_address_id" )
-    private ManagerAddress managerAddressId; // addressId Entity
 
     private LocalDateTime managerEntranceDate;
     private LocalDateTime managerResignDate;
@@ -49,7 +48,8 @@ public class Manager extends BaseTimeEntity{
 
 
     @Builder
-    public Manager(Company company_id, Department department_id, String managerName, String managerRank, String managerPosition, String managerCode, ManagerState managerStateId, Gender gender, String managerPhoneNumber, ManagerAddress managerAddressId, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount, Role role){
+    public Manager(Long managerId, Company company_id, Department department_id, String managerName, String managerRank, String managerPosition, String managerCode, ManagerState managerStateId, Gender gender, String managerPhoneNumber, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount, Role role) {
+        this.managerId = managerId;
         this.company_id = company_id;
         this.department_id = department_id;
         this.managerName = managerName;
@@ -59,13 +59,11 @@ public class Manager extends BaseTimeEntity{
         this.managerStateId = managerStateId;
         this.gender = gender;
         this.managerPhoneNumber = managerPhoneNumber;
-        this.managerAddressId = managerAddressId;
         this.managerEntranceDate = managerEntranceDate;
         this.managerResignDate = managerResignDate;
         this.managerEmail = managerEmail;
         this.managerPassword = managerPassword;
-        this.passwordErrorCount =passwordErrorCount;
+        this.passwordErrorCount = passwordErrorCount;
         this.role = role;
     }
-
 }

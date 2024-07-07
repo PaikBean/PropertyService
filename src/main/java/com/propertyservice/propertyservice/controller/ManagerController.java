@@ -25,7 +25,7 @@ public class ManagerController {
         if(managerService.checkDuplicate(email))
             return new Response(ResponseCode.SUCCESS, false,"200"); // 이메일 사용가능
         else
-            return new Response(ResponseCode.SUCCESS, true, "200"); // 이메일 사용불가.
+            return new Response(ResponseCode.SUCCESS, true, "201"); // 이메일 사용불가.
     }
     // 이메일 중복 조회
     // onChanged 사용.

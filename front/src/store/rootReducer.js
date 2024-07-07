@@ -14,8 +14,10 @@ import inflowTypeReducer from './slices/inflowTypeSlice'
 import scheduleTypeReducer from './slices/scheduleTypeSlice'
 import propertyTypeReducer from './slices/propertyTypeSlice'
 import clientReducer from './slices/clientSlice'
+import genderReducer from './slices/genderSlice'
 
 const rootReducer = combineReducers({
+  genderList: genderReducer,
   clientList: clientReducer,
   PropertyType: propertyTypeReducer,
   scheduleType: scheduleTypeReducer,

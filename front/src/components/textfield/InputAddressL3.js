@@ -14,7 +14,6 @@ const InputADdressL3 = ({
       onChange={onChange}
       label={label}
       id="address-level-3"
-      required
       fullWidth
       variant="outlined"
       type="addressLevel3"

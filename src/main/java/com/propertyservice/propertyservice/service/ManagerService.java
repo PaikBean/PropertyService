@@ -1,9 +1,8 @@
 package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.common.Role;
-import com.propertyservice.propertyservice.domain.company.Manager;
-import com.propertyservice.propertyservice.domain.company.ManagerAddress;
-import com.propertyservice.propertyservice.domain.company.ManagerState;
+import com.propertyservice.propertyservice.domain.manager.Manager;
+import com.propertyservice.propertyservice.domain.manager.ManagerState;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
@@ -40,6 +39,7 @@ public class ManagerService implements UserDetailsService {
     private final DepartmentService departmentService;
     private final AddressLevel1Repository addressLevel1Repository;
     private final AddressLevel2Respository addressLevel2Respository;
+    private final DepartmentRepository departmentRepository;
 
     /**
      * 사용자 id를 통해 정보 가져오기
@@ -89,9 +89,11 @@ public class ManagerService implements UserDetailsService {
      */
     @Transactional
     public Long createManager(ManagerSignUpForm managerSignUpForm) {
+        log.info("departmentId : {}",managerSignUpForm.getDepartmentId());
         return managerRepository.save(Manager.builder()
                 .company_id(companyService.searchCompany(managerSignUpForm.getCompanyCode()))
-                .department_id(departmentService.searchDepartment(managerSignUpForm.getDepartmentName()))
+//                .department_id(departmentService.searchDepartment(managerSignUpForm.getDepartmentName()))
+                .department_id(departmentRepository.findById(managerSignUpForm.getDepartmentId()).orElse(null))
                 .managerName(managerSignUpForm.getManagerName())
                 .managerRank(managerSignUpForm.getManagerRank())
                 .managerPosition(managerSignUpForm.getManagerPosition())
@@ -99,11 +101,6 @@ public class ManagerService implements UserDetailsService {
                 .managerStateId(searchStateById(managerSignUpForm.getManagerStateId()))
                 .gender(managerSignUpForm.getGender())
                 .managerPhoneNumber(managerSignUpForm.getManagerPhoneNumber())
-                .managerAddressId(managerAddressRepository.save(ManagerAddress.builder()
-                        .addressLevel1Id(validAddressLevel1(managerSignUpForm.getManagerAddressLevel1()))
-                        .addressLevel2Id(validAddressLevel2(managerSignUpForm.getManagerAddressLevel2()))
-                        .addressLevel3(managerSignUpForm.getManagerAddressLevel3())
-                        .build()))
                 .managerEntranceDate(LocalDateTime.now())
                 .managerResignDate(LocalDateTime.now())
                 .managerEmail(managerSignUpForm.getManagerEmail())

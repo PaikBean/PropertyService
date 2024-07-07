@@ -5,7 +5,6 @@ import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 class ManagerControllerTest {
@@ -20,16 +19,17 @@ class ManagerControllerTest {
                 .managerName("test")
                 .managerPhoneNumber("010-0000-0000")
                 .gender(Gender.MALE)
-                .departmentName("Sales")
+//                .departmentName("Sales")
+                .departmentId(null)
                 .managerRank("사원")
                 .managerPosition("개발")
                 .managerStateId(1L)
                 .managerCode("24080599001")
                 .managerEmail("test@test.com")
                 .managerPassword("123123")
-                .managerAddressLevel1(1L)
-                .managerAddressLevel2(1L)
-                .managerAddressLevel3("asd")
+//                .managerAddressLevel1(1L)
+//                .managerAddressLevel2(1L)
+//                .managerAddressLevel3("asd")
                 .build();
 
         System.out.println("Controller CreateManager : " + managerController.createManager(managerSignUpForm).getResponseCode());
