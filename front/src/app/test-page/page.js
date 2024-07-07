@@ -1,9 +1,9 @@
 'use client'
-import AddressL1 from '@/components/autocomplete/AddressL1'
-import AddressL2 from '@/components/autocomplete/AddressL2'
-import RegistCompanyFirstStep from '@/components/form/RegistCompanyFirstStep'
-import RegistCompanySecondStep from '@/components/form/RegistCompnaySecondStep'
-import { fetchGet } from '@/utils/fetch/fetchWrapper'
+// React, Next
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+// Materials
 import {
   Container,
   Stack,
@@ -16,19 +16,30 @@ import {
   Alert,
   Grid,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { fetchValidBizNumber } from './api/fetchValidateBizNumber'
+
+// Custom Component
 import SubmitBtn from '@/components/button/SubmitBtn'
 import NextBtn from '@/components/button/NextBtn'
 import BackBtn from '@/components/button/BackBtn'
-import { fetchDuplicateEmail } from './api/fetchDuplicateEmail'
+import RegistCompanyFirstStep from '@/components/form/RegistCompanyFirstStep'
+import RegistCompanySecondStep from '@/components/form/RegistCompnaySecondStep'
 import RegistCompanyThirdStep from '@/components/form/RegistCompanyThridStep'
+
+// Utils
+import { fetchValidBizNumber } from './api/fetchValidateBizNumber'
+import { fetchDuplicateEmail } from './api/fetchDuplicateEmail'
 import { fetchRegistCompany } from './api/fetchRegistCompany'
 
 const steps = ['사업체 인증', '대표자 등록', '사업체 정보 등록']
 
 const TestPage = () => {
+  const router = useRouter()
   const initValidBiz = {
     bizNumber: '',
     bizStartDate: null,
@@ -76,6 +87,15 @@ const TestPage = () => {
 
   const [stepFlag, setStepFlag] = useState(initStepFlag)
 
+  const [companyCode, setCompanyCode] = useState('')
+
+  const [isRegistDialogOpen, setIsRegistDialogOpen] = useState(false)
+
+  const confirmYes = () => {
+    setIsRegistDialogOpen(false)
+    router.push('/')
+  }
+
   const handleNext = () => {
     switch (currentStep) {
       case 0:
@@ -84,9 +104,6 @@ const TestPage = () => {
           setShowNextAlert(!showNextAlert)
         }
       case 1:
-        alert(stepFlag.secondEmail)
-        alert(registPresident.duplicateEmail)
-        alert(registPresident.checkResult)
         if (
           stepFlag.secondEmail &&
           registPresident.presidentEmail &&
@@ -126,10 +143,10 @@ const TestPage = () => {
     }
     const result = await fetchRegistCompany(data)
     if (result.code === '200') {
-      alert('성공')
+      setCompanyCode(result.data.companyCode)
+      setIsRegistDialogOpen(!isRegistDialogOpen)
     } else {
       alert('실패')
-      console.log(result)
     }
   }
 
@@ -269,6 +286,25 @@ const TestPage = () => {
           </Grid>
         </Stack>
       </Container>
+      <Dialog
+        open={isRegistDialogOpen}
+        onClose={() => setIsRegistDialogOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">회사 코드 발급 완료</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            ComapnyCode : {companyCode} 가 발급되었습니다. 가입하신 이메일과
+            비밀번호로 로그인 하시기 바랍니다.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={confirmYes} color="primary" autoFocus>
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }

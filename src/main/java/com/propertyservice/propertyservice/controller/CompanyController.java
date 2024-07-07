@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -63,12 +66,15 @@ public class CompanyController {
      */
     @PostMapping("/v1/company")
     public Response registerCompany(@RequestBody @Valid CompanyRegistryForm companyRegistryForm, BindingResult bindingResult) {
+        Map<String, String> result = new HashMap<>();
         try {
             ManagerSignUpForm presidentInfo = companyRegistryForm.getPresidentInfo();
-            presidentInfo.setCompanyCode(companyService.registerCompany(companyRegistryForm));
+            String companyCode = companyService.registerCompany(companyRegistryForm);
+            presidentInfo.setCompanyCode(companyCode);
             presidentInfo.setDepartmentId(-1L);                 // 대표 회원가입 때 부서 등록하지 않음 >> 조직관리페이지에서 부서 관리 가능
             managerService.createManager(presidentInfo);        // 매니저 회원가입 메소드 재사용
-            return new Response(ResponseCode.SUCCESS, null, "200");
+            result.put("companyCode", companyCode);
+            return new Response(ResponseCode.SUCCESS, result, "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
