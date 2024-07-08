@@ -30,14 +30,14 @@ public class CompanyController {
      * @param companyCode
      * @return
      */
-//    @GetMapping("/v1/validate/company-code")
-//    public Response searchCompanyByCompanyCode(@RequestParam(value = "companyCode", defaultValue = "") String companyCode) {
-//        try {
-//            return new Response(ResponseCode.SUCCESS, companyService.searcshCompanyByCompanyCode(companyCode), "200");
-//        } catch (Exception e) {
-//            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
-//        }
-//    }
+    @GetMapping("/v1/validate/company-code")
+    public Response validateCompanyCode(@RequestParam(value = "companyCode", defaultValue = "") String companyCode) {
+        try {
+            return new Response(ResponseCode.SUCCESS, companyService.validateCompanyCode(companyCode), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 
     /**
      * 사업자 등록번호 진위확인
