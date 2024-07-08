@@ -1,10 +1,14 @@
 package com.propertyservice.propertyservice.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.propertyservice.propertyservice.domain.common.Response;
+import com.propertyservice.propertyservice.domain.common.ResponseCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -62,10 +66,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     // 인증 성공 메소드
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        log.info("로그인 성공");
-        //System.out.println(authResult.getPrincipal().toString());
+        log.info("Login Success <Email : {}> ", authResult.getName());
         User user = (User) authResult.getPrincipal();
-        System.out.println(user.toString());
 
         // 2. 권한 가져오기.
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
@@ -78,12 +80,27 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = tokenProvider.generateJwtToken(user.getUsername(), role, VALID_TIME); // 1시간
         log.warn(token);
         response.addHeader("Authorization","Bearer " + token);
+
+        Response<String> successResponse = new Response<>(ResponseCode.SUCCESS, null, HttpStatus.OK.toString());
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpStatus.OK.value());
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.getWriter().write(objectMapper.writeValueAsString(successResponse));
     }
 
     //인증 실패 메소드
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        log.info("로그인 실패.");
-        throw new IllegalAccessError("로그인을 실패했습니다.");
+        log.warn("Login Fail <Cause : {}> ", failed.toString());
+
+        Response<String> failResponse = new Response<>(ResponseCode.FAIL, null, HttpStatus.UNAUTHORIZED.toString());
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpStatus.OK.value());
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.getWriter().write(objectMapper.writeValueAsString(failResponse));
     }
 }
