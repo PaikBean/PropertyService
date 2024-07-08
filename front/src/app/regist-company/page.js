@@ -114,8 +114,6 @@ const TestPage = () => {
       case 2:
       case 3:
     }
-    if (showNextAlert) {
-    }
   }
 
   const handleBack = () => {

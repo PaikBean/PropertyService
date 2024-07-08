@@ -1,12 +1,12 @@
 import { fetchGet } from '@/utils/fetch/fetchWrapper'
 
-export const fetchDuplicateEmail = async (data) => {
+export const fetchValidCompanyCode = async (data) => {
   try {
     const queryParams = {
-      email: data,
+      companyCode: data,
     }
     const response = await fetchGet(
-      '/api/manager/v1/duplicate',
+      '/api/company/v1/validate/company-code',
       {},
       queryParams
     )

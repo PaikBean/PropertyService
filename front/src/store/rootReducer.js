@@ -15,8 +15,10 @@ import scheduleTypeReducer from './slices/scheduleTypeSlice'
 import propertyTypeReducer from './slices/propertyTypeSlice'
 import clientReducer from './slices/clientSlice'
 import genderReducer from './slices/genderSlice'
+import departmentReducer2 from './slices/departmentSlice2'
 
 const rootReducer = combineReducers({
+  departmentList: departmentReducer2,
   genderList: genderReducer,
   clientList: clientReducer,
   PropertyType: propertyTypeReducer,
