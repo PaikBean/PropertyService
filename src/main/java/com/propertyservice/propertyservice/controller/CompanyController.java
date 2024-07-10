@@ -49,11 +49,14 @@ public class CompanyController {
     @GetMapping("/v1/validate/biz-number")
     public Response validateBizNumber(@Valid BizNumberValidateRequestForm bizNumberValidateRequestForm, BindingResult bindingResult) {
         try {
+            companyService.validDuplicateCompany(bizNumberValidateRequestForm);
             return ValidBizRegNumber.validateBizNumber(bizNumberValidateRequestForm) ?
                     new Response(ResponseCode.SUCCESS, null, "200") :           // 진위확인 결과 true
                     new Response(ResponseCode.SUCCESS, null, "204");            // 진위확인 결과 false
+        } catch (IllegalStateException e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "401");      // 중복된 사업자 등록 번호
         } catch (Exception e) {
-            return new Response(ResponseCode.FAIL, e.getMessage(), "200");
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
 

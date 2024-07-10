@@ -15,9 +15,6 @@ const SignUpFirstStep = ({
   onClick,
   readOnly,
 }) => {
-  const [showAlert, setShowAlert] = useState(validCompany.flag)
-  const [showNextAlert, setShowNextAlert] = useState(readOnly)
-
   const handleInputChange = (field, value) => {
     setValidCompany((prev) => ({
       ...prev,

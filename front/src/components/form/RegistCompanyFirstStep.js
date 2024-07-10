@@ -8,7 +8,6 @@ import dayjs from 'dayjs'
 import SearchBtn from '../button/SearchBtn'
 import { useDispatch } from 'react-redux'
 import { fetchValidBizNumber } from '@/store/slices/registCompanySlice'
-import { useEffect } from 'react'
 
 const RegistCompanyFirstStep = ({
   inputFirst,

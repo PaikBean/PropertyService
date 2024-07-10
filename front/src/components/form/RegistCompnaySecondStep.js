@@ -1,16 +1,11 @@
 import { useEffect, useState } from 'react'
-import AddressL1 from '../autocomplete/AddressL1'
-import AddressL2 from '../autocomplete/AddressL2'
 import Gender from '../autocomplete/Gender'
 import ManagerState from '../autocomplete/ManagerState'
 import CheckSignUpPassword from '../textfield/CheckSignUpPassword'
-import InputADdressL3 from '../textfield/InputAddressL3'
-import InputEmail from '../textfield/InputEmail'
 import InputName2 from '../textfield/InputName2'
 import InputPhoneNumber from '../textfield/InputPhoneNumber'
 import InputSignUpEmail from '../textfield/InputSignUpEmail'
 import InputSignUpPassword from '../textfield/InputSignUpPassword'
-import { fetchDuplicateEmail } from '@/app/test-page/api/fetchDuplicateEmail'
 
 const { Stack, Grid, Button, Alert } = require('@mui/material')
 

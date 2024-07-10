@@ -1,36 +1,33 @@
+import { fetchGet } from '@/utils/fetch/fetchWrapper'
+
 const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit')
 
 export const fetchDepartmentList = createAsyncThunk(
   'manager/fetchDepartmentList',
-  async () => {
-    // Todo: 회사코드로 등록된 부서들을 검색해서 가져와야함
-    // const response = await fetch('/api/client-list')
-    // const data = await response.json()
-    const data = {
-      responseCode: 'SUCCESS',
-      data: [
-        {
-          departmentId: 1,
-          departmentName: '부서 1',
-        },
-        {
-          departmentId: 2,
-          departmentName: '부서 2',
-        },
-        {
-          departmentId: 2,
-          departmentName: '부서 2',
-        },
-      ],
-      message: null,
-      code: '200',
+  async (companyCode) => {
+    try {
+      const queryParams = {
+        companyCode: companyCode,
+      }
+      const response = await fetchGet(
+        '/api/department/v1/department-list',
+        {},
+        queryParams
+      )
+
+      if (response.responseCode === 'SUCCESS') {
+        return response.data
+      } else {
+        throw new Error(response.message || 'Error!')
+      }
+    } catch (error) {
+      return new Error(error.message) // 에러 발생 시 null 반환
     }
-    return data
   }
 )
 
 const departmentSlice = createSlice({
-  name: 'department',
+  name: 'department2',
   initialState: {
     options: null,
     status: 'idle',
@@ -44,7 +41,7 @@ const departmentSlice = createSlice({
       })
       .addCase(fetchDepartmentList.fulfilled, (state, action) => {
         state.status = 'succeeded'
-        state.options = action.payload.data
+        state.options = action.payload
       })
       .addCase(fetchDepartmentList.rejected, (state, action) => {
         state.status = 'failed'

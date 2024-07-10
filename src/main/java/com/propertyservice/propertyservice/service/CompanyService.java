@@ -8,6 +8,7 @@ import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.company.CompanyRepository;
 import com.propertyservice.propertyservice.repository.company.ManagerRepository;
 import com.propertyservice.propertyservice.repository.property.CompanyAddressRepository;
+import com.propertyservice.propertyservice.utils.validation.dto.BizNumberValidateRequestForm;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,5 +66,12 @@ public class CompanyService {
                 .companyPresidnetName(company.getPresidentName())
                 .companyBizNumber(company.getBizNumber())
                 .build();
+    }
+
+    public void validDuplicateCompany(BizNumberValidateRequestForm bizNumberValidateRequestForm) {
+        boolean flag = companyRepository.existsByBizNumber(bizNumberValidateRequestForm.getBNo());
+        if(flag){
+            throw new IllegalStateException("등록된 회사입니다.");
+        }
     }
 }

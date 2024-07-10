@@ -103,6 +103,7 @@ const TestPage = () => {
           setCurrentStep(currentStep + 1)
           setShowNextAlert(!showNextAlert)
         }
+        break
       case 1:
         if (
           stepFlag.secondEmail &&
@@ -111,8 +112,7 @@ const TestPage = () => {
         ) {
           setCurrentStep(currentStep + 1)
         }
-      case 2:
-      case 3:
+        break
     }
   }
 
@@ -162,11 +162,17 @@ const TestPage = () => {
 
   const handleValidateBizNum = async () => {
     const result = await fetchValidBizNumber(validBiz)
+    console.log(result)
     if (result.code === '200') {
       // 유효성 검사 통과 시 처리 로직 추가
       setShowBizNumberErrorAlert(false)
       setShowNextAlert(true)
       setStepFlag((prev) => ({ ...prev, first: true }))
+    } else if (result == 'Error: Error: 등록된 회사입니다.') {
+      alert(
+        ' 등록된 사업자 번호 입니다.\n 확인이 필요하시면 관리자에게 연락해주세요.\n\n 초기화면으로 돌아갑니다.'
+      )
+      router.push('/')
     } else {
       // 유효성 검사 실패 시 처리 로직 추가
       setShowNextAlert(false)
@@ -286,9 +292,15 @@ const TestPage = () => {
       </Container>
       <Dialog
         open={isRegistDialogOpen}
-        onClose={() => setIsRegistDialogOpen(false)}
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            setIsRegistDialogOpen(false)
+          }
+        }}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        maxWidth="sm" // Dialog의 최대 너비를 "sm"으로 설정합니다.
+        fullWidth // Dialog가 최대 너비를 채우도록 설정합니다.
       >
         <DialogTitle id="alert-dialog-title">회사 코드 발급 완료</DialogTitle>
         <DialogContent>

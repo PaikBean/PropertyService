@@ -12,14 +12,13 @@ export const fetchValidBizNumber = async (data) => {
       {},
       queryParams
     )
-
     if (response.responseCode === 'SUCCESS') {
       return response
     } else {
-      throw new Error(response.message || 'Error!')
+      throw new Error(response.code || 'Error!')
     }
   } catch (error) {
     // console.error(error.message)
-    return new Error(error.message) // 에러 발생 시 null 반환
+    return new Error(error) // 에러 발생 시 null 반환
   }
 }

@@ -1,8 +1,9 @@
 'use client'
-import BackBtn from '@/components/button/BackBtn'
-import NextBtn from '@/components/button/NextBtn'
-import SubmitBtn from '@/components/button/SubmitBtn'
 // React, Next
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+// Materials
 import {
   Box,
   Container,
@@ -13,21 +14,31 @@ import {
   StepLabel,
   Stepper,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
 } from '@mui/material'
-import { useState } from 'react'
-import { fetchValidCompanyCode } from './api/fetchValidCompanyCode'
-import SignUpFirstStep from '@/components/form/SignUpFirstStep'
-import SignUpSecondStep from '@/components/form/SignUpSecondStep'
-
-// Materials
 
 // Custom Component
+import BackBtn from '@/components/button/BackBtn'
+import NextBtn from '@/components/button/NextBtn'
+import SubmitBtn from '@/components/button/SubmitBtn'
+import SignUpFirstStep from '@/components/form/SignUpFirstStep'
+import SignUpSecondStep from '@/components/form/SignUpSecondStep'
+import SignUpThirdStep from '@/components/form/SignUpThirdStep'
 
 // Utils
+import { fetchREgistManager } from './api/fetchRegistManager'
+import { fetchValidCompanyCode } from './api/fetchValidCompanyCode'
+import { fetchDuplicateEmail } from '../regist-company/api/fetchDuplicateEmail'
 
 const steps = ['회사 인증', '가입 정보', '계정 등록']
 
 const TestPage = () => {
+  const router = useRouter()
   const initValidCompany = {
     companyCode: '',
     companyName: '',
@@ -42,7 +53,7 @@ const TestPage = () => {
     departmentId: null,
     managerRank: '',
     managerPosition: '',
-    ManagerStateId: null,
+    managerStateId: null,
     managerPhoneNumber: '',
   }
 
@@ -61,12 +72,22 @@ const TestPage = () => {
     thirdPassword: false, // 비밀번호 일치
   }
 
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(0)
 
   const [validCompany, setValidCompany] = useState(initValidCompany)
   const [managerInfo, setManagerInfo] = useState(initManagerInfo)
   const [registAccount, setRegistAccount] = useState(initRegistAccount)
   const [stepFlag, setStepFlag] = useState(initStepFlag)
+
+  const [isRegistDialogOpen, setIsRegistDialogOpen] = useState(false)
+
+  const confirmYes = () => {
+    setIsRegistDialogOpen(false)
+    setValidCompany(initValidCompany)
+    setManagerInfo(initManagerInfo)
+    setRegistAccount(initRegistAccount)
+    router.push('/')
+  }
 
   const handleBack = () => {
     currentStep > 0 ? setCurrentStep(currentStep - 1) : null
@@ -79,12 +100,50 @@ const TestPage = () => {
           setCurrentStep(currentStep + 1)
         }
       case 1:
-      case 2:
-      case 3:
+        if (checkAllSecond) {
+          setCurrentStep(currentStep + 1)
+        }
     }
   }
 
-  const handleSubmit = () => {}
+  const handleValidDuplicateEmail = async () => {
+    const result = await fetchDuplicateEmail(registAccount.managerEmail)
+    if (result.code === '200') {
+      setStepFlag((prev) => ({ ...prev, thirdEmail: true }))
+      setRegistAccount((prev) => ({ ...prev, duplicateEmail: true }))
+    } else {
+      // 중복
+      setStepFlag((prev) => ({ ...prev, thirdEmail: false }))
+      setRegistAccount((prev) => ({ ...prev, duplicateEmail: true }))
+    }
+  }
+
+  const handleSubmit = async () => {
+    const data = {
+      companyCode: validCompany.companyCode,
+      managerName: managerInfo.managerName,
+      managerPhoneNumber: managerInfo.managerPhoneNumber,
+      gender: managerInfo.managerGender,
+      departmentId: managerInfo.departmentId,
+      managerRank: managerInfo.managerRank,
+      managerPosition: managerInfo.managerPosition,
+      managerStateId: managerInfo.managerStateId,
+      managerEmail: registAccount.managerEmail,
+      managerPassword: registAccount.managerPassword,
+    }
+    const result = await fetchREgistManager(data)
+    if (result.code === '201') {
+      setIsRegistDialogOpen(!isRegistDialogOpen)
+    } else {
+      alert('실패')
+    }
+  }
+
+  const checkAllSecond = () => {
+    return Object.values(managerInfo).every(
+      (field) => field !== '' && field !== null
+    )
+  }
 
   const validCompanyCode = async () => {
     const result = await fetchValidCompanyCode(validCompany.companyCode)
@@ -92,7 +151,7 @@ const TestPage = () => {
       setValidCompany((prev) => ({
         ...prev,
         companyName: result.data.companyName,
-        companyPresidnetName: result.data.companyName,
+        companyPresidnetName: result.data.companyPresidnetName,
         companyBizNumber: result.data.companyBizNumber,
         flag: true,
       }))
@@ -125,7 +184,14 @@ const TestPage = () => {
           />
         )
       case 2:
-        return <div>세번째</div>
+        return (
+          <SignUpThirdStep
+            registAccount={registAccount}
+            setRegistAccount={setRegistAccount}
+            stepFlag={stepFlag}
+            handleValidEmail={handleValidDuplicateEmail}
+          />
+        )
       default:
         return 'Unknown step'
     }
@@ -153,6 +219,7 @@ const TestPage = () => {
           padding: 3,
           // border: '2px solid black',
           width: '700px',
+          maxWidth: '90vw', // 모바일 화면에서 최대 너비를 제한합니다.
         }}
       >
         <Typography variant="h4">회원 가입</Typography>
@@ -202,6 +269,31 @@ const TestPage = () => {
           </Grid>
         </Stack>
       </Container>
+      <Dialog
+        open={isRegistDialogOpen}
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            setIsRegistDialogOpen(false)
+          }
+        }}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        maxWidth="md" // Dialog의 최대 너비를 설정합니다.
+        fullWidth // Dialog가 최대 너비를 채우도록 설정합니다.
+      >
+        <DialogTitle id="alert-dialog-title">회원가입 완료</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            회원가입이 완료되었습니다. <br />
+            로그인해주세요.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={confirmYes} color="primary" autoFocus>
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }

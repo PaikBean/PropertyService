@@ -1,13 +1,16 @@
 package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.company.Department;
+import com.propertyservice.propertyservice.dto.company.DepartmentDto;
 import com.propertyservice.propertyservice.dto.company.DepartmentForm;
+import com.propertyservice.propertyservice.repository.company.CompanyRepository;
 import com.propertyservice.propertyservice.repository.company.DepartmentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class DepartmentService {
 
     private final DepartmentRepository departmentRepository;
+    private final CompanyRepository companyRepository;
     public Department searchDepartment(String departmentName){
         return departmentRepository.findByDepartmentName(departmentName).orElseThrow(
                 ()-> new EntityNotFoundException("부서가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
@@ -31,5 +35,9 @@ public class DepartmentService {
                 .departmentName(departmentForm.getDepartmentName())
                 .departmentCode(departmentForm.getDepartmentCode())
                 .build()).getDepartmentId();
+    }
+
+    public List<DepartmentDto> searchDepartmentList(String companyCode) {
+        return departmentRepository.searchDepartmentListByCompanyCode(companyCode);
     }
 }
