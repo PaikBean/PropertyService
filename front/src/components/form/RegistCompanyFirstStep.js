@@ -56,7 +56,13 @@ const RegistCompanyFirstStep = ({
               label="등록일"
               value={dayjs(inputFirst.bizStartDate)}
               onChange={(value) => {
-                handleInputChange('bizStartDate', value.format('YYYYMMDD'))
+                if (value) {
+                  // Check if value is not null or undefined
+                  handleInputChange('bizStartDate', value.format('YYYYMMDD'))
+                } else {
+                  // Handle the case where date is cleared or invalid
+                  handleInputChange('bizStartDate', '')
+                }
               }}
               readOnly={readOnly}
             />
