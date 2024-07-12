@@ -1,19 +1,16 @@
 package com.propertyservice.propertyservice.dto.company;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+/**
+ * 로그인 json 정보를 맵핑하기 위한 Form DTO
+ */
 @Getter
+@Setter
+@NoArgsConstructor
 public class LoginFormDto {
-    // 혹시 몰라서 작성함.
-    // security 작동안 할 경우 사용.
-
-    private String username;
+    private String email;
     private String password;
-
-    @Builder
-    public LoginFormDto(String username, String password){
-        this.username = username;
-        this.password = password;
-    }
 }

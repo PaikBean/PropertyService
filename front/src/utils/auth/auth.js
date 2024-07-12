@@ -1,28 +1,27 @@
-const login = async (email, password) => {
-  try {
-    let path = "/api/manager/v1/login"
-    let data = {
-      email : email,
-      password: password
-    }
-    for (const [key, value] of Object.entries(data)) {
-      path = path.replace(`:${key}`, value)
-    }
+import { fetchPost } from '../fetch/fetchWrapper'
 
-    const queryString = new URLSearchParams(queryParams).toString()
-    const finalUrl = queryString ? `${path}?${queryString}` : path
-    console.log(finalUrl)
-    const response = await fetch(finalUrl, {
+export const login = async (data) => {
+  try {
+    const params = {
+      email: data.get('email'),
+      password: data.get('password'),
+    }
+    const response = await fetch('/api/manager/v1/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
-    });
-    const result = await response.json();
+      body: JSON.stringify(params),
+    })
+    if (response.ok && response.status === 200) {
+      localStorage.setItem('token', response.headers.get('Authorization'))
+      return await response.json()
+    } else {
+      console.error('Login failed:', response.statusText)
+      throw new Error('Login failed')
+    }
   } catch (error) {
-    console.error('Error:', error)
+    console.error('Error fetching data:', error)
+    throw error
   }
 }
-
-export default login
