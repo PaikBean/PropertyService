@@ -24,12 +24,12 @@ export const fetchRegistRevenue = async (data) => {
       '/api/revenue/v1/revenue-ledger',
       requestData
     )
-    if (!response.ok) {
-      // throw new Error('Network response was not ok')
-      throw new Error(response.statusText)
-    }
     const result = await response.json()
-    return result
+    if (result.responseCode === 'SUCCESS') {
+      return result
+    } else {
+      throw new Error(result.message)
+    }
   } catch (error) {
     console.error('Error saving revenue data:', error)
     throw error
