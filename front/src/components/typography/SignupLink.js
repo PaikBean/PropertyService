@@ -1,5 +1,12 @@
-import { Typography } from '@mui/material'
+// React, Next
 import { useRouter } from 'next/navigation'
+
+// Materials
+import { Typography } from '@mui/material'
+
+// Custom Components
+
+// Utils
 
 const SignUpLink = ({ setLoading }) => {
   const router = useRouter()

@@ -1,5 +1,4 @@
 import { TextField } from '@mui/material'
-import { useEffect } from 'react'
 
 const InputSignUpPassword = ({ value, onChange, sx, label = '비밀번호' }) => {
   return (

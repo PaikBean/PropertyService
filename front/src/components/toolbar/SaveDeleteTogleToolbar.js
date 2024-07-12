@@ -1,5 +1,3 @@
-import DeleteBtn from '../button/DeleteBtn'
-
 const {
   Grid,
   Toolbar,
