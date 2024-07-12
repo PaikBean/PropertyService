@@ -1,11 +1,12 @@
 const getAuthHeader = () => {
   const token = localStorage.getItem('token')
-  return token ? { Authorization: `Bearer ${token}` } : {}
+  // return token ? { Authorization: `Bearer ${token}` } : {}
+  return token ? { Authorization: `${token}` } : {}
 }
 
 const handleResponse = async (response) => {
   const result = await response.json()
-  if (!response.ok) {
+  if (!response.ok || response.status !== 200) {
     throw new Error(result.message || response.statusText)
   }
   return result
