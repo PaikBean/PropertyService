@@ -1,7 +1,14 @@
-import { fetchInflowTypeList } from '@/store/slices/inflowTypeSlice'
-import { Autocomplete, TextField } from '@mui/material'
+// React, Next
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+// Materials
+import { Autocomplete, TextField } from '@mui/material'
+
+// Custom Components
+
+// Utils
+import { fetchInflowTypeList } from '@/store/slices/inflowTypeSlice'
 
 const InflowType = ({ value, onChange, label = 'Inflow Type' }) => {
   const dispatch = useDispatch()

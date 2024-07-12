@@ -1,14 +1,20 @@
+// React, Next
+import { useState } from 'react'
+
+// Materials
+const { Modal, Box, Stack, Grid, IconButton } = require('@mui/material')
+import RemoveIcon from '@mui/icons-material/Remove'
+
+// Custom Components
 import SaveToolbar from '../toolbar/SaveToolbar'
 import AddIcon from '@mui/icons-material/Add'
-import RemoveIcon from '@mui/icons-material/Remove'
 import CustomDataGrid2 from '../datagrid/CustomDataGrid2'
 import ManagerColumns from './columns/ManagerColumns'
-import { useState } from 'react'
 import DepartmentMemberColumns from './columns/DepartmentMemberColumns'
 
-const { Modal, Box, Stack, Grid, IconButton } = require('@mui/material')
+// Utils
 
-const HandleDepartmentMember = ({ open, handleClose, data, onClick }) => {
+const HandleDepartmentMember = ({ open, handleClose, data }) => {
   const [departmentId, setDepartmentId] = useState(data.departmentId)
 
   const [managerRows, setManagerRows] = useState([])

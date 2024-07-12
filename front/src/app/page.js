@@ -1,24 +1,25 @@
 'use client'
-import { useRouter } from 'next/navigation' // useRouter 훅을 임포트합니다.
+// React, Next
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
-import SilhouetteLicense from '@/components/typography/SilhouetteLicense'
+// Materials
 import { Box, Grid, Typography, Avatar, CircularProgress } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+
+// Custom Components
+import SilhouetteLicense from '@/components/typography/SilhouetteLicense'
 import InputEmail from '@/components/textfield/InputEmail'
 import InputPassword from '@/components/textfield/InputPassword'
 import LoginBtn from '@/components/button/LoginBtn'
 import SignUpLink from '@/components/typography/SignupLink'
 import FindPasswordLink from '@/components/typography/FindPasswordLink'
-import { useDispatch, useSelector } from 'react-redux'
-import { loginUser } from '@/store/slices/authSlice'
 import RegistCompanyLink from '@/components/typography/RegistCompanyLink'
-import { useEffect, useState } from 'react'
-import auth, { login } from '@/utils/auth/auth'
+import { login } from '@/utils/auth/auth'
 
+// Utils
 export default function Home() {
-  const router = useRouter() // useRouter 훅으로 router 객체를 가져옵니다.
-  const dispatch = useDispatch()
-  const { user, status, error } = useSelector((state) => state.auth)
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
 
   const [theme, setTheme] = useState(null)

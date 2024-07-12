@@ -1,8 +1,15 @@
+// React, Next
+
+// Materials
 import { Stack } from '@mui/material'
+
+// Custom Components
 import InputSignUpPassword from '../textfield/InputSignUpPassword'
 import CheckSignUpPassword from '../textfield/CheckSignUpPassword'
 import { useEffect, useState } from 'react'
 import SaveBtn from '../button/SaveBtn'
+
+// Utils
 
 const InitialPasswordSecondStep = ({
   inputSecond,

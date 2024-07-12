@@ -1,16 +1,16 @@
-import { Grid, Stack } from '@mui/material'
-import InputName from '../textfield/InputName'
-import InputPhoneNumber from '../textfield/InputPhoneNumber'
-import AddressL1 from '../autocomplete/AddressL1'
-import AddressL2 from '../autocomplete/AddressL2'
+// React, Next
 
-import InputAddressL3 from '../textfield/InputAddressL3'
+// Materials
+import { Grid, Stack } from '@mui/material'
+
+// Custom Components
+import InputPhoneNumber from '../textfield/InputPhoneNumber'
 import Gender from '../autocomplete/Gender'
 import InputName2 from '../textfield/InputName2'
 import ManagerState from '../autocomplete/ManagerState'
-import Department from '../autocomplete/Department'
 import Department2 from '../autocomplete/Department2'
-import { useEffect } from 'react'
+
+// Utils
 
 const SignUpSecondStep = ({ managerInfo, setManagerInfo, companyCode }) => {
   const handleInputChange = (field, value) => {

@@ -1,11 +1,13 @@
-import AddressL1 from '../autocomplete/AddressL1'
-import AddressL2 from '../autocomplete/AddressL2'
-import InputADdressL3 from '../textfield/InputAddressL3'
-import InputEmail from '../textfield/InputEmail'
+// React, Next
+
+// Materials
+const { Stack } = require('@mui/material')
+
+// Custom Components
 import InputName2 from '../textfield/InputName2'
 import InputSignUpEmail from '../textfield/InputSignUpEmail'
 
-const { Stack } = require('@mui/material')
+// Utils
 
 const RegistCompanyThirdStep = ({ inputThird, setInputThird }) => {
   const handleInputChange = (field, value) => {

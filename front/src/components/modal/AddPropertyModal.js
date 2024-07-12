@@ -1,11 +1,18 @@
-import { Grid, Modal, Stack } from '@mui/material'
-import SaveToolbar from '../toolbar/SaveToolbar'
+// React, Next
 import { useState } from 'react'
+
+// Materials
+import { Grid, Modal, Stack } from '@mui/material'
+
+// Custom Components
 import AddressL1 from '../autocomplete/AddressL1'
 import AddressL2 from '../autocomplete/AddressL2'
 import TransactionType from '../autocomplete/TransactionType'
 import SearchBtn from '../button/SearchBtn'
 import CustomDataGrid from '../datagrid/CustomDataGrid'
+import SaveToolbar from '../toolbar/SaveToolbar'
+
+// Utils
 import propertyColumns from '@/pages/clientsLedger/columns/PropertyColumns'
 import { fetchSearchProperties } from '@/pages/clientsLedger/api/fetchSearchProperties'
 

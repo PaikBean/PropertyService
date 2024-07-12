@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux'
 import exampleReducer from './slices/exampleSlice'
-import authReducer from './slices/authSlice'
 import companyReducer from './slices/companySlice'
 import signUpReducer from './slices/signUpSlice'
 import addressReducer from './slices/addressSlice'
@@ -33,7 +32,6 @@ const rootReducer = combineReducers({
   address: addressReducer,
   signUp: signUpReducer,
   company: companyReducer,
-  auth: authReducer,
   example: exampleReducer,
 })
 

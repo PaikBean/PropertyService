@@ -1,7 +1,14 @@
-import { fetchDepartmentList } from '@/store/slices/departmentSlice2'
-import { Autocomplete, TextField } from '@mui/material'
+// React, Next
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+// Materials
+import { Autocomplete, TextField } from '@mui/material'
+
+// Custom Components
+
+// Utils
+import { fetchDepartmentList } from '@/store/slices/departmentSlice2'
 
 const Department2 = ({
   value,

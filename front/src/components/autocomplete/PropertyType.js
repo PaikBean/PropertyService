@@ -1,7 +1,14 @@
-import { fetchPropertyTypeList } from '@/store/slices/propertyTypeSlice'
-import { Autocomplete, TextField } from '@mui/material'
+// React, Next
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+// Materials
+import { Autocomplete, TextField } from '@mui/material'
+
+// Custom Components
+
+// Utils
+import { fetchPropertyTypeList } from '@/store/slices/propertyTypeSlice'
 
 const PropertyType = ({ value, onChange, sx, readOnly = false }) => {
   const dispatch = useDispatch()

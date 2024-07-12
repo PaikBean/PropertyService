@@ -1,7 +1,14 @@
-import { fetchAddressesLevel2 } from '@/store/slices/addressSlice'
-import { Autocomplete, TextField } from '@mui/material'
+// React, Next
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+// Materials
+import { Autocomplete, TextField } from '@mui/material'
+
+// Custom Components
+
+// Utils
+import { fetchAddressesLevel2 } from '@/store/slices/addressSlice'
 
 const AddressL2 = ({
   value,

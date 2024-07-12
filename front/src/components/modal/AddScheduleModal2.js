@@ -1,20 +1,25 @@
-import { Box, Button, Modal, Stack, Typography } from '@mui/material'
-import SaveToolbar from '../toolbar/SaveToolbar'
-import InputName from '../textfield/InputName'
-import InputName2 from '../textfield/InputName2'
-import ManagerAutocomplete from '../autocomplete/ManagerAutocomplete'
+// React, Next
 import { useState } from 'react'
+
+// Materials
+import { Modal, Stack } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import BasicDatePicker from '@/components/datepicker/BasicDatePicker'
-import dayjs from 'dayjs'
+
+// Custom Components
+import Clients from '../autocomplete/Clients'
 import RemarkTextField from '../textfield/RemarkTextField'
 import ScheduleType from '../autocomplete/scheduleType'
 import Priority from '../autocomplete/Priority'
-import { fetchRegistSchedule } from '@/pages/clientsLedger/api/fetchRegistSchedule'
-import Clients from '../autocomplete/Clients'
+import SaveToolbar from '../toolbar/SaveToolbar'
+import ManagerAutocomplete from '../autocomplete/ManagerAutocomplete'
+import BasicDatePicker from '@/components/datepicker/BasicDatePicker'
 
-const AddScheduleModal2 = ({ open, handleClose, data, onClick }) => {
+// Utils
+import dayjs from 'dayjs'
+import { fetchRegistSchedule } from '@/pages/clientsLedger/api/fetchRegistSchedule'
+
+const AddScheduleModal2 = ({ open, handleClose, data }) => {
   const initialData = {
     managerId: null,
     clientId: data,

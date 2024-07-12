@@ -1,5 +1,3 @@
-import { fetchPost } from '../fetch/fetchWrapper'
-
 export const login = async (data) => {
   try {
     const params = {
@@ -24,4 +22,8 @@ export const login = async (data) => {
     console.error('Error fetching data:', error)
     throw error
   }
+}
+
+export const logout = () => {
+  // 로그아웃 로직
 }

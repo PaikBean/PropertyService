@@ -1,6 +1,13 @@
+// React, Next
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+// Materials
 import { Autocomplete, TextField } from '@mui/material'
+
+// Custom Components
+
+// Utils
 import { fetchManagerStateList } from '@/store/slices/managerStateSlice'
 
 const ManagerState = ({ value, onChange, label = '근무 상태' }) => {

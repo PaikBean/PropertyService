@@ -1,4 +1,10 @@
+// React, Next
 import { useEffect, useState } from 'react'
+
+// Materials
+const { Stack, Grid, Button, Alert } = require('@mui/material')
+
+// Custom Components
 import Gender from '../autocomplete/Gender'
 import ManagerState from '../autocomplete/ManagerState'
 import CheckSignUpPassword from '../textfield/CheckSignUpPassword'
@@ -7,7 +13,7 @@ import InputPhoneNumber from '../textfield/InputPhoneNumber'
 import InputSignUpEmail from '../textfield/InputSignUpEmail'
 import InputSignUpPassword from '../textfield/InputSignUpPassword'
 
-const { Stack, Grid, Button, Alert } = require('@mui/material')
+// Utils
 
 const RegistCompanySecondStep = ({
   inputSecond,

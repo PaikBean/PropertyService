@@ -1,10 +1,15 @@
+// React, Next
 import { useEffect, useState } from 'react'
+
+// Materials
+const { Stack, Button, Grid, Alert } = require('@mui/material')
+
+// Custom Components
 import CheckSignUpPassword from '../textfield/CheckSignUpPassword'
 import InputSignUpEmail from '../textfield/InputSignUpEmail'
 import InputSignUpPassword from '../textfield/InputSignUpPassword'
-import { useSelector } from 'react-redux'
 
-const { Stack, Button, Grid, Alert } = require('@mui/material')
+// Utils
 
 const fetchDuplicateEmail = async (email) => {
   try {

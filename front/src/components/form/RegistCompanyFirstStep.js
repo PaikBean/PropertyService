@@ -1,12 +1,19 @@
-import { Grid, Stack, Typography } from '@mui/material'
-import InputBizNumber from '../textfield/InputBizNumber'
-import BasicDatePicker from '../datepicker/BasicDatePicker'
+// React, Next
+import { useDispatch } from 'react-redux'
+
+// Materials
+import { Grid, Stack } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
+// Custom Components
+import InputBizNumber from '../textfield/InputBizNumber'
+import BasicDatePicker from '../datepicker/BasicDatePicker'
 import InputName2 from '../textfield/InputName2'
-import dayjs from 'dayjs'
 import SearchBtn from '../button/SearchBtn'
-import { useDispatch } from 'react-redux'
+
+// Utils
+import dayjs from 'dayjs'
 import { fetchValidBizNumber } from '@/store/slices/registCompanySlice'
 
 const RegistCompanyFirstStep = ({

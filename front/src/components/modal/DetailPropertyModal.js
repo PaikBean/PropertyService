@@ -1,3 +1,7 @@
+// React, Next
+import { useState } from 'react'
+
+// Materials
 import {
   Button,
   Dialog,
@@ -9,8 +13,8 @@ import {
   Modal,
   Stack,
 } from '@mui/material'
-import SaveTogleToolbar from '../toolbar/SaveTogleToolbar'
-import { useState } from 'react'
+
+// Custom Components
 import InputName2 from '../textfield/InputName2'
 import PropertyType from '../autocomplete/PropertyType'
 import TransactionType from '../autocomplete/TransactionType'
@@ -18,6 +22,8 @@ import TrasactionTypePriceForm from '@/components/form/TransactionTypePriceForm'
 import CommisionFeeForm from '../form/CommisionFeeForm'
 import RemarkTextField from '../textfield/RemarkTextField'
 import SaveDeleteTogleToolbar from '../toolbar/SaveDeleteTogleToolbar'
+
+// Utils
 
 const DetailPropertyModal = ({ open, handleClose, data, onClick }) => {
   const initPropertyData = {

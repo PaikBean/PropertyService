@@ -1,6 +1,13 @@
+// React, Next
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+// Materials
 import { Autocomplete, TextField } from '@mui/material'
+
+// Custom Components
+
+// Utils
 import { fetchGenderList } from '@/store/slices/genderSlice'
 
 const Gender = ({ value, onChange, label = '성별' }) => {

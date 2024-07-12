@@ -1,16 +1,23 @@
-import { Box, Button, Modal, Stack, Typography } from '@mui/material'
-import SaveToolbar from '../toolbar/SaveToolbar'
-import InputName from '../textfield/InputName'
-import InputName2 from '../textfield/InputName2'
-import ManagerAutocomplete from '../autocomplete/ManagerAutocomplete'
+import dayjs from 'dayjs'
+
+// React, Next
 import { useState } from 'react'
+
+// Materials
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import BasicDatePicker from '@/components/datepicker/BasicDatePicker'
-import dayjs from 'dayjs'
+
+// Custom Components
+import { Modal, Stack } from '@mui/material'
 import RemarkTextField from '../textfield/RemarkTextField'
 import ScheduleType from '../autocomplete/scheduleType'
 import Priority from '../autocomplete/Priority'
+import BasicDatePicker from '@/components/datepicker/BasicDatePicker'
+import ManagerAutocomplete from '../autocomplete/ManagerAutocomplete'
+import SaveToolbar from '../toolbar/SaveToolbar'
+
+// Utils
+
 import { fetchRegistSchedule } from '@/pages/clientsLedger/api/fetchRegistSchedule'
 
 const AddScheduleModal = ({ open, handleClose, data, onClick }) => {

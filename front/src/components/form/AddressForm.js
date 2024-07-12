@@ -1,13 +1,19 @@
-import { useEffect, useState } from 'react'
+// React, Next
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Autocomplete, Grid, Stack, TextField, Typography } from '@mui/material'
 import {
-  clearAddressL2Option,
   fetchAddressesLevel1,
   fetchAddressesLevel2,
   setAddressL1,
   setAddressL2,
 } from 'front/src/store/slices/addressSlice'
+
+// Materials
+import { Autocomplete, Stack, TextField } from '@mui/material'
+
+// Custom Components
+
+// Utils
 
 const AddressForm = () => {
   const dispatch = useDispatch()

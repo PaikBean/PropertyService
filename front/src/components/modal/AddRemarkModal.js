@@ -1,10 +1,18 @@
-import { Modal, Stack } from '@mui/material'
+// React, Next
 import { useState } from 'react'
+
+// Materials
+
+import { Modal, Stack } from '@mui/material'
+
+// Custom Components
 import SaveToolbar from '../toolbar/SaveToolbar'
 import RemarkTextField from '../textfield/RemarkTextField'
+
+// Utils
 import { fetchRegistClientRemark } from '@/pages/clientsLedger/api/fetchRegistClientRemark'
 
-const AddRemarkModal = ({ open, handleClose, data, onClick }) => {
+const AddRemarkModal = ({ open, handleClose, data }) => {
   const initialData = {
     managerId: data.managerId,
     clientId: data.clientId,

@@ -1,15 +1,15 @@
-import { Alert, Button, Grid, Stack } from '@mui/material'
-import Department from '../autocomplete/Department'
-import InputRank from '../textfield/InputRank'
-import InputPosition from '../textfield/InputPosition'
-import ManagerState from '../autocomplete/ManagerState'
-import InputEmail from '../textfield/InputEmail'
-import InputPassword from '../textfield/InputPassword'
-import InputManagerCode from '../textfield/InputManagerCode'
+// React, Next
 import { useEffect, useState } from 'react'
+
+// Materials
+import { Alert, Button, Grid, Stack } from '@mui/material'
+
+// Custom Components
 import InputSignUpEmail from '../textfield/InputSignUpEmail'
 import InputSignUpPassword from '../textfield/InputSignUpPassword'
 import CheckSignUpPassword from '../textfield/CheckSignUpPassword'
+
+// Utils
 
 const SignUpThirdStep = ({
   registAccount,

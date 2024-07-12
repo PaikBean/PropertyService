@@ -1,3 +1,5 @@
+import { fetchPost } from '@/utils/fetch/fetchWrapper'
+
 export const fetchRegistRevenue = async (data) => {
   try {
     const requestData = {
@@ -17,15 +19,11 @@ export const fetchRegistRevenue = async (data) => {
       commission: data.commision,
       remark: data.remark,
     }
-    const response = await fetch(`/api/revenue/v1/revenue-ledger`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestData),
-    })
-    console.log(response)
 
+    const response = await fetchPost(
+      '/api/revenue/v1/revenue-ledger',
+      requestData
+    )
     if (!response.ok) {
       // throw new Error('Network response was not ok')
       throw new Error(response.statusText)

@@ -1,9 +1,15 @@
+// React, Next
 import { useState } from 'react'
+
+// Materials
+const { Modal, Stack } = require('@mui/material')
+
+// Custom Components
 import ManagerAutocomplete from '../autocomplete/ManagerAutocomplete'
 import InputName2 from '../textfield/InputName2'
 import SaveToolbar from '../toolbar/SaveToolbar'
 
-const { Modal, Stack, Grid, Button } = require('@mui/material')
+// Utils
 
 const AddDepartmentModal = ({ open, handleClose, data, onClick }) => {
   const initialData = {

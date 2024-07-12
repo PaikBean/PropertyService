@@ -1,14 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { useState } from 'react'
+// React, Next
+
+// Materials
 import { Stack, Grid, Divider, Alert } from '@mui/material'
-import InputCompanyCode from '../textfield/InputCompanyCode'
-import CompanyName from '../textfield/CompanyName'
-import CompanyBizNum from '../textfield/CompanyBizNum'
-import CompanyPresidentName from '../textfield/CompanyPresidentName'
+
+// Custom Components
 import SearchBtn from '../button/SearchBtn'
-import { fetchCompanyDetails } from '@/store/slices/companySlice'
-import { setCompanyInfo } from '@/store/slices/signUpSlice'
 import InputName2 from '../textfield/InputName2'
+
+// Utils
+
 const SignUpFirstStep = ({
   validCompany,
   setValidCompany,

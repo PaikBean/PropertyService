@@ -1,6 +1,13 @@
+// React, Next
+
+// Materials
 import { Button, Grid, Stack, Typography } from '@mui/material'
+
+// Custom Components
 import CashTextField from '../textfield/CashTextField'
 import CashTransWonTextField from '../textfield/CashTransWonTextField'
+
+// Utils
 
 const TrasactionTypePriceForm = ({ value, onChange, readOnly }) => {
   const renderInputs = () => {
