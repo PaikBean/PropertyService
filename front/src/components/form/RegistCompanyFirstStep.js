@@ -14,7 +14,6 @@ import SearchBtn from '../button/SearchBtn'
 
 // Utils
 import dayjs from 'dayjs'
-import { fetchValidBizNumber } from '@/store/slices/registCompanySlice'
 
 const RegistCompanyFirstStep = ({
   inputFirst,
@@ -28,10 +27,6 @@ const RegistCompanyFirstStep = ({
       ...prev,
       [field]: value,
     }))
-  }
-
-  const handleSearch = () => {
-    dispatch(fetchValidBizNumber(inputFirst))
   }
 
   return (
@@ -85,7 +80,6 @@ const RegistCompanyFirstStep = ({
           />
         </Grid>
       </Grid>
-      {/* <SearchBtn onClick={handleSearch} /> */}
       <SearchBtn onClick={onClick} />
     </Stack>
   )
