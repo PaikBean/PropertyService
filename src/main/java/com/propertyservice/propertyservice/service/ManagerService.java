@@ -3,6 +3,7 @@ package com.propertyservice.propertyservice.service;
 import com.propertyservice.propertyservice.domain.common.Role;
 import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.domain.manager.ManagerState;
+import com.propertyservice.propertyservice.dto.company.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
@@ -128,7 +129,7 @@ public class ManagerService implements UserDetailsService {
     // 로그인.
     // security Login
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CustomUserDetail loadUserByUsername(String username) throws UsernameNotFoundException {
 
         System.out.println("managerEmail  " + username);
         Manager manager = managerRepository.findByManagerEmail(username).orElseThrow(
@@ -138,7 +139,9 @@ public class ManagerService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("COM_USER"));
 
-        return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
+
+        //return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
+        return  new CustomUserDetail(manager);
     }
 
 }

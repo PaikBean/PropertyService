@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -97,7 +98,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         log.info("Login Success <Email : {}> ", authResult.getName());
-        User user = (User) authResult.getPrincipal();
+        UserDetails user = (UserDetails) authResult.getPrincipal();
 
         // 2. 권한 가져오기.
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
