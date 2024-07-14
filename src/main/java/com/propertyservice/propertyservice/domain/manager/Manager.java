@@ -66,4 +66,8 @@ public class Manager extends BaseTimeEntity{
         this.passwordErrorCount = passwordErrorCount;
         this.role = role;
     }
+
+    public void resetPassword(String managerPassword){
+        this.managerPassword = managerPassword;
+    }
 }

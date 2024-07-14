@@ -3,6 +3,7 @@ package com.propertyservice.propertyservice.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
+import com.propertyservice.propertyservice.dto.company.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.company.LoginFormDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

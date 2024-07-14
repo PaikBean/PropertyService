@@ -1,6 +1,7 @@
 package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.common.Role;
+import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.domain.manager.ManagerState;
 import com.propertyservice.propertyservice.dto.company.CustomUserDetail;
@@ -9,11 +10,15 @@ import com.propertyservice.propertyservice.repository.common.AddressLevel1Reposi
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
 import com.propertyservice.propertyservice.repository.common.ManagerStateRepository;
 import com.propertyservice.propertyservice.repository.company.*;
+import io.jsonwebtoken.io.IOException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,7 +33,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ManagerService implements UserDetailsService {
 
@@ -58,9 +63,18 @@ public class ManagerService implements UserDetailsService {
      * @param managerEmail : 사용자 email
      * @return manager
      */
-    public Long searchManagerByEmail(String managerEmail){
+    public Long searchManagerIdByEmail(String managerEmail){
         return managerRepository.findByManagerEmail(managerEmail).orElseThrow(
                 ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요.")).getManagerId();
+    }
+    /**
+     * 사용자 email를 통해 정보 가져오기
+     * @param managerEmail : 사용자 email
+     * @return manager
+     */
+    public Manager searchManagerByEmail(String managerEmail){
+        return managerRepository.findByManagerEmail(managerEmail).orElseThrow(
+                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요."));
     }
 
     /**
@@ -70,7 +84,7 @@ public class ManagerService implements UserDetailsService {
      */
     public boolean checkDuplicate(String email){
         try{
-            Long manager = searchManagerByEmail(email);
+            Long manager = searchManagerIdByEmail(email);
             return false;
         }catch (Exception e){
             return true;
@@ -115,26 +129,63 @@ public class ManagerService implements UserDetailsService {
     private Long validAddressLevel1(Long addressLevel1Id) {
 
         return addressLevel1Repository.findById(addressLevel1Id).orElseThrow(
-                () -> new IllegalStateException("주소의 입력이 잘못되었습니다.")
+                () -> new IOException("주소의 입력이 잘못되었습니다.")
         ).getAddressLevel1Id();
     }
 
     private Long validAddressLevel2(Long addressLevel2Id) {
         return addressLevel2Respository.findById(addressLevel2Id).orElseThrow(
-                () -> new IllegalStateException("주소의 입력이 잘못되었습니다.")
+                () -> new IOException("주소의 입력이 잘못되었습니다.")
         ).getAddressLevel2Id();
+    }
+
+    // SecurityContextHolder로 사용자 정보 가져오기.
+    public CustomUserDetail getCustomUserDetail(){
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = loggedInUser.getPrincipal();
+
+        if (principal instanceof CustomUserDetail) {
+            return (CustomUserDetail) principal;
+        } else {
+            throw new ClassCastException("Principal cannot be cast to CustomUserDetail");
+        }
+    }
+
+    public String searchPassword(String managerEmail, String companyCode) {
+        // 1. 회원 가져오기.
+        Manager manager = searchManagerByEmail(managerEmail);
+
+        // 2. 회사코드로 회사 가져오기.
+        if (companyCode.equals(""))
+            throw new IOException("회사코드가 입력되지 않았습니다.");
+        Company company = companyService.searchCompany(companyCode);
+
+        // 2. 회원의 회사코드가 일치하는지 확인.
+//        if (!(manager.getCompany_id() == company))
+//            throw new IllegalStateException("회사코드가 일치하지 않습니다.");
+
+        // 3.비밀번호 재설정.
+        System.out.println("current Password : " + manager.getManagerPassword());
+        String password = manager.getManagerPassword().substring(5, 13);
+        manager.resetPassword(passwordEncoder.encode(password));
+
+
+        //4. 저장
+        managerRepository.save(manager);
+
+        return password;
+
     }
 
 
     // 로그인.
     // security Login
     @Override
-    public CustomUserDetail loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails  loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        System.out.println("managerEmail  " + username);
-        Manager manager = managerRepository.findByManagerEmail(username).orElseThrow(
-                () -> new EntityNotFoundException("사용자 정보가 존재하지 않습니다. /n 회원가입 후 이용해주세요.")
-        );
+        //System.out.println("managerEmail  " + username);
+        Manager manager = searchManagerByEmail(username);
+
         //사용자 권한 USER로 설정.
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("COM_USER"));
@@ -143,5 +194,6 @@ public class ManagerService implements UserDetailsService {
         //return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
         return  new CustomUserDetail(manager);
     }
+
 
 }

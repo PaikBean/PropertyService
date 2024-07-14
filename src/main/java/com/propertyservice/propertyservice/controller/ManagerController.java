@@ -2,12 +2,12 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
-import com.propertyservice.propertyservice.dto.company.LoginFormDto;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.service.ManagerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
 
 @Slf4j
 @RestController
@@ -50,17 +50,36 @@ public class ManagerController {
         }
     }
 
+//    /**
+//     * 로그인.  // 자동으로 filter가 가로채기 때문에 서비스를 호출할 필요가 없음.
+//     * @param loginFormDto
+//     * @return
+//     */
+//    @PostMapping("/v1/login")
+//    public Response login(@RequestBody LoginFormDto loginFormDto){
+//        log.info("로그인 시도");
+//        try{
+//            return new Response(ResponseCode.SUCCESS, managerService ,"200");
+//        }catch (Exception e){
+//            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+//        }
+//    }
+
     /**
-     * 로그인.
-     * @param loginFormDto
+     * 비밀번호 찾기.
      * @return
      */
-    @PostMapping("/v1/login")
-    public Response login(@RequestBody LoginFormDto loginFormDto){
+    @GetMapping("/v1/manager-password")
+    public Response searchPassword(@RequestParam(value = "managerEmail", defaultValue = "")String managerEmail,
+                                  @RequestParam(value = "companyCode", defaultValue = "")String companyCode){
+        log.info("Password 찾기" );
+        log.info("managerEmail : " + managerEmail + "companyCode : "+ companyCode);
         try{
-            return new Response(ResponseCode.SUCCESS, null,"200");
+            return new Response(ResponseCode.SUCCESS, managerService.searchPassword(managerEmail, companyCode),"200");
         }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+    
+
 }

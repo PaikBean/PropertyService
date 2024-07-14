@@ -36,14 +36,14 @@ class ManagerServiceTest {
 //        }
 
 
-        for(int i =0; i <1; i++){
+        for(int i =0; i <2; i++){
             ManagerSignUpForm managerSignUpForm = ManagerSignUpForm.builder()
                 .companyCode("COMP001")
                 .managerName("test"+i)
                 .managerPhoneNumber("010-0000-0000"+i)
                 .gender(Gender.MALE)
 //                .departmentName("Sales")
-                    .departmentId(null)
+                    .departmentId(1L)
                 .managerRank("사원")
                 .managerPosition("개발")
                 .managerStateId(1L)
@@ -57,5 +57,14 @@ class ManagerServiceTest {
                 .build();
             managerService.createManager(managerSignUpForm);
         }
+    }
+
+    @Test
+    public void resetPasswordTest(){
+        String managerEmail = "test0@test.com";
+        String companyCode = "COMP001";
+
+        String password = managerService.searchPassword(managerEmail, companyCode);
+        System.out.println("Reset Password : " + password);
     }
 }
