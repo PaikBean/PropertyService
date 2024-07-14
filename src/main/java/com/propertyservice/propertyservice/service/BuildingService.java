@@ -190,6 +190,9 @@ public class BuildingService {
                 owner,
                 buildingAddress
         );
+
+        buildingRepository.save(building);
+
         return building.getBuildingId();
     }
 
