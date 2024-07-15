@@ -80,6 +80,18 @@ public class ManagerController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
-    
 
+    /**
+     * 비밀번호 재설정.
+     * @return
+     */
+    @PutMapping("/v1/manager-password-reset")
+    public Response resetPassword(@RequestParam(value = "prePassword", defaultValue = "")String prePassword,
+                                  @RequestParam(value = "curPassword", defaultValue = "")String curPassword){
+        try{
+            return new Response(ResponseCode.SUCCESS, managerService.resetPassword(prePassword, curPassword),"200");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 }

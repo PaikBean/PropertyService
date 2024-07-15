@@ -200,15 +200,15 @@ public class ManagerService implements UserDetailsService {
 //        return manager.getManagerPassword();
 
         //1. 현재 로그인한 사용자 정보 가져옴.
-        UserDetails customUserDetail = getCustomUserDetail();
+        UserDetails userDetails = getCustomUserDetail();
 
         // 2. 비밀번호 일치 여부 확인.
-        if(!customUserDetail.getPassword().equals(prePassword)){
+        if(!userDetails.getPassword().equals(prePassword)){
             throw new IllegalStateException("비밀번호가 일치하지 않거나 입력되지 않았습니다.");
         }
 
         // 3. 비밀번호 재설정.
-        Manager manager = searchManagerByEmail(customUserDetail.getUsername());
+        Manager manager = searchManagerByEmail(userDetails.getUsername());
         manager.resetPassword( passwordEncoder.encode(curPassword) );
 
         managerRepository.save(manager);
