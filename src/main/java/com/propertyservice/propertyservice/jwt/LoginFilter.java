@@ -3,6 +3,7 @@ package com.propertyservice.propertyservice.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
+import com.propertyservice.propertyservice.domain.common.Role;
 import com.propertyservice.propertyservice.dto.company.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.company.LoginFormDto;
 import jakarta.servlet.FilterChain;
@@ -17,12 +18,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 // security의 formLogin이 disable 되었기 때문에 따로 커스텀을 하기 위한 Filter
@@ -78,9 +81,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             // email, password 받아오기
             String email = loginFormDto.getEmail();
             String password = loginFormDto.getPassword();
+
+            // 현재는 임시로 COM_USER로 저장. 원래는 loadUserByUsername에서 권한을 받아와야함.
+
+//            User user = new User(email, password, Collections.singleton(new SimpleGrantedAuthority(Role.COM_USER.toString())));
+//            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+//                    user, null, user.getAuthorities()
+//            );
+
             log.info("Login By <Email : {}> ", email);
 
-            // Spring Security에서 username, password를 검증하기위해 token생성
+            // Spring Security에서 username, password를 검증하기위해 token생성, (권한을 받아와야함.)
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     email, password, null
             );

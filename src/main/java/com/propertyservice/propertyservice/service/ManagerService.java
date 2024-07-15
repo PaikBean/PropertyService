@@ -14,7 +14,6 @@ import io.jsonwebtoken.io.IOException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,10 +38,10 @@ public class ManagerService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final ManagerRepository managerRepository;
-    private final ManagerAddressRepository managerAddressRepository;
+    //private final ManagerAddressRepository managerAddressRepository;
     private final ManagerStateRepository managerStateRepository;
     private final CompanyService companyService;
-    private final DepartmentService departmentService;
+    //private final DepartmentService departmentService;
     private final AddressLevel1Repository addressLevel1Repository;
     private final AddressLevel2Respository addressLevel2Respository;
     private final DepartmentRepository departmentRepository;
@@ -140,12 +139,18 @@ public class ManagerService implements UserDetailsService {
     }
 
     // SecurityContextHolder로 사용자 정보 가져오기.
-    public CustomUserDetail getCustomUserDetail(){
+    public UserDetails getCustomUserDetail(){
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
         Object principal = loggedInUser.getPrincipal();
 
-        if (principal instanceof CustomUserDetail) {
-            return (CustomUserDetail) principal;
+//        if (principal instanceof CustomUserDetail) {
+//            return (CustomUserDetail) principal;
+//        } else {
+//            throw new ClassCastException("Principal cannot be cast to CustomUserDetail");
+//        }
+
+        if (principal instanceof UserDetails) {
+            return (UserDetails) principal;
         } else {
             throw new ClassCastException("Principal cannot be cast to CustomUserDetail");
         }
@@ -177,12 +182,47 @@ public class ManagerService implements UserDetailsService {
 
     }
 
+    public String resetPassword(String prePassword, String curPassword){
+//        //1. 현재 로그인한 사용자 정보 가져옴.
+//        CustomUserDetail customUserDetail = getCustomUserDetail();
+//
+//        // 2. 비밀번호 일치 여부 확인.
+//        if(!customUserDetail.getPassword().equals(prePassword)){
+//            throw new IllegalStateException("비밀번호가 일치하지 않거나 입력되지 않았습니다.");
+//        }
+//
+//        // 3. 비밀번호 재설정.
+//        Manager manager = searchManagerByEmail(customUserDetail.getUsername());
+//        manager.resetPassword( passwordEncoder.encode(curPassword) );
+//
+//        managerRepository.save(manager);
+//
+//        return manager.getManagerPassword();
+
+        //1. 현재 로그인한 사용자 정보 가져옴.
+        UserDetails customUserDetail = getCustomUserDetail();
+
+        // 2. 비밀번호 일치 여부 확인.
+        if(!customUserDetail.getPassword().equals(prePassword)){
+            throw new IllegalStateException("비밀번호가 일치하지 않거나 입력되지 않았습니다.");
+        }
+
+        // 3. 비밀번호 재설정.
+        Manager manager = searchManagerByEmail(customUserDetail.getUsername());
+        manager.resetPassword( passwordEncoder.encode(curPassword) );
+
+        managerRepository.save(manager);
+
+        return manager.getManagerPassword();
+
+    }
+
 
     // 로그인.
     // security Login
     @Override
-    public UserDetails  loadUserByUsername(String username) throws UsernameNotFoundException {
-
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.warn("loadUserByUsername call");
         //System.out.println("managerEmail  " + username);
         Manager manager = searchManagerByEmail(username);
 
@@ -191,8 +231,8 @@ public class ManagerService implements UserDetailsService {
         authorities.add(new SimpleGrantedAuthority("COM_USER"));
 
 
-        //return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
-        return  new CustomUserDetail(manager);
+        return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
+        //return new CustomUserDetail(manager);
     }
 
 

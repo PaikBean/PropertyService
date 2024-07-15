@@ -1,8 +1,10 @@
 package com.propertyservice.propertyservice.config;
 
+import com.propertyservice.propertyservice.dto.company.CustomUserDetail;
 import com.propertyservice.propertyservice.jwt.JWTFilter;
 import com.propertyservice.propertyservice.jwt.LoginFilter;
 import com.propertyservice.propertyservice.jwt.TokenProvider;
+import com.propertyservice.propertyservice.service.ManagerService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -33,15 +36,18 @@ public class SecurityConfiguration {
     //private final CustomAuthSueccessHandler customAuthSueccessHandler; //성공 핸들러.
     private final AuthenticationConfiguration authenticationConfiguration;
     private final TokenProvider tokenProvider;
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
 
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
 
 
     @Bean
