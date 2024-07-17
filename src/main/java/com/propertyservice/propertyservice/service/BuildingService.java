@@ -4,6 +4,7 @@ import com.propertyservice.propertyservice.domain.building.Building;
 import com.propertyservice.propertyservice.domain.building.BuildingAddress;
 import com.propertyservice.propertyservice.domain.building.BuildingRemark;
 import com.propertyservice.propertyservice.domain.building.Owner;
+import com.propertyservice.propertyservice.domain.common.TransactionType;
 import com.propertyservice.propertyservice.domain.property.Property;
 import com.propertyservice.propertyservice.dto.building.*;
 import com.propertyservice.propertyservice.dto.property.PropertySummaryDto;
@@ -13,7 +14,6 @@ import com.propertyservice.propertyservice.repository.building.BuildingRepositor
 import com.propertyservice.propertyservice.repository.building.OwnerRepository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
-import com.propertyservice.propertyservice.repository.common.TransactionTypeRepository;
 import com.propertyservice.propertyservice.repository.property.PropertyRepository;
 import com.propertyservice.propertyservice.utils.SummaryPrice;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -39,7 +38,7 @@ public class BuildingService {
     private final AddressLevel1Repository addressLevel1Repository;
     private final AddressLevel2Respository addressLevel2Respository;
     private final PropertyRepository propertyRepository;
-    private final TransactionTypeRepository transactionTypeRepository;
+
     public List<BuildingDto> searchBuildingList(BuildingCondition buildingCondition) {
         return buildingRepository.searchBuildingList(buildingCondition);
     }
@@ -120,7 +119,7 @@ public class BuildingService {
                             .propertyTypeId(property.getPropertyTypeId())
                             .unitNumber(property.getUnitNumber())
                             .propertyTypeId(property.getPropertyTypeId())
-                            .transactionTypeId(property.getTransactionTypeId())
+                            .transactionType(property.getTransactionType())
                             .price(getSummaryPrice(property))
                             .transactionStateId(property.getTransactionStateId())
                             .transactionStateId(property.getTransactionStateId())
@@ -151,18 +150,12 @@ public class BuildingService {
     }
 
     private String getSummaryPrice(Property property) {
-        if (property.getTransactionTypeId() == 1 || property.getTransactionTypeId() == 4)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
-                    () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
-            ).getTransactionTypeName(), property.getDeposit(), property.getMonthlyFee());
-        else if (property.getTransactionTypeId() == 2)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
-                    () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
-            ).getTransactionTypeName(), property.getJeonseFee());
-        else if (property.getTransactionTypeId() == 3)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
-                    () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
-            ).getTransactionTypeName(), property.getTradeFee());
+        if (property.getTransactionType() == TransactionType.MONTHLY || property.getTransactionType() == TransactionType.SHORTERM)
+            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getDeposit(), property.getMonthlyFee());
+        else if (property.getTransactionType() == TransactionType.JEONSE)
+            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getJeonseFee());
+        else if (property.getTransactionType() == TransactionType.TRADE)
+            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getTradeFee());
         else
             return null;
     }

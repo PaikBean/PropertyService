@@ -51,7 +51,7 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                                 showingProperty.propertyId,
                                 property.unitNumber,
                                 property.propertyTypeId,
-                                property.transactionTypeId,
+                                property.transactionType,
                                 property.deposit,
                                 property.monthlyFee,
                                 property.jeonseFee,

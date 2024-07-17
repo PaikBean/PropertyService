@@ -2,6 +2,7 @@ package com.propertyservice.propertyservice.domain.revenue;
 
 
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
+import com.propertyservice.propertyservice.domain.common.TransactionType;
 import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.manager.Manager;
 import jakarta.persistence.*;
@@ -39,8 +40,8 @@ public class RevenueLedger extends BaseTimeEntity {
     private String addressLevel3;
     private LocalDateTime contractStartDate;
     private LocalDateTime contractEndDate;
-    @Column(nullable = false)
-    private Long transactionTypeId;
+
+    private TransactionType transactionType;
     private BigDecimal deposit;
     private BigDecimal monthlyFee;
     private BigDecimal jeonseFee;
@@ -50,7 +51,7 @@ public class RevenueLedger extends BaseTimeEntity {
     private String remark;
 
     @Builder
-    public RevenueLedger(Long id, Manager managerId, Company companyId, String companyCode, String departmentCode, String ownerName, String clientName, Long addressLevel1Id, Long addressLevel2Id, String addressLevel3, LocalDateTime contractStartDate, LocalDateTime contractEndDate, Long transactionTypeId, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal commission, String remark) {
+    public RevenueLedger(Long id, Manager managerId, Company companyId, String companyCode, String departmentCode, String ownerName, String clientName, Long addressLevel1Id, Long addressLevel2Id, String addressLevel3, LocalDateTime contractStartDate, LocalDateTime contractEndDate, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal commission, String remark) {
         this.id = id;
         this.managerId = managerId;
         this.companyId = companyId;
@@ -63,7 +64,7 @@ public class RevenueLedger extends BaseTimeEntity {
         this.addressLevel3 = addressLevel3;
         this.contractStartDate = contractStartDate;
         this.contractEndDate = contractEndDate;
-        this.transactionTypeId = transactionTypeId;
+        this.transactionType = transactionType;
         this.deposit = deposit;
         this.monthlyFee = monthlyFee;
         this.jeonseFee = jeonseFee;

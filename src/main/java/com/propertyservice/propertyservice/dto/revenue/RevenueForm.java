@@ -1,5 +1,6 @@
 package com.propertyservice.propertyservice.dto.revenue;
 
+import com.propertyservice.propertyservice.domain.common.TransactionType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class RevenueForm {
     private String contractStartDate;
     private String contractEndDate;
     @NotNull
-    private Long transactionTypeId;
+    private TransactionType transactionType;
     private BigDecimal deposit;
     private BigDecimal monthlyFee;
     private BigDecimal jeonseFee;
@@ -32,7 +33,7 @@ public class RevenueForm {
     private String remark;
 
     @Builder
-    public RevenueForm(Long managerId, String ownerName, String clientName, Long addressL1, Long addressL2, String addressL3, String contractStartDate, String contractEndDate, Long transactionTypeId, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal commission, String remark) {
+    public RevenueForm(Long managerId, String ownerName, String clientName, Long addressL1, Long addressL2, String addressL3, String contractStartDate, String contractEndDate, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal commission, String remark) {
         this.managerId = managerId;
         this.ownerName = ownerName;
         this.clientName = clientName;
@@ -41,7 +42,7 @@ public class RevenueForm {
         this.addressL3 = addressL3;
         this.contractStartDate = contractStartDate;
         this.contractEndDate = contractEndDate;
-        this.transactionTypeId = transactionTypeId;
+        this.transactionType = transactionType;
         this.deposit = deposit;
         this.monthlyFee = monthlyFee;
         this.jeonseFee = jeonseFee;

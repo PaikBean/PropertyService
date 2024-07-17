@@ -8,7 +8,6 @@ import com.propertyservice.propertyservice.domain.manager.ManagerState;
 import com.propertyservice.propertyservice.dto.common.*;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
-import com.propertyservice.propertyservice.repository.common.TransactionTypeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,8 +26,7 @@ public class CommonService {
 
     private final AddressLevel1Repository addressLevel1Repository;
     private final AddressLevel2Respository addressLevel2Respository;
-    private final TransactionTypeRepository transactionTypeRepository;
-//    private final GenderRepository genderRepository;
+
 
 
     public List<AddressLevel1Dto> getAddressLevel1List() {
@@ -52,15 +50,9 @@ public class CommonService {
     }
 
     public List<TransactionTypeDto> searchInflowTypeList() {
-        List<TransactionTypeDto> transactionTypeDtoList = new ArrayList<>();
-        for (TransactionType type : transactionTypeRepository.findAllByIsUsed(true)) {
-            transactionTypeDtoList.add(TransactionTypeDto.builder()
-                    .transactionTypeId(type.getTransactionTypeId())
-                    .transactionTypeCode(type.getTransactionTypeCode())
-                    .transactionTypeName(type.getTransactionTypeName())
-                    .build());
-        }
-        return transactionTypeDtoList;
+        return Arrays.stream(TransactionType.values())
+                .map(transactionType -> new TransactionTypeDto(transactionType.name(), transactionType.getLabel()))
+                .collect(Collectors.toList());
     }
 
 

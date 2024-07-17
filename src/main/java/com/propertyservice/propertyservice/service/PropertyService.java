@@ -1,20 +1,13 @@
 package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.building.Building;
-import com.propertyservice.propertyservice.domain.building.BuildingRemark;
 import com.propertyservice.propertyservice.domain.property.MaintenanceItem;
 import com.propertyservice.propertyservice.domain.property.Property;
 import com.propertyservice.propertyservice.domain.property.PropertyRemark;
-import com.propertyservice.propertyservice.dto.building.BuildingDto;
-import com.propertyservice.propertyservice.dto.building.BuildingPropertyDto;
-import com.propertyservice.propertyservice.dto.building.BuildingRemarkDto;
 import com.propertyservice.propertyservice.dto.property.*;
 import com.propertyservice.propertyservice.repository.building.BuildingRemarkRepository;
 import com.propertyservice.propertyservice.repository.building.BuildingRepository;
-import com.propertyservice.propertyservice.repository.common.TransactionTypeRepository;
 import com.propertyservice.propertyservice.repository.property.*;
-import com.propertyservice.propertyservice.utils.SummaryPrice;
-import com.sun.security.auth.UserPrincipal;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +26,6 @@ public class PropertyService {
     private final PropertyRepository propertyRepository;
     private final MaintenanceItemRepository maintenanceItemRepository;
     private final PropertyRemarkRepository propertyRemarkRepository;
-    private final TransactionTypeRepository transactionTypeRepository;
     private final BuildingRemarkRepository buildingRemarkRepository;
     private final PropertyImageRepository propertyImageRepository;
 
@@ -50,7 +42,7 @@ public class PropertyService {
                         .unitNumber(propertyForm.getUnitNumber())
                         .picManagerId(propertyForm.getPicManagerId())
                         .propertyTypeId(propertyForm.getPropertyTypeId())
-                        .transactionTypeId(propertyForm.getTransactionTypeId())
+                        .transactionType(propertyForm.getTransactionType())
                         .deposit(propertyForm.getDeposit())
                         .monthlyFee(propertyForm.getMonthlyFee())
                         .jeonseFee(propertyForm.getJeonseFee())
@@ -61,7 +53,7 @@ public class PropertyService {
                         .transactionStateId(propertyForm.getTransactionStateId())
                         .build()
         );
-        System.out.println("propertyForm = " + propertyForm.getTransactionTypeId());
+        System.out.println("propertyForm = " + propertyForm.getTransactionType().toString());
         propertyRemarkRepository.save(
                 PropertyRemark.builder()
                         .property(property)
@@ -106,7 +98,7 @@ public class PropertyService {
                 .unitNumber(property.getUnitNumber())
                 .picManagerId(property.getPicManagerId())
                 .picManagerName(null)   // Todo 추후 manager 엔티티 주가되면 가져오기
-                .transactionTypeId(property.getTransactionTypeId())
+                .transactionType(property.getTransactionType())
                 .deposit(property.getDeposit())
                 .monthlyFee(property.getMonthlyFee())
                 .jeonseFee(property.getJeonseFee())
@@ -138,7 +130,7 @@ public class PropertyService {
                 propertyForm.getUnitNumber(),
                 propertyForm.getPicManagerId(),
                 propertyForm.getPropertyTypeId(),
-                propertyForm.getTransactionTypeId(),
+                propertyForm.getTransactionType(),
                 propertyForm.getDeposit(),
                 propertyForm.getMonthlyFee(),
                 propertyForm.getJeonseFee(),

@@ -3,12 +3,12 @@ package com.propertyservice.propertyservice.service;
 import com.propertyservice.propertyservice.domain.client.Client;
 import com.propertyservice.propertyservice.domain.client.ClientRemark;
 import com.propertyservice.propertyservice.domain.client.InflowType;
+import com.propertyservice.propertyservice.domain.common.TransactionType;
 import com.propertyservice.propertyservice.domain.property.Property;
 import com.propertyservice.propertyservice.domain.property.ShowingProperty;
 import com.propertyservice.propertyservice.dto.client.*;
 import com.propertyservice.propertyservice.dto.schedule.ScheduleSummaryDto;
 import com.propertyservice.propertyservice.repository.client.*;
-import com.propertyservice.propertyservice.repository.common.TransactionTypeRepository;
 import com.propertyservice.propertyservice.repository.property.PropertyRepository;
 import com.propertyservice.propertyservice.utils.SummaryPrice;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,7 +30,6 @@ public class ClientService {
     private final ShowingPropertyRepository showingPropertyRepository;
     private final InflowTypeRepository inflowTypeRepository;
     private final PropertyRepository propertyRepository;
-    private final TransactionTypeRepository transactionTypeRepository;
     private final ScheduleService scheduleService;
     private final ManagerService managerService;
     public List<InflowTypeDto> searchInflowTypeList() {
@@ -50,7 +49,7 @@ public class ClientService {
         for (ShowingPropertyCandidateDto showingPropertyCandidateDto : showingPropertyCandidateDtoList) {
             Property property = propertyRepository.findById(showingPropertyCandidateDto.getPropertyId()).orElseThrow(
                     () -> new EntityNotFoundException("정보가 잘못되었습니다. 관리자에게 문의하세요."));
-            showingPropertyCandidateDto.setPrice(getSummaryPrice(property));
+            showingPropertyCandidateDto.setPrice(getClientSummaryPrice(property));
         }
         return showingPropertyCandidateDtoList;
     }
@@ -76,19 +75,13 @@ public class ClientService {
         showingPropertyRepository.delete(showingProperty);
     }
 
-    private String getSummaryPrice(Property property) {
-        if (property.getTransactionTypeId() == 1 || property.getTransactionTypeId() == 4)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
-                    () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
-            ).getTransactionTypeName(), property.getDeposit(), property.getMonthlyFee());
-        else if (property.getTransactionTypeId() == 2)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
-                    () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
-            ).getTransactionTypeName(), property.getJeonseFee());
-        else if (property.getTransactionTypeId() == 3)
-            return SummaryPrice.summaryPrice(transactionTypeRepository.findById(property.getTransactionTypeId()).orElseThrow(
-                    () -> new EntityNotFoundException("선택한 거래유형을 찾을 수 없습니다. 관리자에게 문의하세요")
-            ).getTransactionTypeName(), property.getTradeFee());
+    private String getClientSummaryPrice(Property property) {
+        if (property.getTransactionType() == TransactionType.MONTHLY || property.getTransactionType() == TransactionType.SHORTERM)
+            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getDeposit(), property.getMonthlyFee());
+        else if (property.getTransactionType() == TransactionType.JEONSE)
+            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getJeonseFee());
+        else if (property.getTransactionType() == TransactionType.TRADE)
+            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getTradeFee());
         else
             return null;
     }

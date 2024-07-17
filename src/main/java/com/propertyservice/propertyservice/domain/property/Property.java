@@ -2,6 +2,7 @@ package com.propertyservice.propertyservice.domain.property;
 
 import com.propertyservice.propertyservice.domain.building.Building;
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
+import com.propertyservice.propertyservice.domain.common.TransactionType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,8 +29,8 @@ public class Property extends BaseTimeEntity {
     private String unitNumber;
     private Long picManagerId;
     private Long propertyTypeId;
-    @Column(nullable = false)
-    private Long transactionTypeId;
+
+    private TransactionType transactionType;
     private BigDecimal deposit;
     private BigDecimal monthlyFee;
     private BigDecimal jeonseFee;
@@ -41,13 +42,13 @@ public class Property extends BaseTimeEntity {
     private Long transactionStateId;
 
     @Builder
-    public Property(Long propertyId, Building building, String unitNumber, Long picManagerId, Long propertyTypeId, Long transactionTypeId, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, Long transactionStateId) {
+    public Property(Long propertyId, Building building, String unitNumber, Long picManagerId, Long propertyTypeId, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, Long transactionStateId) {
         this.propertyId = propertyId;
         this.building = building;
         this.unitNumber = unitNumber;
         this.picManagerId = picManagerId;
         this.propertyTypeId = propertyTypeId;
-        this.transactionTypeId = transactionTypeId;
+        this.transactionType = transactionType;
         this.deposit = deposit;
         this.monthlyFee = monthlyFee;
         this.jeonseFee = jeonseFee;
@@ -57,11 +58,11 @@ public class Property extends BaseTimeEntity {
         this.transactionStateId = transactionStateId;
     }
 
-    public void updateProperty(String unitNumber, Long picManagerId, Long propertyTypeId, Long transactionTypeId, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, Long transactionStateId) {
+    public void updateProperty(String unitNumber, Long picManagerId, Long propertyTypeId, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, Long transactionStateId) {
         this.unitNumber = unitNumber;
         this.picManagerId = picManagerId;
         this.propertyTypeId = propertyTypeId;
-        this.transactionTypeId = transactionTypeId;
+        this.transactionType = transactionType;
         this.deposit = deposit;
         this.monthlyFee = monthlyFee;
         this.jeonseFee = jeonseFee;

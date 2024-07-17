@@ -1,5 +1,6 @@
 package com.propertyservice.propertyservice.dto.property;
 
+import com.propertyservice.propertyservice.domain.common.TransactionType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -17,8 +18,8 @@ public class PropertyForm {
     private String unitNumber;
     private Long picManagerId;
     private Long propertyTypeId;
-    @NotNull
-    private Long transactionTypeId;
+    //@NotNull
+    private TransactionType transactionType;
     private BigDecimal deposit;
     private BigDecimal monthlyFee;
     private BigDecimal jeonseFee;

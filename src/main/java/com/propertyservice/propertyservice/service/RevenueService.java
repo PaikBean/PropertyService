@@ -2,6 +2,7 @@ package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.domain.revenue.RevenueLedger;
+import com.propertyservice.propertyservice.dto.company.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.revenue.RevenueCondition;
 import com.propertyservice.propertyservice.dto.revenue.RevenueForm;
 import com.propertyservice.propertyservice.dto.revenue.RevenueTotalDto;
@@ -10,6 +11,8 @@ import com.propertyservice.propertyservice.repository.revenue.RevenueRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,8 @@ import java.time.format.DateTimeFormatter;
 public class RevenueService {
     private final ManagerRepository managerRepository;
     private final RevenueRepository revenueRepository;
+    private final ManagerService managerService;
+
     @Transactional
     public void registryRevenue(RevenueForm revenueForm) {
         Manager manager = managerRepository.findById(revenueForm.getManagerId()).orElseThrow(
@@ -39,7 +44,7 @@ public class RevenueService {
                         .addressLevel3(revenueForm.getAddressL3())
                         .contractStartDate(LocalDate.parse(revenueForm.getContractStartDate(),DateTimeFormatter.ofPattern("yyyyMMdd")).atStartOfDay())
                         .contractEndDate(LocalDate.parse(revenueForm.getContractEndDate(),DateTimeFormatter.ofPattern("yyyyMMdd")).atStartOfDay())
-                        .transactionTypeId(revenueForm.getTransactionTypeId())
+                        .transactionType(revenueForm.getTransactionType())
                         .deposit(revenueForm.getDeposit() != null ? revenueForm.getDeposit() : null)
                         .monthlyFee(revenueForm.getMonthlyFee() != null ? revenueForm.getMonthlyFee() : null)
                         .jeonseFee(revenueForm.getJeonseFee() != null ? revenueForm.getJeonseFee() : null)
@@ -50,6 +55,10 @@ public class RevenueService {
     }
 
     public RevenueTotalDto searchRevenueList(RevenueCondition revenueCondition) {
+        //CustomUserDetail customUserDetail = managerService.getCustomUserDetail();
+        UserDetails userDetails = managerService.getCustomUserDetail();
+
+        System.out.println("CustomuserDetail : " + userDetails);
         log.info(revenueCondition.toString());
         return RevenueTotalDto.builder()
                 .totalCount(revenueRepository.totalCount(revenueCondition))
