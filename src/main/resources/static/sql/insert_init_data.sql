@@ -1,13 +1,13 @@
 -- 일정 유형 정보
-INSERT INTO schedule_type (schedule_type) VALUES ('잔금');
-INSERT INTO schedule_type (schedule_type) VALUES ('미팅');
-INSERT INTO schedule_type (schedule_type) VALUES ('휴가');
-INSERT INTO schedule_type (schedule_type) VALUES ('입주');
-INSERT INTO schedule_type (schedule_type) VALUES ('퇴실');
+-- INSERT INTO schedule_type (schedule_type) VALUES ('잔금');
+-- INSERT INTO schedule_type (schedule_type) VALUES ('미팅');
+-- INSERT INTO schedule_type (schedule_type) VALUES ('휴가');
+-- INSERT INTO schedule_type (schedule_type) VALUES ('입주');
+-- INSERT INTO schedule_type (schedule_type) VALUES ('퇴실');
 
 -- 주용도 정보
-INSERT INTO property_type (property_type) VALUES ('주거용');
-INSERT INTO property_type (property_type) VALUES ('상업용');
+-- INSERT INTO property_type (property_type) VALUES ('주거용');
+-- INSERT INTO property_type (property_type) VALUES ('상업용');
 
 -- 거래상태 정보
 -- INSERT INTO transaction_state (transaction_state) VALUES ('거래중');
@@ -30,11 +30,11 @@ INSERT INTO property_type (property_type) VALUES ('상업용');
 -- INSERT INTO transaction_type (transaction_type_name, transaction_type_code) VALUES ('단기', 'shorterm');
 
 -- 유입경로 정보
-INSERT INTO inflow_type (inflow_type) VALUES ('직방');
-INSERT INTO inflow_type (inflow_type) VALUES ('다방');
-INSERT INTO inflow_type (inflow_type) VALUES ('피터팬');
-INSERT INTO inflow_type (inflow_type) VALUES ('집토스');
-INSERT INTO inflow_type (inflow_type) VALUES ('기타');
+-- INSERT INTO inflow_type (inflow_type) VALUES ('직방');
+-- INSERT INTO inflow_type (inflow_type) VALUES ('다방');
+-- INSERT INTO inflow_type (inflow_type) VALUES ('피터팬');
+-- INSERT INTO inflow_type (inflow_type) VALUES ('집토스');
+-- INSERT INTO inflow_type (inflow_type) VALUES ('기타');
 
 -- 주소 정보
 INSERT INTO address_level1 (address_level1_id, address_level1) VALUES (1, '서울특별시');
