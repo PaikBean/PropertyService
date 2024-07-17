@@ -33,9 +33,7 @@ public class Manager extends BaseTimeEntity{
     private String managerPosition;
     private String managerCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_state_id" )
-    private ManagerState managerStateId; //stateId Entity
+    private ManagerState managerState; //stateId Entity
     private Gender gender; // genderId;
     private String managerPhoneNumber;
 
@@ -48,7 +46,7 @@ public class Manager extends BaseTimeEntity{
 
 
     @Builder
-    public Manager(Long managerId, Company company_id, Department department_id, String managerName, String managerRank, String managerPosition, String managerCode, ManagerState managerStateId, Gender gender, String managerPhoneNumber, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount, Role role) {
+    public Manager(Long managerId, Company company_id, Department department_id, String managerName, String managerRank, String managerPosition, String managerCode, ManagerState managerState, Gender gender, String managerPhoneNumber, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount, Role role) {
         this.managerId = managerId;
         this.company_id = company_id;
         this.department_id = department_id;
@@ -56,7 +54,7 @@ public class Manager extends BaseTimeEntity{
         this.managerRank = managerRank;
         this.managerPosition = managerPosition;
         this.managerCode = managerCode;
-        this.managerStateId = managerStateId;
+        this.managerState = managerState;
         this.gender = gender;
         this.managerPhoneNumber = managerPhoneNumber;
         this.managerEntranceDate = managerEntranceDate;

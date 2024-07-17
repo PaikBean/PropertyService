@@ -3,15 +3,11 @@ package com.propertyservice.propertyservice.service;
 import com.propertyservice.propertyservice.domain.common.Role;
 import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.manager.Manager;
-import com.propertyservice.propertyservice.domain.manager.ManagerState;
-import com.propertyservice.propertyservice.dto.company.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
-import com.propertyservice.propertyservice.repository.common.ManagerStateRepository;
 import com.propertyservice.propertyservice.repository.company.*;
 import io.jsonwebtoken.io.IOException;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -39,7 +35,6 @@ public class ManagerService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final ManagerRepository managerRepository;
     //private final ManagerAddressRepository managerAddressRepository;
-    private final ManagerStateRepository managerStateRepository;
     private final CompanyService companyService;
     //private final DepartmentService departmentService;
     private final AddressLevel1Repository addressLevel1Repository;
@@ -90,12 +85,6 @@ public class ManagerService implements UserDetailsService {
         }
     }
 
-    public ManagerState searchStateById(Long managerStateId){
-        return managerStateRepository.findByManagerStateId(managerStateId).orElseThrow(
-                () -> new EntityNotFoundException("State Id 값 오류.")
-        );
-    }
-
     /**
      * 사용자 회원가입.
      * @param managerSignUpForm
@@ -112,7 +101,7 @@ public class ManagerService implements UserDetailsService {
                 .managerRank(managerSignUpForm.getManagerRank())
                 .managerPosition(managerSignUpForm.getManagerPosition())
                 .managerCode(managerSignUpForm.getManagerCode())
-                .managerStateId(searchStateById(managerSignUpForm.getManagerStateId()))
+                .managerState(managerSignUpForm.getManagerState())
                 .gender(managerSignUpForm.getGender())
                 .managerPhoneNumber(managerSignUpForm.getManagerPhoneNumber())
                 .managerEntranceDate(LocalDateTime.now())

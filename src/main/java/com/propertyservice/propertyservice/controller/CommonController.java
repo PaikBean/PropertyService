@@ -93,6 +93,7 @@ public class CommonController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+    
 
 //    @GetMapping("/v1/gender-list")
 //    public Response searchGenderList() {

@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class ManagerStateDto {
-    private Long managerStateId;
-    private String managerState;
+    private String managerStateName;
+    private String label;
 
     @Builder
-    public ManagerStateDto(Long managerStateId, String managerState) {
-        this.managerStateId = managerStateId;
-        this.managerState = managerState;
+    public ManagerStateDto(String managerStateName, String label) {
+        this.managerStateName = managerStateName;
+        this.label = label;
     }
 }

@@ -1,6 +1,7 @@
 package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.common.Gender;
+import com.propertyservice.propertyservice.domain.manager.ManagerState;
 import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ class ManagerServiceTest {
                     .departmentId(1L)
                 .managerRank("사원")
                 .managerPosition("개발")
-                .managerStateId(1L)
+                .managerState(ManagerState.EMPLOYMENT)
                 .managerCode("24080599001")
                 .managerEmail("test"+i+"@test.com")
                 .managerPassword("123123")
