@@ -6,21 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
-@Table(name = "manager_state")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ManagerState {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "manager_state_id")
-    private Long managerStateId;
-    @Column(nullable = false)
-    private String managerState;
+public enum ManagerState {
+    EMPLOYMENT("재직"),
+    LEAVE("휴직"),
+    RESIGNATION("퇴사");
 
-    @Builder
-    public ManagerState(Long managerStateId,     String managerState) {
-        this.managerStateId = managerStateId;
-        this.managerState = managerState;
+    private final String label;
+
+    ManagerState(String label){
+        this.label = label;
     }
 }
