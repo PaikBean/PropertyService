@@ -52,8 +52,8 @@ public class JWTFilter extends OncePerRequestFilter {
 
 
         // 3. 정보 객체 담기
-        User user = new User(username, null, Collections.singleton(new SimpleGrantedAuthority(role)));
-        //CustomUserDetail user = (CustomUserDetail) managerService.loadUserByUsername(username);
+        User user = new User(username, "123123", Collections.singleton(new SimpleGrantedAuthority(role)));
+        //CustomUserDetail user = (CustomUserDetail) commonService.getCustomUserDetail();
         //System.out.println("user 객체 : "  + user.toString());
 //        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 //                user, null, Collections.singleton(new SimpleGrantedAuthority(role))
