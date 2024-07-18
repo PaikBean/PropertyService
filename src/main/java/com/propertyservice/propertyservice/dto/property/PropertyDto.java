@@ -1,5 +1,6 @@
 package com.propertyservice.propertyservice.dto.property;
 
+import com.propertyservice.propertyservice.domain.common.TransactionState;
 import com.propertyservice.propertyservice.domain.common.TransactionType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -25,12 +26,12 @@ public class PropertyDto {
     private boolean maintenanceItemInternet;
     private boolean maintenanceItemGas;
     private String maintenanceItemOthers;
-    private Long transactionStateId;
+    private TransactionState transactionState;
 
     private List<PropertyRemarkDto> propertyRemarkDtoList;
 
     @Builder
-    public PropertyDto(Long propertyId, String unitNumber, Long picManagerId, String picManagerName, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, boolean maintenanceItemWater, boolean maintenanceItemElectricity, boolean maintenanceItemInternet, boolean maintenanceItemGas, String maintenanceItemOthers, Long transactionStateId, List<PropertyRemarkDto> propertyRemarkDtoList) {
+    public PropertyDto(Long propertyId, String unitNumber, Long picManagerId, String picManagerName, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, boolean maintenanceItemWater, boolean maintenanceItemElectricity, boolean maintenanceItemInternet, boolean maintenanceItemGas, String maintenanceItemOthers, TransactionState transactionState, List<PropertyRemarkDto> propertyRemarkDtoList) {
         this.propertyId = propertyId;
         this.unitNumber = unitNumber;
         this.picManagerId = picManagerId;
@@ -46,7 +47,7 @@ public class PropertyDto {
         this.maintenanceItemInternet = maintenanceItemInternet;
         this.maintenanceItemGas = maintenanceItemGas;
         this.maintenanceItemOthers = maintenanceItemOthers;
-        this.transactionStateId = transactionStateId;
+        this.transactionState = transactionState;
         this.propertyRemarkDtoList = propertyRemarkDtoList;
     }
 }

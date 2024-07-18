@@ -50,7 +50,7 @@ public class PropertyService {
                         .tradeFee(propertyForm.getTradeFee())
                         .maintenanceFee(propertyForm.getMaintenanceFee())
                         .maintenanceItem(createMaintenanceItem(propertyForm))
-                        .transactionStateId(propertyForm.getTransactionStateId())
+                        .transactionState(propertyForm.getTransactionState())
                         .build()
         );
         System.out.println("propertyForm = " + propertyForm.getTransactionType().toString());
@@ -109,7 +109,7 @@ public class PropertyService {
                 .maintenanceItemInternet(property.getMaintenanceItem().isInternet())
                 .maintenanceItemGas(property.getMaintenanceItem().isGas())
                 .maintenanceItemOthers(property.getMaintenanceItem().getOthers())
-                .transactionStateId(property.getTransactionStateId())
+                .transactionState(property.getTransactionState())
                 .propertyRemarkDtoList(propertyRemarkDtoList)
                 .build();
     }
@@ -137,7 +137,7 @@ public class PropertyService {
                 propertyForm.getTradeFee(),
                 propertyForm.getMaintenanceFee(),
                 maintenanceItem,
-                propertyForm.getTransactionStateId()
+                propertyForm.getTransactionState()
         );
         return property.getPropertyId();
     }

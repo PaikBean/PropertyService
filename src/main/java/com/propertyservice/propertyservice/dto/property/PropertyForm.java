@@ -1,5 +1,6 @@
 package com.propertyservice.propertyservice.dto.property;
 
+import com.propertyservice.propertyservice.domain.common.TransactionState;
 import com.propertyservice.propertyservice.domain.common.TransactionType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -35,6 +36,6 @@ public class PropertyForm {
     @NotNull
     private boolean maintenanceItemGas;
     private String maintenanceItemOthers;
-    private Long transactionStateId;
+    private TransactionState transactionState;
     private String remark;
 }

@@ -121,8 +121,7 @@ public class BuildingService {
                             .propertyTypeId(property.getPropertyTypeId())
                             .transactionType(property.getTransactionType())
                             .price(getSummaryPrice(property))
-                            .transactionStateId(property.getTransactionStateId())
-                            .transactionStateId(property.getTransactionStateId())
+                            .transactionState(property.getTransactionState())
                             .build()
             );
         }
