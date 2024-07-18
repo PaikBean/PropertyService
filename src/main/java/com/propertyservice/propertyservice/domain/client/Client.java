@@ -23,7 +23,7 @@ public class Client extends BaseTimeEntity {
 
     private String clientPhoneNumber;
 
-    private Long inflowTypeId;
+    private InflowType inflowType;
 
     private Long registrationManagerId;
 
@@ -32,11 +32,11 @@ public class Client extends BaseTimeEntity {
 
 
     @Builder
-    public Client(Long managerId, String clientName,String clientPhoneNumber, Long inflowTypeId, Long registrationManagerId, Long modifiedManagerId){
+    public Client(Long managerId, String clientName,String clientPhoneNumber, InflowType inflowType, Long registrationManagerId, Long modifiedManagerId){
         this.managerId = managerId;
         this.clientName = clientName;
         this.clientPhoneNumber = clientPhoneNumber;
-        this.inflowTypeId =inflowTypeId;
+        this.inflowType =inflowType;
         this.registrationManagerId =registrationManagerId;
         this.modifiedManagerId = modifiedManagerId;
     }

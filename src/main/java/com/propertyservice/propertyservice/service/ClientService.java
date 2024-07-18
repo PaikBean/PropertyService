@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,20 +30,15 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientRemarkRepository clientRemarkRepository;
     private final ShowingPropertyRepository showingPropertyRepository;
-    private final InflowTypeRepository inflowTypeRepository;
+    //private final InflowTypeRepository inflowTypeRepository;
     private final PropertyRepository propertyRepository;
     private final ScheduleService scheduleService;
     private final ManagerService managerService;
+
     public List<InflowTypeDto> searchInflowTypeList() {
-        List<InflowTypeDto> inflowTypeDtoList = new ArrayList<>();
-
-        for (InflowType inflowType : inflowTypeRepository.findAll()) {
-            inflowTypeDtoList.add(InflowTypeDto.builder()
-                    .inflowType(inflowType)
-                    .build());
-        }
-
-        return inflowTypeDtoList;
+        return Arrays.stream(InflowType.values())
+                .map(inflowType -> new InflowTypeDto(inflowType.name(), inflowType.getLabel()))
+                .collect(Collectors.toList());
     }
 
     public List<ShowingPropertyCandidateDto> searchShowingPropertyCandidateList(ShowingPropertyCandidateCondition showingPropertyCandidateCondition) {
@@ -91,10 +88,7 @@ public class ClientService {
                 .clientName(clientForm.getClientName())
                 .clientPhoneNumber(clientForm.getClientPhoneNumber())
                 .managerId(managerService.searchManagerById(clientForm.getManagerId()))
-                .inflowTypeId(inflowTypeRepository.findById(clientForm.getInflowTypeId()).orElseThrow(
-                        () -> new IllegalStateException("inflowType 정보를 찾을 수 없습니다.")
-                    ).getId()
-                )
+                .inflowType(clientForm.getInflowType())
                 .registrationManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
                 .modifiedManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
                 .build());

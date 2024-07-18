@@ -1,5 +1,6 @@
 package com.propertyservice.propertyservice.service;
 
+import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.dto.client.*;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ class ClientServiceTest {
             clientForm.setClientName("test1");
             clientForm.setClientPhoneNumber("010-1234-1234"+i);
             clientForm.setRemark("특이사항 있음");
-            clientForm.setInflowTypeId(1L);
+            clientForm.setInflowType(InflowType.OTHERS);
             clientForm.setManagerId(1L);
 
             clientService.createClient(clientForm);
