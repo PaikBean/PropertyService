@@ -3,9 +3,7 @@ package com.propertyservice.propertyservice.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
-import com.propertyservice.propertyservice.domain.common.Role;
-import com.propertyservice.propertyservice.dto.company.CustomUserDetail;
-import com.propertyservice.propertyservice.dto.company.LoginFormDto;
+import com.propertyservice.propertyservice.dto.manager.LoginFormDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,14 +16,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 
 // security의 formLogin이 disable 되었기 때문에 따로 커스텀을 하기 위한 Filter

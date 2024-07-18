@@ -1,5 +1,6 @@
 package com.propertyservice.propertyservice.dto.company;
 
+import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
 import lombok.Getter;
 import lombok.Setter;
 

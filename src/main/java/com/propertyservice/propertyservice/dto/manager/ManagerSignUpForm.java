@@ -1,4 +1,4 @@
-package com.propertyservice.propertyservice.dto.company;
+package com.propertyservice.propertyservice.dto.manager;
 
 import com.propertyservice.propertyservice.domain.common.Gender;
 import com.propertyservice.propertyservice.domain.manager.ManagerState;

@@ -2,7 +2,7 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Gender;
 import com.propertyservice.propertyservice.domain.manager.ManagerState;
-import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
+import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

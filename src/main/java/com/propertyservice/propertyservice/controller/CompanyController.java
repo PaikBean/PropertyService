@@ -3,7 +3,7 @@ package com.propertyservice.propertyservice.controller;
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
 import com.propertyservice.propertyservice.dto.company.CompanyRegistryForm;
-import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
+import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
 import com.propertyservice.propertyservice.service.CompanyService;
 import com.propertyservice.propertyservice.service.ManagerService;
 import com.propertyservice.propertyservice.utils.validation.ValidBizRegNumber;

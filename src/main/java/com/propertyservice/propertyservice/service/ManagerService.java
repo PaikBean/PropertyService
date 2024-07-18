@@ -3,7 +3,7 @@ package com.propertyservice.propertyservice.service;
 import com.propertyservice.propertyservice.domain.common.Role;
 import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.manager.Manager;
-import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
+import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
 import com.propertyservice.propertyservice.repository.company.*;

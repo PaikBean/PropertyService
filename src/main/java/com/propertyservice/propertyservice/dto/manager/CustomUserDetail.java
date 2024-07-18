@@ -1,4 +1,4 @@
-package com.propertyservice.propertyservice.dto.company;
+package com.propertyservice.propertyservice.dto.manager;
 
 import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.company.Department;

@@ -1,4 +1,4 @@
-package com.propertyservice.propertyservice.dto.company;
+package com.propertyservice.propertyservice.dto.manager;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

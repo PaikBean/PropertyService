@@ -4,7 +4,7 @@ import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.dto.company.CompanyInfoForm;
 import com.propertyservice.propertyservice.dto.company.CompanyRegistryForm;
 import com.propertyservice.propertyservice.dto.company.CompanySimpleDto;
-import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
+import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.company.CompanyRepository;
 import com.propertyservice.propertyservice.repository.company.ManagerRepository;
 import com.propertyservice.propertyservice.repository.property.CompanyAddressRepository;

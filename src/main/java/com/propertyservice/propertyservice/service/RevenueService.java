@@ -2,7 +2,6 @@ package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.domain.revenue.RevenueLedger;
-import com.propertyservice.propertyservice.dto.company.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.revenue.RevenueCondition;
 import com.propertyservice.propertyservice.dto.revenue.RevenueForm;
 import com.propertyservice.propertyservice.dto.revenue.RevenueTotalDto;
@@ -11,7 +10,6 @@ import com.propertyservice.propertyservice.repository.revenue.RevenueRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
