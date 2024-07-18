@@ -4,33 +4,27 @@ import com.propertyservice.propertyservice.domain.schedule.Schedule;
 import com.propertyservice.propertyservice.domain.schedule.ScheduleType;
 import com.propertyservice.propertyservice.dto.schedule.*;
 import com.propertyservice.propertyservice.repository.schedule.ScheduleRepository;
-import com.propertyservice.propertyservice.repository.schedule.ScheduleTypeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ScheduleService {
-    private final ScheduleTypeRepository scheduleTypeRepository;
     private final ScheduleRepository scheduleRepository;
 
     public List<ScheduleTypeDto> searchScheduleTypeList() {
-        List<ScheduleTypeDto> scheduleTypeDtoList = new ArrayList<>();
-        for (ScheduleType scheduleType : scheduleTypeRepository.findAll()) {
-            scheduleTypeDtoList.add(ScheduleTypeDto.builder()
-                    .scheduleId(scheduleType.getScheduleTypeId())
-                    .scheduleType(scheduleType.getScheduleType())
-                    .build());
-        }
-        return scheduleTypeDtoList;
+        return Arrays.stream(ScheduleType.values())
+                .map(scheduleType -> new ScheduleTypeDto(scheduleType.name(), scheduleType.getLabel()))
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -39,8 +33,7 @@ public class ScheduleService {
                         .managerId(scheduleForm.getManagerId())
                         .clientId(scheduleForm.getClientId())
                         .scheduleDate(scheduleForm.getScheduleDate())
-                        .scheduleType(scheduleTypeRepository.findById(scheduleForm.getScheduleTypeId()).orElseThrow(
-                                () -> new EntityNotFoundException("등록되지 않은 일정입니다.")))
+                        .scheduleType(scheduleForm.getScheduleType())
                         .priority(scheduleForm.getPriority())
                         .remark(scheduleForm.getRemark())
                 .build());
@@ -53,8 +46,7 @@ public class ScheduleService {
                 .updateSchedule(
                         scheduleForm.getManagerId(),
                         scheduleForm.getClientId(),
-                        scheduleTypeRepository.findById(scheduleForm.getScheduleTypeId()).orElseThrow(
-                                () -> new EntityNotFoundException("등록되지 않은 일정 유형입니다.")),
+                        scheduleForm.getScheduleType(),
                         scheduleForm.getPriority(),
                         scheduleForm.getScheduleDate(),
                         scheduleForm.getRemark()
@@ -75,10 +67,7 @@ public class ScheduleService {
                 .managerName(null)  // Todo : manager 엔티티 생성되면 수정
                 .clientId(schedule.getClientId())
                 .clientName(null)   // Todo : client 엔티티 생성되면 수정
-                .scheduleTypeId(schedule.getScheduleId())
-                .scheduleType(scheduleTypeRepository.findById(schedule.getScheduleId()).orElseThrow(
-                        () -> new EntityNotFoundException("등록되지 않은 일정 유형입니다.")
-                    ).getScheduleType())
+                .scheduleType(schedule.getScheduleType())
                 .priority(schedule.getPriority().getLabel())
                 .scheduleDate(schedule.getScheduleDate())
                 .remark(schedule.getRemark())

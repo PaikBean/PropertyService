@@ -1,11 +1,11 @@
 package com.propertyservice.propertyservice.repository.schedule;
 
-import com.propertyservice.propertyservice.domain.client.QClient;
-import com.propertyservice.propertyservice.domain.manager.QManager;
-import com.propertyservice.propertyservice.domain.property.QProperty;
-import com.propertyservice.propertyservice.domain.schedule.QSchedule;
-import com.propertyservice.propertyservice.domain.schedule.QScheduleType;
-import com.propertyservice.propertyservice.dto.schedule.QScheduleSummaryDto;
+//import com.propertyservice.propertyservice.domain.client.QClient;
+//import com.propertyservice.propertyservice.domain.manager.QManager;
+//import com.propertyservice.propertyservice.domain.property.QProperty;
+//import com.propertyservice.propertyservice.domain.schedule.QSchedule;
+//import com.propertyservice.propertyservice.domain.schedule.QScheduleType;
+//import com.propertyservice.propertyservice.dto.schedule.QScheduleSummaryDto;
 import com.propertyservice.propertyservice.dto.schedule.ScheduleCondition;
 import com.propertyservice.propertyservice.dto.schedule.ScheduleSummaryDto;
 import com.propertyservice.propertyservice.utils.BooleanExpressionBuilder;
@@ -19,11 +19,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
     private final JPAQueryFactory queryFactory;
-    private final QProperty property = QProperty.property;
-    private final QSchedule schedule = QSchedule.schedule;
-    private final QClient client =QClient.client;
-    private final QScheduleType scheduleType = QScheduleType.scheduleType1;
-    private final QManager manager= QManager.manager;
+//    private final QProperty property = QProperty.property;
+//    private final QSchedule schedule = QSchedule.schedule;
+//    private final QClient client =QClient.client;
+//    private final QManager manager= QManager.manager;
 
     @Override
     public List<ScheduleSummaryDto> searchScheduleList(ScheduleCondition scheduleCondition) {
