@@ -49,7 +49,7 @@ public class CommonService {
         return addressLevel2DtoList;
     }
 
-    public List<TransactionTypeDto> searchInflowTypeList() {
+    public List<TransactionTypeDto> searchTransactionTypeList() {
         return Arrays.stream(TransactionType.values())
                 .map(transactionType -> new TransactionTypeDto(transactionType.name(), transactionType.getLabel()))
                 .collect(Collectors.toList());

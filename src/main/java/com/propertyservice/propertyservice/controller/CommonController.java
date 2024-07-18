@@ -61,7 +61,7 @@ public class CommonController {
     @GetMapping("/v1/transaction-type-list")
     public Response searchInflowTypeList() {
         try {
-            return new Response(ResponseCode.SUCCESS, commonService.searchInflowTypeList(), "200");
+            return new Response(ResponseCode.SUCCESS, commonService.searchTransactionTypeList(), "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
