@@ -29,7 +29,7 @@ public class Property extends BaseTimeEntity {
     @Column(nullable = false)
     private String unitNumber;
     private Long picManagerId;
-    private Long propertyTypeId;
+    private PropertyType propertyType;
 
     private TransactionType transactionType;
     private BigDecimal deposit;
@@ -44,12 +44,12 @@ public class Property extends BaseTimeEntity {
     private TransactionState transactionState;
 
     @Builder
-    public Property(Long propertyId, Building building, String unitNumber, Long picManagerId, Long propertyTypeId, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, TransactionState transactionState) {
+    public Property(Long propertyId, Building building, String unitNumber, Long picManagerId, PropertyType propertyType, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, TransactionState transactionState) {
         this.propertyId = propertyId;
         this.building = building;
         this.unitNumber = unitNumber;
         this.picManagerId = picManagerId;
-        this.propertyTypeId = propertyTypeId;
+        this.propertyType = propertyType;
         this.transactionType = transactionType;
         this.deposit = deposit;
         this.monthlyFee = monthlyFee;
@@ -60,10 +60,10 @@ public class Property extends BaseTimeEntity {
         this.transactionState = transactionState;
     }
 
-    public void updateProperty(String unitNumber, Long picManagerId, Long propertyTypeId, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, TransactionState transactionState) {
+    public void updateProperty(String unitNumber, Long picManagerId, PropertyType propertyType, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, TransactionState transactionState) {
         this.unitNumber = unitNumber;
         this.picManagerId = picManagerId;
-        this.propertyTypeId = propertyTypeId;
+        this.propertyType = propertyType;
         this.transactionType = transactionType;
         this.deposit = deposit;
         this.monthlyFee = monthlyFee;

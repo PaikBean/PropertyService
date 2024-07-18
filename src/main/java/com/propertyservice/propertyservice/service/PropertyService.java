@@ -41,7 +41,7 @@ public class PropertyService {
                         .building(building)
                         .unitNumber(propertyForm.getUnitNumber())
                         .picManagerId(propertyForm.getPicManagerId())
-                        .propertyTypeId(propertyForm.getPropertyTypeId())
+                        .propertyType(propertyForm.getPropertyType())
                         .transactionType(propertyForm.getTransactionType())
                         .deposit(propertyForm.getDeposit())
                         .monthlyFee(propertyForm.getMonthlyFee())
@@ -129,7 +129,7 @@ public class PropertyService {
         property.updateProperty(
                 propertyForm.getUnitNumber(),
                 propertyForm.getPicManagerId(),
-                propertyForm.getPropertyTypeId(),
+                propertyForm.getPropertyType(),
                 propertyForm.getTransactionType(),
                 propertyForm.getDeposit(),
                 propertyForm.getMonthlyFee(),

@@ -116,9 +116,8 @@ public class BuildingService {
             propertySummaryDtoList.add(
                     PropertySummaryDto.builder()
                             .propertyId(property.getPropertyId())
-                            .propertyTypeId(property.getPropertyTypeId())
                             .unitNumber(property.getUnitNumber())
-                            .propertyTypeId(property.getPropertyTypeId())
+                            .propertyType(property.getPropertyType())
                             .transactionType(property.getTransactionType())
                             .price(getSummaryPrice(property))
                             .transactionState(property.getTransactionState())
