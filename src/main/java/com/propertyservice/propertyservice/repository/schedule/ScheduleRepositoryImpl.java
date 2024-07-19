@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
     private final JPAQueryFactory queryFactory;
-    private final QProperty property = QProperty.property;
+    //private final QProperty property = QProperty.property;
     private final QSchedule schedule = QSchedule.schedule;
     private final QClient client =QClient.client;
     private final QManager manager= QManager.manager;
@@ -32,21 +32,23 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
                         new QScheduleSummaryDto(
                                 schedule.scheduleId,
                                 schedule.managerId,
-                                null, // Todo : manager 엔티티 추가되면 manager Name 넣기
+                                manager.managerName, // Todo : manager 엔티티 추가되면 manager Name 넣기
                                 schedule.clientId,
-                                null, // Todo : client 엔티티 추가되면 client Name 넣기
+                                client.clientName, // Todo : client 엔티티 추가되면 client Name 넣기
                                 schedule.scheduleType,
                                 schedule.priority.stringValue(),
                                 schedule.scheduleDate
                         )
                 )
                 .from(schedule)
+                .leftJoin(manager).on(schedule.managerId.eq(manager.managerId))
+                .leftJoin(client).on(schedule.clientId.eq(client.clientId))
                 .where(
                         BooleanExpressionBuilder.andBooleanBuilder(
                                 scheduleTypeEq(scheduleCondition.getScheduleType()),
-                                scheduleDateBetween(scheduleCondition.getStartDate(), scheduleCondition.getEndDate())
-                                // Todo : manager 엔티티 추가되면 manager 조건 넣기
-                                // Todo : client 엔티티 추가되면 client 조건 넣기
+                                scheduleDateBetween(scheduleCondition.getStartDate(), scheduleCondition.getEndDate()),
+                                managerIdEq(scheduleCondition.getManagerId()), // Todo : manager 엔티티 추가되면 manager 조건 넣기
+                                clientIdEq(scheduleCondition.getClientId())// Todo : client 엔티티 추가되면 client 조건 넣기
                         )
                 )
                 .fetch();
@@ -80,5 +82,12 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
     }
     private BooleanExpression scheduleDateBetween(LocalDateTime startDate, LocalDateTime endDate){
         return startDate != null && endDate != null ? schedule.scheduleDate.between(startDate, endDate) : null;
+    }
+
+    private BooleanExpression managerIdEq(Long managerId){
+        return managerId != null ? manager.managerId.eq(managerId) : null;
+    }
+    private BooleanExpression clientIdEq(Long clientId){
+        return clientId != null ? client.clientId.eq(clientId) : null;
     }
 }
