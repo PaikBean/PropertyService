@@ -1,7 +1,7 @@
 package com.propertyservice.propertyservice.dto.client;
 
 import com.propertyservice.propertyservice.domain.common.TransactionType;
-import com.querydsl.core.annotations.PropertyType;
+import com.propertyservice.propertyservice.domain.property.PropertyType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 

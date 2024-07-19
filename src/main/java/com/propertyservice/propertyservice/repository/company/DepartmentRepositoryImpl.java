@@ -1,5 +1,6 @@
 package com.propertyservice.propertyservice.repository.company;
 
+
 import com.propertyservice.propertyservice.domain.company.QCompany;
 import com.propertyservice.propertyservice.domain.company.QDepartment;
 import com.propertyservice.propertyservice.dto.company.DepartmentDto;
