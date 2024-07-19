@@ -2,6 +2,7 @@ package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.domain.revenue.RevenueLedger;
+import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.revenue.RevenueCondition;
 import com.propertyservice.propertyservice.dto.revenue.RevenueForm;
 import com.propertyservice.propertyservice.dto.revenue.RevenueTotalDto;
@@ -24,7 +25,7 @@ import java.time.format.DateTimeFormatter;
 public class RevenueService {
     private final ManagerRepository managerRepository;
     private final RevenueRepository revenueRepository;
-    private final ManagerService managerService;
+    private final CommonService commonService;
 
     @Transactional
     public void registryRevenue(RevenueForm revenueForm) {
@@ -53,10 +54,10 @@ public class RevenueService {
     }
 
     public RevenueTotalDto searchRevenueList(RevenueCondition revenueCondition) {
-        //CustomUserDetail customUserDetail = managerService.getCustomUserDetail();
-        UserDetails userDetails = managerService.getCustomUserDetail();
+        CustomUserDetail customUserDetail = commonService.getCustomUserDetailBySecurityContextHolder();
+        //UserDetails userDetails = .getCustomUserDetail();
+        log.info("CustomuserDetail : " + customUserDetail.getManagerName());
 
-        System.out.println("CustomuserDetail : " + userDetails);
         log.info(revenueCondition.toString());
         return RevenueTotalDto.builder()
                 .totalCount(revenueRepository.totalCount(revenueCondition))

@@ -6,10 +6,14 @@ import com.propertyservice.propertyservice.domain.common.Gender;
 import com.propertyservice.propertyservice.domain.common.TransactionType;
 import com.propertyservice.propertyservice.domain.manager.ManagerState;
 import com.propertyservice.propertyservice.dto.common.*;
+import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,6 +70,25 @@ public class CommonService {
                 .map(gender -> new GenderDto(gender.name(), gender.getLabel()))
                 .collect(Collectors.toList());
     }
+    public CustomUserDetail getCustomUserDetailBySecurityContextHolder(){
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = loggedInUser.getPrincipal();
+
+        if (principal instanceof CustomUserDetail) {
+            return (CustomUserDetail) principal;
+        } else {
+            throw new ClassCastException("Principal cannot be cast to CustomUserDetail");
+        }
+
+//        if (principal instanceof UserDetails) {
+//            return (UserDetails) principal;
+//        } else {
+//            throw new ClassCastException("Principal cannot be cast to CustomUserDetail");
+//        }
+    }
+
+
+
     /**
         public List<GenderDto> searchGenderList() {
         List<GenderDto> genderDtoList = new ArrayList<>();

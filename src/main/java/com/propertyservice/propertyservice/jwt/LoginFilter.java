@@ -3,6 +3,7 @@ package com.propertyservice.propertyservice.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
+import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.manager.LoginFormDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -42,24 +43,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-//        log.info("LoginFilter.attemptAuthentication() :  try to login");
-//
-//        if(!request.getMethod().equals("POST")){
-//            log.warn("Request Method :" + request.getMethod());
-//            throw new AuthenticationServiceException("Authentication method not supported" + request.getMethod());
-//        }
-//
-//        // 1. Username, password 받아오기
-//        String managerEmail = obtainUsername(request);
-//        String managerPassword = obtainPassword(request);
-//        log.info("managerEmail : " + managerEmail + "managerPassword : " + managerPassword);
-//
-//
-//        //2. Spring Security에서 username, password를 검증하기위해 token생성.
-//        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(managerEmail, managerPassword, null);
-//
-//        //3. AuthenticationManager에게 전달
-//        return authenticationManager.authenticate(authToken);
 
         try {
             log.info("LoginFilter.attemptAuthentication() :  try to login");
@@ -105,7 +88,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         log.info("Login Success <Email : {}> ", authResult.getName());
-        UserDetails user = (UserDetails) authResult.getPrincipal();
+        //UserDetails userDetails = (UserDetails) authResult.getPrincipal();
+        CustomUserDetail customUserDetail = (CustomUserDetail) authResult.getPrincipal();
 
         // 2. 권한 가져오기.
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
@@ -115,7 +99,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //3. Token 생성 ( 이름, 권한, 만기일)
-        String token = tokenProvider.generateJwtToken(user.getUsername(), role, VALID_TIME); // 1시간
+        String token = tokenProvider.generateJwtToken(customUserDetail.getUsername(), role, VALID_TIME); // 1시간
         log.warn(token);
         response.addHeader("Authorization", "Bearer " + token);
 

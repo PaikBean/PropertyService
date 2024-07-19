@@ -3,6 +3,7 @@ package com.propertyservice.propertyservice.service;
 import com.propertyservice.propertyservice.domain.common.Role;
 import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.manager.Manager;
+import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
@@ -30,17 +31,16 @@ import java.util.List;
 @Service
 //@Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ManagerService implements UserDetailsService {
+public class ManagerService  {
 
     private final PasswordEncoder passwordEncoder;
     private final ManagerRepository managerRepository;
-    //private final ManagerAddressRepository managerAddressRepository;
     private final CompanyService companyService;
     //private final DepartmentService departmentService;
     private final AddressLevel1Repository addressLevel1Repository;
     private final AddressLevel2Respository addressLevel2Respository;
     private final DepartmentRepository departmentRepository;
-
+    private final CommonService commonService;
     /**
      * 사용자 id를 통해 정보 가져오기
      * @param managerId : 사용자 ID
@@ -127,23 +127,6 @@ public class ManagerService implements UserDetailsService {
         ).getAddressLevel2Id();
     }
 
-    // SecurityContextHolder로 사용자 정보 가져오기.
-    public UserDetails getCustomUserDetail(){
-        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = loggedInUser.getPrincipal();
-
-//        if (principal instanceof CustomUserDetail) {
-//            return (CustomUserDetail) principal;
-//        } else {
-//            throw new ClassCastException("Principal cannot be cast to CustomUserDetail");
-//        }
-
-        if (principal instanceof UserDetails) {
-            return (UserDetails) principal;
-        } else {
-            throw new ClassCastException("Principal cannot be cast to CustomUserDetail");
-        }
-    }
 
     public String searchPassword(String managerEmail, String companyCode) {
         // 1. 회원 가져오기.
@@ -171,25 +154,10 @@ public class ManagerService implements UserDetailsService {
 
     }
 
-    public String resetPassword(String prePassword, String curPassword){
-//        //1. 현재 로그인한 사용자 정보 가져옴.
-//        CustomUserDetail customUserDetail = getCustomUserDetail();
-//
-//        // 2. 비밀번호 일치 여부 확인.
-//        if(!customUserDetail.getPassword().equals(prePassword)){
-//            throw new IllegalStateException("비밀번호가 일치하지 않거나 입력되지 않았습니다.");
-//        }
-//
-//        // 3. 비밀번호 재설정.
-//        Manager manager = searchManagerByEmail(customUserDetail.getUsername());
-//        manager.resetPassword( passwordEncoder.encode(curPassword) );
-//
-//        managerRepository.save(manager);
-//
-//        return manager.getManagerPassword();
 
+    public String resetPassword(String prePassword, String curPassword){
         //1. 현재 로그인한 사용자 정보 가져옴.
-        UserDetails userDetails = getCustomUserDetail();
+        CustomUserDetail userDetails = commonService.getCustomUserDetailBySecurityContextHolder();
 
         // 2. 비밀번호 일치 여부 확인.
         if(!userDetails.getPassword().equals(prePassword)){
@@ -199,30 +167,28 @@ public class ManagerService implements UserDetailsService {
         // 3. 비밀번호 재설정.
         Manager manager = searchManagerByEmail(userDetails.getUsername());
         manager.resetPassword( passwordEncoder.encode(curPassword) );
-
         managerRepository.save(manager);
 
         return manager.getManagerPassword();
 
     }
 
-
-    // 로그인.
-    // security Login
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.warn("loadUserByUsername call");
-        //System.out.println("managerEmail  " + username);
-        Manager manager = searchManagerByEmail(username);
-
-        //사용자 권한 USER로 설정.
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("COM_USER"));
-
-
-        return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
-        //return new CustomUserDetail(manager);
-    }
+//    // 로그인.
+//    // security Login
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        log.warn("loadUserByUsername call");
+//        //System.out.println("managerEmail  " + username);
+//        Manager manager = searchManagerByEmail(username);
+//
+//        //사용자 권한 USER로 설정.
+//        List<GrantedAuthority> authorities = new ArrayList<>();
+//        authorities.add(new SimpleGrantedAuthority("COM_USER"));
+//
+//
+//        //return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
+//        return new CustomUserDetail(manager);
+//    }
 
 
 }
