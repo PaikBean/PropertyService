@@ -177,8 +177,8 @@ const ManageCompanyPage = () => {
                       readOnly={true}
                       sx={{
                         '& .MuiInputBase-root': {
-                          backgroundColor: !mode ? '#f5f5f5' : 'inherite', // 회색빛 배경 설정
-                          cursor: !mode ? 'not-allowed' : 'inherite', // 커서 변경
+                          backgroundColor: '#f5f5f5', // 회색빛 배경 설정
+                          cursor: 'not-allowed', // 커서 변경
                         },
                       }}
                     />
