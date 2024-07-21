@@ -10,7 +10,7 @@ import { Autocomplete, TextField } from '@mui/material'
 // Utils
 import { fetchGenderList } from '@/store/slices/genderSlice'
 
-const Gender = ({ value, onChange, label = '성별' }) => {
+const Gender = ({ value, onChange, sx, readOnly = false , label = '성별' }) => {
   const dispatch = useDispatch()
   const { options, status, error } = useSelector((state) => state.genderList) // gender state 전체를 가져옵니다
 
@@ -33,6 +33,8 @@ const Gender = ({ value, onChange, label = '성별' }) => {
       getOptionLabel={(option) => option.label || ''}
       onChange={handleChange}
       renderInput={(params) => <TextField {...params} label={label} />}
+      disabled={readOnly}
+      sx={sx}
     />
   )
 }
