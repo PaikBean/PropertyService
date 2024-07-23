@@ -18,10 +18,10 @@ public class CustomUserDetail implements UserDetails {
     }
 
     public Company getCompany(){
-        return manager.getCompany_id();
+        return manager.getCompany();
     }
     public Department getDepartment(){
-        return manager.getDepartment_id();
+        return manager.getDepartment();
     }
     public String getManagerName(){
         return manager.getManagerName();

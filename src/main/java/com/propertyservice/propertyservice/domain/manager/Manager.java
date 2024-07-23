@@ -24,10 +24,10 @@ public class Manager extends BaseTimeEntity{
     private Long managerId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
-    private Company companyId;
+    private Company company;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
-    private Department department_id; // department Entity
+    private Department department; // department Entity
     private String managerName;
     private String managerRank;
     private String managerPosition;
@@ -46,10 +46,10 @@ public class Manager extends BaseTimeEntity{
 
 
     @Builder
-    public Manager(Long managerId, Company companyId, Department department_id, String managerName, String managerRank, String managerPosition, String managerCode, ManagerState managerState, Gender gender, String managerPhoneNumber, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount, Role role) {
+    public Manager(Long managerId, Company company, Department department, String managerName, String managerRank, String managerPosition, String managerCode, ManagerState managerState, Gender gender, String managerPhoneNumber, LocalDateTime managerEntranceDate, LocalDateTime managerResignDate, String managerEmail, String managerPassword, Integer passwordErrorCount, Role role) {
         this.managerId = managerId;
-        this.companyId = companyId;
-        this.department_id = department_id;
+        this.company = company;
+        this.department = department;
         this.managerName = managerName;
         this.managerRank = managerRank;
         this.managerPosition = managerPosition;

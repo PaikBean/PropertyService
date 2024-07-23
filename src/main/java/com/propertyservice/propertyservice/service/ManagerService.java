@@ -94,9 +94,9 @@ public class ManagerService  {
     public Long createManager(ManagerSignUpForm managerSignUpForm) {
         log.info("departmentId : {}",managerSignUpForm.getDepartmentId());
         return managerRepository.save(Manager.builder()
-                .companyId(companyService.searchCompany(managerSignUpForm.getCompanyCode()))
+                .company(companyService.searchCompany(managerSignUpForm.getCompanyCode()))
 //                .department_id(departmentService.searchDepartment(managerSignUpForm.getDepartmentName()))
-                .department_id(departmentRepository.findById(managerSignUpForm.getDepartmentId()).orElse(null))
+                .department(departmentRepository.findById(managerSignUpForm.getDepartmentId()).orElse(null))
                 .managerName(managerSignUpForm.getManagerName())
                 .managerRank(managerSignUpForm.getManagerRank())
                 .managerPosition(managerSignUpForm.getManagerPosition())
@@ -172,7 +172,6 @@ public class ManagerService  {
         return manager.getManagerPassword();
 
     }
-
 //    // 로그인.
 //    // security Login
 //    @Override

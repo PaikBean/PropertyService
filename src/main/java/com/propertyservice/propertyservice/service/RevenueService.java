@@ -33,9 +33,9 @@ public class RevenueService {
                 () -> new EntityNotFoundException("등록되지 않은 매니저 입니다."));
         revenueRepository.save(RevenueLedger.builder()
                         .managerId(manager)
-                        .companyId(manager.getCompany_id())
-                        .companyCode(manager.getCompany_id().getCompanyCode())
-                        .departmentCode(manager.getDepartment_id().getDepartmentCode())
+                        .companyId(manager.getCompany())
+                        .companyCode(manager.getCompany().getCompanyCode())
+                        .departmentCode(manager.getDepartment().getDepartmentCode())
                         .ownerName(revenueForm.getOwnerName())
                         .clientName(revenueForm.getClientName())
                         .addressLevel1Id(revenueForm.getAddressL1())
