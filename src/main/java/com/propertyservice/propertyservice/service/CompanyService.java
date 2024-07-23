@@ -33,10 +33,10 @@ public class CompanyService {
                 () -> new EntityNotFoundException("회사코드가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
     }
 
-    public Long searchCompany(Long companyId) {
+    public Company searchCompany(Long companyId) {
         return companyRepository.findById(companyId).orElseThrow(
                 () -> new EntityNotFoundException("회사가 존재하지 않습니다.")
-        ).getCompanyId();
+        );
     }
 
     @Transactional
