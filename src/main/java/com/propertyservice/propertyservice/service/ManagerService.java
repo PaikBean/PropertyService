@@ -172,6 +172,19 @@ public class ManagerService  {
         return manager.getManagerPassword();
 
     }
+
+    public List<Manager> searchManagerList(Long companyId){
+        Company company = companyService.searchCompany(companyId);
+        List<Manager> managerList = new ArrayList<>();
+        for(Manager manager : managerRepository.findAllByCompany(company)){
+            managerList.add(Manager.builder()
+                    .managerId(manager.getManagerId())
+                    .managerName(manager.getManagerName())
+                    .build());
+        }
+        return managerList;
+        //return managerRepository.findAllByCompanyId(companyId);
+    }
 //    // 로그인.
 //    // security Login
 //    @Override

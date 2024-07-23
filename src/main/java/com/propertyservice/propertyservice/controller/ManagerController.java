@@ -2,11 +2,14 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
+import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
 import com.propertyservice.propertyservice.service.ManagerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Slf4j
@@ -91,7 +94,21 @@ public class ManagerController {
         try{
             return new Response(ResponseCode.SUCCESS, managerService.resetPassword(prePassword, curPassword),"200");
         }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "401");
+        }
+    }
+
+
+    @GetMapping("/v1/manager-list/{companyId}")
+    public Response searchMangerList(@PathVariable("companyId")Long companyId){
+        try{
+            List<Manager> managerList = managerService.searchManagerList(companyId);
+            return managerList.isEmpty()
+                    ? new Response(ResponseCode.SUCCESS, managerList, "204")
+                    : new Response(ResponseCode.SUCCESS, managerList, "200");
+        }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
 }
