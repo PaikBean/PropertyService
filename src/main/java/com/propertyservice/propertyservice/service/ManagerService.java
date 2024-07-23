@@ -94,7 +94,7 @@ public class ManagerService  {
     public Long createManager(ManagerSignUpForm managerSignUpForm) {
         log.info("departmentId : {}",managerSignUpForm.getDepartmentId());
         return managerRepository.save(Manager.builder()
-                .company_id(companyService.searchCompany(managerSignUpForm.getCompanyCode()))
+                .companyId(companyService.searchCompany(managerSignUpForm.getCompanyCode()))
 //                .department_id(departmentService.searchDepartment(managerSignUpForm.getDepartmentName()))
                 .department_id(departmentRepository.findById(managerSignUpForm.getDepartmentId()).orElse(null))
                 .managerName(managerSignUpForm.getManagerName())
