@@ -68,4 +68,9 @@ class ManagerServiceTest {
         String password = managerService.searchPassword(managerEmail, companyCode);
         System.out.println("Reset Password : " + password);
     }
+
+    @Test
+    public void searchManagerList(){
+        System.out.println(managerService.searchManagerList(1L));
+    }
 }
