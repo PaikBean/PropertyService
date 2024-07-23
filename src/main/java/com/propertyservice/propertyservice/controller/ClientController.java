@@ -1,7 +1,9 @@
 package com.propertyservice.propertyservice.controller;
 
+import com.propertyservice.propertyservice.domain.client.Client;
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
+import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.dto.client.*;
 import com.propertyservice.propertyservice.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -173,6 +175,16 @@ public class ClientController {
     }
 
 
-
+    @GetMapping("/v1/client-list/{companyId}")
+    public Response searchClientList(@PathVariable("companyId")Long companyId){
+        try{
+            List<Client> clientList = clientService.searchClientList(companyId);
+            return clientList.isEmpty()
+                    ? new Response(ResponseCode.SUCCESS, clientList, "204")
+                    : new Response(ResponseCode.SUCCESS, clientList, "200");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 
 }

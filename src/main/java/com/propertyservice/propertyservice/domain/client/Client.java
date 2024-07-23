@@ -1,6 +1,7 @@
 package com.propertyservice.propertyservice.domain.client;
 
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
+import com.propertyservice.propertyservice.domain.company.Company;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,15 +30,21 @@ public class Client extends BaseTimeEntity {
 
     private Long modifiedManagerId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
 
 
     @Builder
-    public Client(Long managerId, String clientName,String clientPhoneNumber, InflowType inflowType, Long registrationManagerId, Long modifiedManagerId){
+    public Client(Long clientId, Long managerId, String clientName,String clientPhoneNumber, InflowType inflowType, Long registrationManagerId, Long modifiedManagerId, Company company){
+        this.clientId = clientId;
         this.managerId = managerId;
         this.clientName = clientName;
         this.clientPhoneNumber = clientPhoneNumber;
         this.inflowType =inflowType;
         this.registrationManagerId =registrationManagerId;
         this.modifiedManagerId = modifiedManagerId;
+        this.company = company;
     }
 }

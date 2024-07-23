@@ -24,6 +24,7 @@ class ClientServiceTest {
             clientForm.setRemark("특이사항 있음");
             clientForm.setInflowType(InflowType.OTHERS);
             clientForm.setManagerId(1L);
+            clientForm.setCompanyId(1L);
 
             clientService.createClient(clientForm);
         }
@@ -88,6 +89,12 @@ class ClientServiceTest {
     @Test
     public void deleteShowingProrpertyTest(){
         clientService.deleteShowingProperty(1L);
+    }
+
+
+    @Test
+    public void searchClientListTest(){
+        System.out.println(clientService.searchClientList(1L));
     }
 
 

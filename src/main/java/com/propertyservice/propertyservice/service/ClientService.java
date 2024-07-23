@@ -4,6 +4,7 @@ import com.propertyservice.propertyservice.domain.client.Client;
 import com.propertyservice.propertyservice.domain.client.ClientRemark;
 import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.domain.common.TransactionType;
+import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.property.Property;
 import com.propertyservice.propertyservice.domain.property.ShowingProperty;
 import com.propertyservice.propertyservice.dto.client.*;
@@ -34,6 +35,7 @@ public class ClientService {
     private final PropertyRepository propertyRepository;
     private final ScheduleService scheduleService;
     private final ManagerService managerService;
+    private final CompanyService companyService;
 
     public List<InflowTypeDto> searchInflowTypeList() {
         return Arrays.stream(InflowType.values())
@@ -91,6 +93,7 @@ public class ClientService {
                 .inflowType(clientForm.getInflowType())
                 .registrationManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
                 .modifiedManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
+                .company(companyService.searchCompany(clientForm.getCompanyId()))
                 .build());
         if(clientForm.getRemark() != null){
             clientRemarkRepository.save(ClientRemark.builder()
@@ -157,5 +160,17 @@ public class ClientService {
                 () -> new EntityNotFoundException("해당 특이사항이 존재 하지 않습니다.")
         );
         clientRemarkRepository.delete(clientRemark);
+    }
+
+    public List<Client> searchClientList(Long companyId){
+        Company company = companyService.searchCompany(companyId);
+        List<Client> clientList = new ArrayList<>();
+        for(Client client : clientRepository.findAllByCompany(company)){
+            clientList.add(Client.builder()
+                    .clientId(client.getClientId())
+                    .clientName(client.getClientName())
+                    .build());
+        }
+        return clientList;
     }
 }

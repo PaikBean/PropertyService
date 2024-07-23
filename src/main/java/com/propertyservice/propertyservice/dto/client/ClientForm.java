@@ -18,4 +18,6 @@ public class ClientForm {
     private String remark; //특이사항 작성 후 저장.
 
     private List<Property> propertyList;// 보여줄 매물 리스트.
+
+    private Long companyId;
 }
