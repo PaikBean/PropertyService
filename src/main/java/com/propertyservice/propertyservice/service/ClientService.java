@@ -93,7 +93,7 @@ public class ClientService {
                 .inflowType(clientForm.getInflowType())
                 .registrationManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
                 .modifiedManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
-                .company(companyService.searchCompany(clientForm.getCompanyId()))
+//                .company(companyService.searchCompany(clientForm.getCompanyId()))
                 .build());
         if(clientForm.getRemark() != null){
             clientRemarkRepository.save(ClientRemark.builder()
@@ -162,15 +162,8 @@ public class ClientService {
         clientRemarkRepository.delete(clientRemark);
     }
 
-    public List<Client> searchClientList(Long companyId){
-        Company company = companyService.searchCompany(companyId);
-        List<Client> clientList = new ArrayList<>();
-        for(Client client : clientRepository.findAllByCompany(company)){
-            clientList.add(Client.builder()
-                    .clientId(client.getClientId())
-                    .clientName(client.getClientName())
-                    .build());
-        }
-        return clientList;
+    public List<ClientDto.ClientListDto> searchClientList(Long companyId){
+//        Company company = companyService.searchCompany(companyId);
+        return clientRepository.searchClientList(companyId);
     }
 }

@@ -178,7 +178,7 @@ public class ClientController {
     @GetMapping("/v1/client-list/{companyId}")
     public Response searchClientList(@PathVariable("companyId")Long companyId){
         try{
-            List<Client> clientList = clientService.searchClientList(companyId);
+            List<ClientDto.ClientListDto> clientList = clientService.searchClientList(companyId);
             return clientList.isEmpty()
                     ? new Response(ResponseCode.SUCCESS, clientList, "204")
                     : new Response(ResponseCode.SUCCESS, clientList, "200");

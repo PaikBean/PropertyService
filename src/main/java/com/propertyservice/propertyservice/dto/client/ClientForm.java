@@ -19,5 +19,5 @@ public class ClientForm {
 
     private List<Property> propertyList;// 보여줄 매물 리스트.
 
-    private Long companyId;
+//    private Long companyId;
 }

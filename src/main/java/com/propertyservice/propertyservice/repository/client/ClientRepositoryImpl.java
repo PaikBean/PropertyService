@@ -1,7 +1,9 @@
 package com.propertyservice.propertyservice.repository.client;
 
+import com.propertyservice.propertyservice.domain.client.Client;
 import com.propertyservice.propertyservice.domain.client.QClient;
 import com.propertyservice.propertyservice.domain.client.QClientRemark;
+import com.propertyservice.propertyservice.domain.company.QCompany;
 import com.propertyservice.propertyservice.domain.manager.QManager;
 import com.propertyservice.propertyservice.domain.property.QProperty;
 import com.propertyservice.propertyservice.domain.property.QPropertyRemark;
@@ -23,6 +25,7 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
     private final QShowingProperty showingProperty = QShowingProperty.showingProperty;
     private final QProperty property = QProperty.property;
     private final QPropertyRemark propertyRemark= QPropertyRemark.propertyRemark;
+    private final QCompany company = QCompany.company;
 
     // 고객 목록 조회
     @Override
@@ -87,5 +90,21 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                 .where(client.clientId.eq(clientId))
                 .fetch();
 //        return null;
+    }
+
+    @Override
+    public List<ClientDto.ClientListDto> searchClientList(Long companyId) {
+        return queryFactory
+                .select(
+                        new QClientDto_ClientListDto(
+                                client.clientId,
+                                client.clientName
+                        )
+                )
+                .from(client)
+                .innerJoin(manager).on(client.managerId.eq(manager.managerId))
+                .innerJoin(company).on(company.eq(manager.company))
+                .where(manager.company.companyId.eq(companyId))
+                .fetch();
     }
 }

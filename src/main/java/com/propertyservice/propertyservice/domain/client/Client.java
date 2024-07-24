@@ -30,14 +30,14 @@ public class Client extends BaseTimeEntity {
 
     private Long modifiedManagerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private Company company;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "company_id")
+//    private Company company;
 
 
 
     @Builder
-    public Client(Long clientId, Long managerId, String clientName,String clientPhoneNumber, InflowType inflowType, Long registrationManagerId, Long modifiedManagerId, Company company){
+    public Client(Long clientId, Long managerId, String clientName,String clientPhoneNumber, InflowType inflowType, Long registrationManagerId, Long modifiedManagerId){
         this.clientId = clientId;
         this.managerId = managerId;
         this.clientName = clientName;
@@ -45,6 +45,6 @@ public class Client extends BaseTimeEntity {
         this.inflowType =inflowType;
         this.registrationManagerId =registrationManagerId;
         this.modifiedManagerId = modifiedManagerId;
-        this.company = company;
+//        this.company = company;
     }
 }

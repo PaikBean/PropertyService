@@ -24,7 +24,7 @@ class ClientServiceTest {
             clientForm.setRemark("특이사항 있음");
             clientForm.setInflowType(InflowType.OTHERS);
             clientForm.setManagerId(1L);
-            clientForm.setCompanyId(1L);
+            //clientForm.setCompanyId(1L);
 
             clientService.createClient(clientForm);
         }

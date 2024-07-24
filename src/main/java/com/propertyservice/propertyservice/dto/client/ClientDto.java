@@ -1,5 +1,6 @@
 package com.propertyservice.propertyservice.dto.client;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
 public class ClientDto {
@@ -20,6 +21,16 @@ public class ClientDto {
         }
     }
 
+    @Getter
+    public static class ClientListDto{
+        private String clientName;
+        private Long clientId;
 
+        @QueryProjection
+        public ClientListDto(Long clientId, String clientName){
+            this.clientId = clientId;
+            this.clientName = clientName;
+        }
+    }
 
 }
