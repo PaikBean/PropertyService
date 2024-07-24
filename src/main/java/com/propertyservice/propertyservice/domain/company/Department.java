@@ -1,6 +1,7 @@
 package com.propertyservice.propertyservice.domain.company;
 
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
+import com.propertyservice.propertyservice.domain.manager.Manager;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,17 +21,21 @@ public class Department extends BaseTimeEntity {
     private Long departmentId;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "company_id")
-    private Company companyId;
+    private Company company;
     @Column(nullable = false)
     private String departmentName;
     @Column(nullable = false)
     private String departmentCode;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "manager_id")
+    private Manager departmentPresidentName;
 
     @Builder
-    public Department(Long departmentId, Company companyId, String departmentName, String departmentCode) {
+    public Department(Long departmentId, Company company, String departmentName, String departmentCode, Manager departmentPresidentName) {
         this.departmentId = departmentId;
-        this.companyId = companyId;
+        this.company = company;
         this.departmentName = departmentName;
         this.departmentCode = departmentCode;
+        this.departmentPresidentName =departmentPresidentName;
     }
 }

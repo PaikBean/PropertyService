@@ -25,18 +25,45 @@ public class DepartmentController {
         }
     }
 
+
     /**
-     * 부서 목록 검색 by 회사 코드
-     *
-     * @param companyCode
+     * JWT( securtyContentHolder ) 부서 목록 검색.
      * @return
      */
     @GetMapping("/v1/department-list")
-    public Response searchDepartmentList(@RequestParam(name = "companyCode") String companyCode) {
+    public Response searchDepartmentList() {
         try {
-            return new Response(ResponseCode.SUCCESS, departmentService.searchDepartmentList(companyCode), "200");
+            return new Response(ResponseCode.SUCCESS, departmentService.searchDepartmentList(), "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
+    /**
+     * companyId기반 부서 목록 검색.
+     * @return
+     */
+    @GetMapping("/v1/department-list/{companyId}")
+    public Response searchDepartmentList(@PathVariable(name = "companyId")Long companyId) {
+        try {
+            return new Response(ResponseCode.SUCCESS, departmentService.searchDepartmentList(companyId), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    //    /**
+//     * 부서 목록 검색 by 회사 코드
+//     *
+//     * @param companyCode
+//     * @return
+//     */
+//    @GetMapping("/v1/department-list")
+//    public Response searchDepartmentList(@RequestParam(name = "companyCode", defaultValue = "") String companyCode) {
+//        try {
+//            return new Response(ResponseCode.SUCCESS, departmentService.searchDepartmentList(companyCode), "200");
+//        } catch (Exception e) {
+//            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+//        }
+//    }
 }

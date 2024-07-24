@@ -13,4 +13,6 @@ public class DepartmentForm {
     private String departmentName;
 
     private String departmentCode;
+
+    private Long managerId;
 }
