@@ -35,7 +35,7 @@ public class DepartmentService {
      */
     public Long createDepartment(DepartmentForm departmentForm){
         return departmentRepository.save(Department.builder()
-                .company(departmentForm.getCompanyId())
+                .company(departmentForm.getCompany())
                 .departmentName(departmentForm.getDepartmentName())
                 .departmentCode(departmentForm.getDepartmentCode())
                 .departmentPresidentName(managerService.searchManagerById(departmentForm.getManagerId()))
