@@ -24,9 +24,6 @@ import java.time.LocalDateTime;
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
-    private final DepartmentService departmentService;
-    private final CompanyAddressRepository companyAddressRepository;
-    private final ManagerRepository managerRepository;
 
     public Company searchCompany(String companyCode) {
         return companyRepository.findByCompanyCode(companyCode).orElseThrow(
