@@ -2,6 +2,7 @@ package com.propertyservice.propertyservice.domain.company;
 
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
 import com.propertyservice.propertyservice.domain.manager.Manager;
+import com.propertyservice.propertyservice.dto.company.DepartmentInfoForm;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,5 +38,10 @@ public class Department extends BaseTimeEntity {
         this.departmentName = departmentName;
         this.departmentCode = departmentCode;
         this.departmentPresidentName =departmentPresidentName;
+    }
+
+    public void updateDepartment(DepartmentInfoForm departmentInfoForm, Manager departmentPresidentName){
+        this.departmentName = departmentInfoForm.getDepartmentName();
+        this.departmentPresidentName = departmentPresidentName;
     }
 }

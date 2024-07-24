@@ -3,6 +3,7 @@ package com.propertyservice.propertyservice.controller;
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
 import com.propertyservice.propertyservice.dto.company.DepartmentForm;
+import com.propertyservice.propertyservice.dto.company.DepartmentInfoForm;
 import com.propertyservice.propertyservice.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @PostMapping("/v1/department")
-    public Response createDepartment(DepartmentForm departmentForm) {
+    public Response createDepartment(@RequestBody DepartmentForm departmentForm) {
         try {
             return new Response(ResponseCode.SUCCESS, departmentService.createDepartment(departmentForm), "201");
         } catch (Exception e) {
@@ -51,6 +52,33 @@ public class DepartmentController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
+    @PutMapping("/v1/department-info")
+    public Response updateDepartmentInfo(@RequestBody DepartmentInfoForm departmentInfoForm){
+        try {
+            return new Response(ResponseCode.SUCCESS, departmentService.updateDepartmentInfo(departmentInfoForm), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+//    @GetMapping("/v1/department-info/{departmentId}")
+//    public Response searchDepartmentInfo(@PathVariable(name = "departmentId")Long departmentId){
+//        try {
+//            return new Response(ResponseCode.SUCCESS, null, "200");
+//        } catch (Exception e) {
+//            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+//        }
+//    }
+
+//    @GetMapping("/v1/manager-list/{departmentId}")
+//    public Response searchManagerListForDepartment(@PathVariable("departmentId")Long departmentId){
+//        try {
+//            return new Response(ResponseCode.SUCCESS, null, "200");
+//        } catch (Exception e) {
+//            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+//        }
+//    }
 
     //    /**
 //     * 부서 목록 검색 by 회사 코드

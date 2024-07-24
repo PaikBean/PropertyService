@@ -2,15 +2,18 @@ package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.company.Department;
+import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.dto.company.DepartmentDto;
 import com.propertyservice.propertyservice.dto.company.DepartmentForm;
 import com.propertyservice.propertyservice.dto.company.DepartmentInfoDto;
+import com.propertyservice.propertyservice.dto.company.DepartmentInfoForm;
 import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.repository.company.CompanyRepository;
 import com.propertyservice.propertyservice.repository.company.DepartmentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +26,12 @@ public class DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final CommonService commonService;
     private final ManagerService managerService;
-    public Department searchDepartment(String departmentName){
+    public Department searchDepartmentByDepartmentName(String departmentName){
         return departmentRepository.findByDepartmentName(departmentName).orElseThrow(
+                ()-> new EntityNotFoundException("부서가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
+    }
+    public Department searchDepartmentByDepartmentId(Long departmentId){
+        return departmentRepository.findByDepartmentId(departmentId).orElseThrow(
                 ()-> new EntityNotFoundException("부서가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
     }
 
@@ -71,5 +78,22 @@ public class DepartmentService {
                 .companyId(companyId)
                 .departmentInfoDtoList(departmentRepository.searchDepartmentList(companyId))
                 .build();
+    }
+
+    /**
+     * 부서 정보 수정.
+     * @param departmentInfoForm
+     * @return
+     */
+    public Long updateDepartmentInfo(DepartmentInfoForm departmentInfoForm){
+        Department department = searchDepartmentByDepartmentId(departmentInfoForm.getDepartmentId());
+        if(departmentInfoForm.getDepartmentId() != null) {
+            Manager departmentPresidentName = managerService.searchManagerById(departmentInfoForm.getManagerId());
+            department.updateDepartment(departmentInfoForm, departmentPresidentName);
+        }
+        else
+            department.updateDepartment(departmentInfoForm, department.getDepartmentPresidentName());
+
+        return departmentRepository.save(department).getDepartmentId();
     }
 }
