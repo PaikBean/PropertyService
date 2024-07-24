@@ -62,6 +62,16 @@ public class DepartmentController {
         }
     }
 
+    @DeleteMapping("/v1/department-info/{departmentId}")
+    public Response deleteDepartment(@PathVariable(name = "departmentId")Long departmentId){
+        try {
+            departmentService.deleteDepartment(departmentId);
+            return new Response(ResponseCode.SUCCESS, null, "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
 //    @GetMapping("/v1/department-info/{departmentId}")
 //    public Response searchDepartmentInfo(@PathVariable(name = "departmentId")Long departmentId){
 //        try {

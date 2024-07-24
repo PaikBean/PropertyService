@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -85,6 +86,7 @@ public class DepartmentService {
      * @param departmentInfoForm
      * @return
      */
+    @Transactional
     public Long updateDepartmentInfo(DepartmentInfoForm departmentInfoForm){
         Department department = searchDepartmentByDepartmentId(departmentInfoForm.getDepartmentId());
         if(departmentInfoForm.getDepartmentId() != null) {
@@ -95,5 +97,9 @@ public class DepartmentService {
             department.updateDepartment(departmentInfoForm, department.getDepartmentPresidentName());
 
         return departmentRepository.save(department).getDepartmentId();
+    }
+    @Transactional
+    public void deleteDepartment(Long departmentId){
+        departmentRepository.delete(searchDepartmentByDepartmentId(departmentId));
     }
 }
