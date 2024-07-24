@@ -63,8 +63,8 @@ public class ClientService {
                                 () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
                         ).getPropertyId()
                 )
-                .registrationManagerId(managerService.searchManagerById(showingProrpertyForm.getManagerId()))
-                .modifiedManagerId(managerService.searchManagerById(showingProrpertyForm.getManagerId()))
+                .registrationManagerId(managerService.searchManagerIdById(showingProrpertyForm.getManagerId()))
+                .modifiedManagerId(managerService.searchManagerIdById(showingProrpertyForm.getManagerId()))
                 .build()).getClientId();
     }
     public void deleteShowingProperty(Long showingPropertyId){
@@ -89,10 +89,10 @@ public class ClientService {
         Client client =   clientRepository.save(Client.builder()
                 .clientName(clientForm.getClientName())
                 .clientPhoneNumber(clientForm.getClientPhoneNumber())
-                .managerId(managerService.searchManagerById(clientForm.getManagerId()))
+                .managerId(managerService.searchManagerIdById(clientForm.getManagerId()))
                 .inflowType(clientForm.getInflowType())
-                .registrationManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
-                .modifiedManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
+                .registrationManagerId(managerService.searchManagerIdById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
+                .modifiedManagerId(managerService.searchManagerIdById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
 //                .company(companyService.searchCompany(clientForm.getCompanyId()))
                 .build());
         if(clientForm.getRemark() != null){
@@ -109,8 +109,8 @@ public class ClientService {
                                         () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
                                 ).getPropertyId()
                         )
-                        .registrationManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
-                        .modifiedManagerId(managerService.searchManagerById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
+                        .registrationManagerId(managerService.searchManagerIdById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
+                        .modifiedManagerId(managerService.searchManagerIdById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
                         .build());
             }
         }

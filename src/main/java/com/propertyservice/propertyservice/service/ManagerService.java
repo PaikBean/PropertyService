@@ -44,11 +44,21 @@ public class ManagerService  {
     /**
      * 사용자 id를 통해 정보 가져오기
      * @param managerId : 사용자 ID
-     * @return manager
+     * @return Long
      */
-    public Long searchManagerById(Long managerId){
+    public Long searchManagerIdById(Long managerId){
         return managerRepository.findByManagerId(managerId).orElseThrow(
                 ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요.")).getManagerId();
+
+    }
+    /**
+     * 사용자 id를 통해 정보 가져오기
+     * @param managerId : 사용자 ID
+     * @return manager
+     */
+    public Manager searchManagerById(Long managerId){
+        return managerRepository.findByManagerId(managerId).orElseThrow(
+                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요."));
 
     }
 
@@ -185,6 +195,8 @@ public class ManagerService  {
         return managerList;
         //return managerRepository.findAllByCompanyId(companyId);
     }
+
+
 //    // 로그인.
 //    // security Login
 //    @Override
