@@ -25,8 +25,8 @@ class DepartmentControllerTest {
 
     public DepartmentForm createForm(){
         DepartmentForm departmentForm = new DepartmentForm();
-        departmentForm.setCompanyId(companyRepository.findById(1L).orElseThrow( () -> new EntityNotFoundException("데이터가 존재 하지 않습니다.")));
-        departmentForm.setDepartmentName("부서test001");
+        departmentForm.setCompany(companyRepository.findById(1L).orElseThrow( () -> new EntityNotFoundException("데이터가 존재 하지 않습니다.")));
+        departmentForm.setDepartmentName("부서001");
         departmentForm.setDepartmentCode("DEP001 TEST");
         return departmentForm;
     }

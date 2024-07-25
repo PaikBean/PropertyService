@@ -77,7 +77,7 @@ public class CompanyService {
     public CompanyManagerDto searchManagerListForCompanyId(Long companyId){
         return CompanyManagerDto.builder()
                 .companyId(companyId)
-                .managerInfoDtoList(managerRepository.searchManagerInfoList(companyId))
+                .managerInfoDtoList(managerRepository.searchManagerInfoListByCompanyId(companyId))
                 .build();
     }
 }
