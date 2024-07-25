@@ -82,4 +82,13 @@ public class CompanyController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
+    @GetMapping("/v1/manager-list/{companyId}")
+    public Response searchManagerListForCompanyId(@PathVariable(name = "companyId")Long companyId){
+        try {
+            return new Response(ResponseCode.SUCCESS, companyService.searchManagerListForCompanyId(companyId), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 }

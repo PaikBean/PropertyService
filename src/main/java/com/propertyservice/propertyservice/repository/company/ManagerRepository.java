@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ManagerRepository extends JpaRepository<Manager, Long> {
+public interface ManagerRepository extends JpaRepository<Manager, Long>, ManagerRepositoryCustom {
     Optional<Manager> findByManagerId(Long managerId);
 
     Optional<Manager> findByManagerEmail(String managerEmail);

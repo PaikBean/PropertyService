@@ -2,6 +2,7 @@ package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.dto.company.CompanyInfoForm;
+import com.propertyservice.propertyservice.dto.company.CompanyManagerDto;
 import com.propertyservice.propertyservice.dto.company.CompanyRegistryForm;
 import com.propertyservice.propertyservice.dto.company.CompanySimpleDto;
 import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final ManagerRepository managerRepository;
 
     public Company searchCompany(String companyCode) {
         return companyRepository.findByCompanyCode(companyCode).orElseThrow(
@@ -70,5 +72,12 @@ public class CompanyService {
         if(flag){
             throw new IllegalStateException("등록된 회사입니다.");
         }
+    }
+
+    public CompanyManagerDto searchManagerListForCompanyId(Long companyId){
+        return CompanyManagerDto.builder()
+                .companyId(companyId)
+                .managerInfoDtoList(managerRepository.searchManagerInfoList(companyId))
+                .build();
     }
 }
