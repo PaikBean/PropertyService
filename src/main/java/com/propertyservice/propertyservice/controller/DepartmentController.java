@@ -72,14 +72,14 @@ public class DepartmentController {
         }
     }
 
-//    @GetMapping("/v1/department-info/{departmentId}")
-//    public Response searchDepartmentInfo(@PathVariable(name = "departmentId")Long departmentId){
-//        try {
-//            return new Response(ResponseCode.SUCCESS, null, "200");
-//        } catch (Exception e) {
-//            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
-//        }
-//    }
+    @GetMapping("/v1/department-info/{departmentId}")
+    public Response searchDepartmentInfo(@PathVariable(name = "departmentId")Long departmentId){
+        try {
+            return new Response(ResponseCode.SUCCESS, null, "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 
 //    @GetMapping("/v1/manager-list/{departmentId}")
 //    public Response searchManagerListForDepartment(@PathVariable("departmentId")Long departmentId){

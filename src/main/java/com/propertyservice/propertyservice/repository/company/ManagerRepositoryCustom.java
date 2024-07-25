@@ -5,5 +5,7 @@ import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
 import java.util.List;
 
 public interface ManagerRepositoryCustom {
-    List<ManagerInfoDto> searchManagerInfoList(Long companyId);
+    List<ManagerInfoDto> searchManagerInfoListByCompanyId(Long companyId);
+
+    List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId);
 }

@@ -3,11 +3,17 @@ package com.propertyservice.propertyservice.repository.company;
 import com.propertyservice.propertyservice.domain.company.QCompany;
 import com.propertyservice.propertyservice.domain.company.QDepartment;
 import com.propertyservice.propertyservice.domain.manager.QManager;
+import com.propertyservice.propertyservice.domain.revenue.QRevenueLedger;
 import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
 import com.propertyservice.propertyservice.dto.manager.QManagerInfoDto;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -17,8 +23,9 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
     private final QManager manager = QManager.manager;
     private final QCompany company = QCompany.company;
     private final QDepartment department = QDepartment.department;
+    private final QRevenueLedger revenueLedger = QRevenueLedger.revenueLedger;
     @Override
-    public List<ManagerInfoDto> searchManagerInfoList(Long companyId) {
+    public List<ManagerInfoDto> searchManagerInfoListByCompanyId(Long companyId) {
         return queryFactory
                 .select(
                     new QManagerInfoDto(
@@ -35,5 +42,48 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                 .where( manager.company.companyId.eq(companyId))
                 .fetch();
 
+    }
+
+    @Override
+    public List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId) {
+//        // 현재 년-월
+//        StringTemplate CURRENT_TIME = formattedDate(LocalDateTime.now(), "%Y-%m");
+//
+//        // ex) 2024-07
+//        StringTemplate formattedDate = formattedDate(revenueLedger.createdDate, "%Y-%m");
+//
+//        return queryFactory
+//                .select(
+//                        new QManagerInfoDto(
+//                                manager.managerId,
+//                                manager.managerPosition,
+//                                manager.managerName,
+//                                manager.managerRank,
+//                                manager.managerPosition,
+//                                revenueLedger.commission.sum()
+//                        )
+//                )
+//                .from(manager)
+//                .leftJoin(revenueLedger).on(manager.eq(revenueLedger.managerId))
+//                .groupBy(revenueLedger.managerId)
+//                .having(manager.department.departmentId.eq(departmentId)
+//                        .and(
+//                                formattedDate.gt(CURRENT_TIME)
+//                        ))
+//                .fetch();
+        return null;
+    }
+
+    public StringTemplate formattedDate(DateTimePath<LocalDateTime> date, String format){
+        return  Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , date
+                , ConstantImpl.create(format));
+    }
+    public StringTemplate formattedDate(LocalDateTime date, String format){
+        return  Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , date
+                , ConstantImpl.create(format));
     }
 }
