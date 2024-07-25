@@ -6,6 +6,7 @@ import com.propertyservice.propertyservice.domain.manager.QManager;
 import com.propertyservice.propertyservice.domain.revenue.QRevenueLedger;
 import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
 import com.propertyservice.propertyservice.dto.manager.QManagerInfoDto;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.Expressions;
@@ -13,6 +14,7 @@ import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -73,6 +75,20 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
 //                .fetch();
         return null;
     }
+
+    @Override
+    public List<BigDecimal> managerTotalRevenue(Long managerId) {
+         return  queryFactory
+                .select(
+                        revenueLedger.commission.sum()
+                )
+                .from(manager)
+                .innerJoin(revenueLedger).on(manager.eq(revenueLedger.managerId))
+                .groupBy(manager.managerId)
+                .where(manager.managerId.eq(managerId))
+                .fetch();
+    }
+
 
     public StringTemplate formattedDate(DateTimePath<LocalDateTime> date, String format){
         return  Expressions.stringTemplate(
