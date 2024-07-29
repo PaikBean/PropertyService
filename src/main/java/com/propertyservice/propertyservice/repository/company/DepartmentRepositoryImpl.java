@@ -4,6 +4,7 @@ package com.propertyservice.propertyservice.repository.company;
 import com.propertyservice.propertyservice.domain.company.Department;
 import com.propertyservice.propertyservice.domain.company.QCompany;
 import com.propertyservice.propertyservice.domain.company.QDepartment;
+import com.propertyservice.propertyservice.domain.revenue.QRevenueLedger;
 import com.propertyservice.propertyservice.dto.company.DepartmentDto;
 import com.propertyservice.propertyservice.dto.company.DepartmentInfoDto;
 import com.propertyservice.propertyservice.dto.company.QDepartmentDto;
@@ -19,6 +20,7 @@ public class DepartmentRepositoryImpl implements DepartmentRepositoryCustom {
 
     private final QCompany company = QCompany.company;
     private final QDepartment department = QDepartment.department;
+    private final QRevenueLedger revenueLedger = QRevenueLedger.revenueLedger;
 
     @Override
     public List<DepartmentDto> searchDepartmentListByCompanyCode(String companyCode) {
@@ -52,6 +54,26 @@ public class DepartmentRepositoryImpl implements DepartmentRepositoryCustom {
                 .where(
                         company.companyId.eq(companyId)
                 )
+                .fetch();
+//        return null;
+    }
+
+    @Override
+    public List<DepartmentInfoDto> searchDepartmentInfo(Long departmentId) {
+        return queryFactory
+                .select(
+                        new QDepartmentInfoDto(
+                                department.departmentId,
+                                department.departmentName,
+                                department.departmentCode,
+                                department.departmentPresidentName.managerId,
+                                revenueLedger.commission.sum()
+                        )
+                )
+                .from(department)
+                .innerJoin(revenueLedger)
+                .on(department.departmentCode.eq(revenueLedger.departmentCode))
+                .where(department.departmentId.eq(departmentId))
                 .fetch();
 //        return null;
     }

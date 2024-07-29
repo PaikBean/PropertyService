@@ -8,6 +8,7 @@ import com.propertyservice.propertyservice.dto.company.DepartmentForm;
 import com.propertyservice.propertyservice.dto.company.DepartmentInfoDto;
 import com.propertyservice.propertyservice.dto.company.DepartmentInfoForm;
 import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
+import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
 import com.propertyservice.propertyservice.repository.company.CompanyRepository;
 import com.propertyservice.propertyservice.repository.company.DepartmentRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -79,6 +80,23 @@ public class DepartmentService {
                 .companyId(companyId)
                 .departmentInfoDtoList(departmentRepository.searchDepartmentList(companyId))
                 .build();
+    }
+
+
+    public DepartmentInfoDto searchDepartmentInfo(Long departmentId){
+        DepartmentInfoDto departmentInfoDtoByRepository = departmentRepository.searchDepartmentInfo(departmentId).get(0);
+        List<ManagerInfoDto> deparmentManagerList = managerService.searchManagerInfoListByDepartmentId(departmentId);
+
+        return DepartmentInfoDto.builder()
+                .departmentId(departmentId)
+                .departmentName(departmentInfoDtoByRepository.getDepartmentName())
+                .departmentCode(departmentInfoDtoByRepository.getDepartmentCode())
+                .managerId(departmentInfoDtoByRepository.getManagerId())
+                .departmentTotalRevenue(departmentInfoDtoByRepository.getDepartmentTotalRevenue())
+                .departmentManagerList(deparmentManagerList)
+                .build();
+
+//        return null;
     }
 
     /**

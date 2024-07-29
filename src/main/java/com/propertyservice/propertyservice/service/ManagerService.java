@@ -4,6 +4,7 @@ import com.propertyservice.propertyservice.domain.common.Role;
 import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
+import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
 import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
@@ -194,6 +195,10 @@ public class ManagerService  {
         }
         return managerList;
         //return managerRepository.findAllByCompanyId(companyId);
+    }
+
+    public List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId){
+        return managerRepository.searchManagerInfoListByDepartmentId(departmentId);
     }
 
 

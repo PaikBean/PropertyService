@@ -2,16 +2,22 @@ package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.common.Gender;
 import com.propertyservice.propertyservice.domain.manager.ManagerState;
+import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
 import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
+import com.propertyservice.propertyservice.repository.company.ManagerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 @SpringBootTest
 class ManagerServiceTest {
 
     @Autowired
     private ManagerService managerService;
+    @Autowired
+    private ManagerRepository managerRepository;
 
     @Test
     public void createManagerTest(){
@@ -72,5 +78,11 @@ class ManagerServiceTest {
     @Test
     public void searchManagerList(){
         System.out.println(managerService.searchManagerList(1L));
+    }
+
+    @Test
+    public void searchManagerInfoListByDepartmentIdTest(){
+        List<ManagerInfoDto> managerInfoDtoList = managerRepository.searchManagerInfoListByDepartmentId(1L);
+        System.out.println(managerInfoDtoList.get(0).getManagerTotalRevenueMonth());
     }
 }

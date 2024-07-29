@@ -1,6 +1,5 @@
 package com.propertyservice.propertyservice.repository.company;
 
-import com.propertyservice.propertyservice.domain.company.Department;
 import com.propertyservice.propertyservice.dto.company.DepartmentDto;
 import com.propertyservice.propertyservice.dto.company.DepartmentInfoDto;
 
@@ -10,4 +9,6 @@ public interface DepartmentRepositoryCustom {
     List<DepartmentDto> searchDepartmentListByCompanyCode(String companyCode);
 
     List<DepartmentInfoDto> searchDepartmentList(Long companyId);
+
+    List<DepartmentInfoDto> searchDepartmentInfo(Long departmentId);
 }

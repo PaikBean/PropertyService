@@ -48,32 +48,30 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
 
     @Override
     public List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId) {
-//        // 현재 년-월
-//        StringTemplate CURRENT_TIME = formattedDate(LocalDateTime.now(), "%Y-%m");
-//
-//        // ex) 2024-07
-//        StringTemplate formattedDate = formattedDate(revenueLedger.createdDate, "%Y-%m");
-//
-//        return queryFactory
-//                .select(
-//                        new QManagerInfoDto(
-//                                manager.managerId,
-//                                manager.managerPosition,
-//                                manager.managerName,
-//                                manager.managerRank,
-//                                manager.managerPosition,
-//                                revenueLedger.commission.sum()
-//                        )
-//                )
-//                .from(manager)
-//                .leftJoin(revenueLedger).on(manager.eq(revenueLedger.managerId))
-//                .groupBy(revenueLedger.managerId)
-//                .having(manager.department.departmentId.eq(departmentId)
-//                        .and(
-//                                formattedDate.gt(CURRENT_TIME)
-//                        ))
-//                .fetch();
-        return null;
+        // 현재 년-월
+        StringTemplate currentDate = formattedDate(LocalDateTime.now(), "%Y-%m");
+
+        // ex) 2024-07
+        StringTemplate formattedDate = formattedDate(revenueLedger.createdDate, "%Y-%m");
+
+        return queryFactory
+                .select(
+                        new QManagerInfoDto(
+                                manager.managerId,
+                                manager.managerPosition,
+                                manager.managerName,
+                                manager.managerRank,
+                                manager.managerPosition,
+                                revenueLedger.commission.sum()
+                        )
+                )
+                .from(manager)
+                .leftJoin(revenueLedger).on(manager.eq(revenueLedger.managerId))
+                .where(manager.department.departmentId.eq(departmentId)
+                        .and(formattedDate.eq(currentDate))
+                )
+                .groupBy(revenueLedger.managerId)
+                .fetch();
     }
 
     @Override
@@ -85,7 +83,26 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                 .from(manager)
                 .innerJoin(revenueLedger).on(manager.eq(revenueLedger.managerId))
                 .groupBy(manager.managerId)
-                .where(manager.managerId.eq(managerId))
+                .having(manager.managerId.eq(managerId))
+                .fetch();
+    }
+
+    @Override
+    public List<BigDecimal> managerTotalRevenueMonth(Long managerId) {
+        // 현재 년-월
+        StringTemplate currentDate = formattedDate(LocalDateTime.now(), "%Y-%m");
+
+        // ex) 2024-07
+        StringTemplate formattedDate = formattedDate(revenueLedger.createdDate, "%Y-%m");
+        return  queryFactory
+                .select(
+                        revenueLedger.commission.sum()
+                )
+                .from(manager)
+                .innerJoin(revenueLedger).on(manager.eq(revenueLedger.managerId))
+                .where(formattedDate.eq(currentDate))
+                .groupBy(manager.managerId, formattedDate)
+                .having(manager.managerId.eq(managerId))
                 .fetch();
     }
 
