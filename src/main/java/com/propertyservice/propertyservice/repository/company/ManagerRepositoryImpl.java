@@ -74,6 +74,11 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                 .fetch();
     }
 
+    /**
+     * 매니저 한명 총 매출 합계.
+     * @param managerId
+     * @return
+     */
     @Override
     public List<BigDecimal> managerTotalRevenue(Long managerId) {
          return  queryFactory
