@@ -67,6 +67,11 @@ public class DepartmentController {
         }
     }
 
+    /**
+     * 부서 목록 조회.
+     * @param departmentId
+     * @return
+     */
     @GetMapping("/v1/manager-list/{departmentId}")
     public Response searchManagerListForDepartment(@PathVariable("departmentId")Long departmentId){
         try {
