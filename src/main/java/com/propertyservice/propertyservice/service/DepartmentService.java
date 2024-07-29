@@ -3,10 +3,7 @@ package com.propertyservice.propertyservice.service;
 import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.company.Department;
 import com.propertyservice.propertyservice.domain.manager.Manager;
-import com.propertyservice.propertyservice.dto.company.DepartmentDto;
-import com.propertyservice.propertyservice.dto.company.DepartmentForm;
-import com.propertyservice.propertyservice.dto.company.DepartmentInfoDto;
-import com.propertyservice.propertyservice.dto.company.DepartmentInfoForm;
+import com.propertyservice.propertyservice.dto.company.*;
 import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
 import com.propertyservice.propertyservice.repository.company.CompanyRepository;
@@ -18,6 +15,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -99,9 +97,20 @@ public class DepartmentService {
 //        return null;
     }
 
+    /**
+     * 부서 목록 조회.
+     * @param departmentId
+     * @return
+     */
     public List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId){
         return managerService.searchManagerInfoListByDepartmentId(departmentId);
     }
+
+    public BigDecimal searchDepartmentTotalRevenue(DepartmentTotalRevenueCondition departmentTotalRevenueCondition){
+        return departmentRepository.searchDepartmentTotalRevenue(departmentTotalRevenueCondition).get(0);
+    }
+
+
     /**
      * 부서 정보 수정.
      * @param departmentInfoForm

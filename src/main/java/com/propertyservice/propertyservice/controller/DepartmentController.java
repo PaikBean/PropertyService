@@ -4,6 +4,7 @@ import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
 import com.propertyservice.propertyservice.dto.company.DepartmentForm;
 import com.propertyservice.propertyservice.dto.company.DepartmentInfoForm;
+import com.propertyservice.propertyservice.dto.company.DepartmentTotalRevenueCondition;
 import com.propertyservice.propertyservice.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,6 +96,25 @@ public class DepartmentController {
         }
     }
 
+    /**
+     * 부서 총 매출액 조회. (기간내)
+     * @param departmentTotalRevenueCondition
+     * @return
+     */
+    @GetMapping
+    public Response searchDepartmentTotalRevenue(DepartmentTotalRevenueCondition departmentTotalRevenueCondition){
+        try {
+            return new Response(ResponseCode.SUCCESS, departmentService.searchDepartmentTotalRevenue(departmentTotalRevenueCondition), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 부서 삭제
+     * @param departmentId
+     * @return
+     */
     @DeleteMapping("/v1/department-info/{departmentId}")
     public Response deleteDepartment(@PathVariable(name = "departmentId")Long departmentId){
         try {
