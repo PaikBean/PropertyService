@@ -82,6 +82,10 @@ public class DepartmentService {
 
 
     public DepartmentInfoDto searchDepartmentInfo(Long departmentId){
+        departmentRepository.findByDepartmentId(departmentId).orElseThrow(
+                ()-> new EntityNotFoundException("부서가 존재하지 않습니다.\n 관리자에게 문의해주세요.")
+        );
+
         DepartmentInfoDto departmentInfoDtoByRepository = departmentRepository.searchDepartmentInfo(departmentId).get(0);
         List<ManagerInfoDto> deparmentManagerList = searchManagerInfoListByDepartmentId(departmentId);
 
@@ -103,10 +107,16 @@ public class DepartmentService {
      * @return
      */
     public List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId){
+        departmentRepository.findByDepartmentId(departmentId).orElseThrow(
+                ()-> new EntityNotFoundException("부서가 존재하지 않습니다.\n 관리자에게 문의해주세요.")
+        );
         return managerService.searchManagerInfoListByDepartmentId(departmentId);
     }
 
     public BigDecimal searchDepartmentTotalRevenue(DepartmentTotalRevenueCondition departmentTotalRevenueCondition){
+        departmentRepository.findByDepartmentId(departmentTotalRevenueCondition.getDepartmentId()).orElseThrow(
+                ()-> new EntityNotFoundException("부서가 존재하지 않습니다.\n 관리자에게 문의해주세요.")
+        );
         return departmentRepository.searchDepartmentTotalRevenue(departmentTotalRevenueCondition).get(0);
     }
 
