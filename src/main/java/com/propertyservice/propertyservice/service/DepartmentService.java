@@ -85,7 +85,7 @@ public class DepartmentService {
 
     public DepartmentInfoDto searchDepartmentInfo(Long departmentId){
         DepartmentInfoDto departmentInfoDtoByRepository = departmentRepository.searchDepartmentInfo(departmentId).get(0);
-        List<ManagerInfoDto> deparmentManagerList = managerService.searchManagerInfoListByDepartmentId(departmentId);
+        List<ManagerInfoDto> deparmentManagerList = searchManagerInfoListByDepartmentId(departmentId);
 
         return DepartmentInfoDto.builder()
                 .departmentId(departmentId)
@@ -99,6 +99,9 @@ public class DepartmentService {
 //        return null;
     }
 
+    public List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId){
+        return managerService.searchManagerInfoListByDepartmentId(departmentId);
+    }
     /**
      * 부서 정보 수정.
      * @param departmentInfoForm

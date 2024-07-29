@@ -67,6 +67,20 @@ public class DepartmentController {
         }
     }
 
+    @GetMapping("/v1/manager-list/{departmentId}")
+    public Response searchManagerListForDepartment(@PathVariable("departmentId")Long departmentId){
+        try {
+            return new Response(ResponseCode.SUCCESS, departmentService.searchManagerInfoListByDepartmentId(departmentId), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 부서 정보 수정.
+     * @param departmentInfoForm
+     * @return
+     */
     @PutMapping("/v1/department-info")
     public Response updateDepartmentInfo(@RequestBody DepartmentInfoForm departmentInfoForm){
         try {
@@ -87,14 +101,6 @@ public class DepartmentController {
     }
 
 
-//    @GetMapping("/v1/manager-list/{departmentId}")
-//    public Response searchManagerListForDepartment(@PathVariable("departmentId")Long departmentId){
-//        try {
-//            return new Response(ResponseCode.SUCCESS, null, "200");
-//        } catch (Exception e) {
-//            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
-//        }
-//    }
 
     //    /**
 //     * 부서 목록 검색 by 회사 코드
