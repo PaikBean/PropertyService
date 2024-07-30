@@ -64,8 +64,8 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void deleteSchedule(ScheduleIdForm scheduleIdForm) {
-        scheduleRepository.deleteById(scheduleIdForm.getScheduleId());
+    public void deleteSchedule(Long scheduleId) {
+        scheduleRepository.deleteById(scheduleId);
     }
 
     public ScheduleDto searchSchedule(Long scheduleId) {

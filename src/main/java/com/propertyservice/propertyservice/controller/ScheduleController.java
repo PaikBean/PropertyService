@@ -72,17 +72,17 @@ public class ScheduleController {
         }
     }
 
+
     /**
      * 일정 삭제
      *
-     * @param scheduleIdForm
-     * @param bindingResult
+     * @param scheduleId
      * @return
      */
-    @DeleteMapping("/v1/schedule")
-    public Response deleteSchedule(@RequestBody @Valid ScheduleIdForm scheduleIdForm, BindingResult bindingResult) {
+    @DeleteMapping("/v1/schedule/{scheduleId}")
+    public Response deleteSchedule(@PathVariable(name = "scheduleId") Long scheduleId) {
         try {
-            scheduleService.deleteSchedule(scheduleIdForm);
+            scheduleService.deleteSchedule(scheduleId);
             return new Response(ResponseCode.SUCCESS, null, "200");
         } catch (EntityNotFoundException e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
