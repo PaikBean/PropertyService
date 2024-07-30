@@ -1,12 +1,13 @@
 package com.propertyservice.propertyservice.repository.company;
 
+import com.propertyservice.propertyservice.domain.client.QClient;
 import com.propertyservice.propertyservice.domain.company.QCompany;
 import com.propertyservice.propertyservice.domain.company.QDepartment;
 import com.propertyservice.propertyservice.domain.manager.QManager;
+import com.propertyservice.propertyservice.domain.property.QProperty;
 import com.propertyservice.propertyservice.domain.revenue.QRevenueLedger;
 import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
 import com.propertyservice.propertyservice.dto.manager.QManagerInfoDto;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.Expressions;
@@ -26,6 +27,8 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
     private final QCompany company = QCompany.company;
     private final QDepartment department = QDepartment.department;
     private final QRevenueLedger revenueLedger = QRevenueLedger.revenueLedger;
+    private final QProperty property = QProperty.property;
+    private final QClient client = QClient.client;
     @Override
     public List<ManagerInfoDto> searchManagerInfoListByCompanyId(Long companyId) {
         return queryFactory
@@ -80,7 +83,7 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
      * @return
      */
     @Override
-    public List<BigDecimal> managerTotalRevenue(Long managerId) {
+    public BigDecimal managerTotalRevenue(Long managerId) {
          return  queryFactory
                 .select(
                         revenueLedger.commission.sum()
@@ -89,11 +92,11 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                 .innerJoin(revenueLedger).on(manager.eq(revenueLedger.managerId))
                 .groupBy(manager.managerId)
                 .having(manager.managerId.eq(managerId))
-                .fetch();
+                .fetchOne();
     }
 
     @Override
-    public List<BigDecimal> managerTotalRevenueMonth(Long managerId) {
+    public BigDecimal managerTotalRevenueMonth(Long managerId) {
         // 현재 년-월
         StringTemplate currentDate = formattedDate(LocalDateTime.now(), "%Y-%m");
 
@@ -108,9 +111,36 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                 .where(formattedDate.eq(currentDate))
                 .groupBy(manager.managerId, formattedDate)
                 .having(manager.managerId.eq(managerId))
-                .fetch();
+                .fetchOne();
     }
 
+    @Override
+    public BigDecimal managerPicProperty(Long managerId) {
+        // 담당 매물 수.
+        return BigDecimal.valueOf(queryFactory
+                .select(
+                        property
+                )
+                .from(manager)
+                .innerJoin(property)
+                .on(manager.managerId.eq(property.picManagerId))
+                .where(manager.managerId.eq(managerId))
+                .fetch().size());
+    }
+
+    @Override
+    public BigDecimal managerPicClient(Long managerId) {
+        // 담당 고객 수
+        return  BigDecimal.valueOf(queryFactory
+                .select(
+                        client
+                )
+                .from(manager)
+                .innerJoin(client)
+                .on(manager.managerId.eq(client.managerId))
+                .where(manager.managerId.eq(managerId))
+                .fetch().size());
+    }
 
     public StringTemplate formattedDate(DateTimePath<LocalDateTime> date, String format){
         return  Expressions.stringTemplate(

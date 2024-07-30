@@ -2,6 +2,7 @@ package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.common.Role;
 import com.propertyservice.propertyservice.domain.company.Company;
+import com.propertyservice.propertyservice.domain.company.Department;
 import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
@@ -12,13 +13,6 @@ import com.propertyservice.propertyservice.repository.company.*;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -199,6 +193,35 @@ public class ManagerService  {
 
     public List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId){
         return managerRepository.searchManagerInfoListByDepartmentId(departmentId);
+    }
+
+
+    public ManagerInfoDto searchManagerInfo(){
+        CustomUserDetail customUserDetail = commonService.getCustomUserDetailBySecurityContextHolder();
+        Manager manager = searchManagerByEmail(customUserDetail.getUsername());
+        Department department = departmentRepository.findById(manager.getDepartment().getDepartmentId()).orElseThrow(
+                () -> new IllegalStateException("부서가 존재하지 않습니다."));
+        Company company = companyService.searchCompany(manager.getCompany().getCompanyId());
+        return createManagerInfo(manager, department, company);
+    }
+
+
+    public ManagerInfoDto createManagerInfo(Manager manager, Department department, Company company){
+        return ManagerInfoDto.builder()
+                .managerId(manager.getManagerId())
+                .managerName(manager.getManagerName())
+                .managerGender(manager.getGender().getLabel())
+                .managerPhoneNumber(manager.getManagerPhoneNumber())
+                .managerEmail(manager.getManagerEmail())
+                .companyName(company.getCompanyName())
+                .departmentName(department.getDepartmentName())
+                .managerPosition(manager.getManagerPosition())
+                .managerRank(manager.getManagerRank())
+                //.managerPicProperty(managerRepository.managerPicProperty(manager.getManagerId()))
+                .managerPicClient(managerRepository.managerPicClient(manager.getManagerId()))
+                .managerTotalRevenueMonth(managerRepository.managerTotalRevenueMonth(manager.getManagerId()))
+                .managerTotalRevenue(managerRepository.managerTotalRevenue(manager.getManagerId()))
+                .build();
     }
 
 

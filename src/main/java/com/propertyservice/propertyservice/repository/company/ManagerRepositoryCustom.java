@@ -11,7 +11,12 @@ public interface ManagerRepositoryCustom {
 
     List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId);
 
-    List<BigDecimal> managerTotalRevenue(Long managerId);
+    BigDecimal managerTotalRevenue(Long managerId);
 
-    List<BigDecimal> managerTotalRevenueMonth(Long managerId);
+    BigDecimal managerTotalRevenueMonth(Long managerId);
+
+    BigDecimal managerPicProperty(Long managerId);
+
+    BigDecimal managerPicClient(Long managerId);
+
 }

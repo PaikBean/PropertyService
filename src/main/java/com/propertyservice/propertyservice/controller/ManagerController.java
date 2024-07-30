@@ -111,4 +111,17 @@ public class ManagerController {
         }
     }
 
+    /**
+     *  SecurityContentHolder 마이페이지 회원 정보 조회.
+     * @return
+     */
+    @GetMapping("/v1/my-info")
+    public Response searchManagerInfo(){
+        try{
+            return new Response(ResponseCode.SUCCESS, managerService.searchManagerInfo(),"200");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "401");
+        }
+    }
+
 }
