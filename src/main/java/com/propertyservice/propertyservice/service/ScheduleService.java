@@ -1,8 +1,10 @@
 package com.propertyservice.propertyservice.service;
 
+import com.propertyservice.propertyservice.domain.client.Client;
 import com.propertyservice.propertyservice.domain.schedule.Schedule;
 import com.propertyservice.propertyservice.domain.schedule.ScheduleType;
 import com.propertyservice.propertyservice.dto.schedule.*;
+import com.propertyservice.propertyservice.repository.client.ClientRepository;
 import com.propertyservice.propertyservice.repository.schedule.ScheduleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final ClientRepository clientRepository;
 
     public List<ScheduleTypeDto> searchScheduleTypeList() {
         return Arrays.stream(ScheduleType.values())
@@ -71,15 +75,19 @@ public class ScheduleService {
     public ScheduleDto searchSchedule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new EntityNotFoundException("등록되지 않은 일정입니다."));
+
+        Optional<Client> client = clientRepository.findById(schedule.getClientId());
+
         return ScheduleDto.builder()
-                .scheduleId(schedule.getScheduleId())
+                .scheduleId(scheduleId)
                 .managerId(schedule.getManagerId())
-                .managerName(null)  // Todo : manager 엔티티 생성되면 수정
-                .clientId(schedule.getClientId())
-                .clientName(null)   // Todo : client 엔티티 생성되면 수정
+                .clientId(client.isPresent() ? client.get().getClientId() : null)
+                .clientName(client.isPresent() ? client.get().getClientName() : null)
                 .scheduleType(schedule.getScheduleType())
-                .priority(schedule.getPriority().getLabel())
-                .scheduleDate(schedule.getScheduleDate())
+                .priority(schedule.getPriority())
+                .scheduleDate(
+                        schedule.getScheduleDate().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+                )
                 .remark(schedule.getRemark())
                 .build();
     }
