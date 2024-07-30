@@ -159,7 +159,9 @@ public class ManagerService  {
 
     }
 
-
+    /**
+     * 비밀번호 재설정.
+     */
     public String resetPassword(String prePassword, String curPassword){
         //1. 현재 로그인한 사용자 정보 가져옴.
         CustomUserDetail userDetails = commonService.getCustomUserDetailBySecurityContextHolder();
@@ -178,6 +180,9 @@ public class ManagerService  {
 
     }
 
+    /**
+     * 회사에 속한 매니저 리스트 조회.
+     */
     public List<Manager> searchManagerList(Long companyId){
         Company company = companyService.searchCompany(companyId);
         List<Manager> managerList = new ArrayList<>();
@@ -191,11 +196,17 @@ public class ManagerService  {
         //return managerRepository.findAllByCompanyId(companyId);
     }
 
+    /**
+     * 부서별 매니저 리스트 조회.
+     */
     public List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId){
         return managerRepository.searchManagerInfoListByDepartmentId(departmentId);
     }
 
-
+    /**
+     * jwt 마이페이지 정보 조회.
+     * @return
+     */
     public ManagerInfoDto searchManagerInfo(){
         CustomUserDetail customUserDetail = commonService.getCustomUserDetailBySecurityContextHolder();
         Manager manager = searchManagerByEmail(customUserDetail.getUsername());
@@ -205,7 +216,21 @@ public class ManagerService  {
         return createManagerInfo(manager, department, company);
     }
 
+    /**
+     * 매니저 id를 통한 마이페이지 정보 조회.
+     * @return
+     */
+    public ManagerInfoDto searchManagerInfo(Long managerId){
+        Manager manager = searchManagerById(managerId);
+        Department department = departmentRepository.findById(manager.getDepartment().getDepartmentId()).orElseThrow(
+                () -> new IllegalStateException("부서가 존재하지 않습니다."));
+        Company company = companyService.searchCompany(manager.getCompany().getCompanyId());
+        return createManagerInfo(manager, department, company);
+    }
 
+    /**
+     * 마이페이지 dto 생성.
+     */
     public ManagerInfoDto createManagerInfo(Manager manager, Department department, Company company){
         return ManagerInfoDto.builder()
                 .managerId(manager.getManagerId())

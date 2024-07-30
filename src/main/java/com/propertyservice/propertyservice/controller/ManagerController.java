@@ -123,5 +123,17 @@ public class ManagerController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "401");
         }
     }
+    /**
+     *  managerId 마이페이지 회원 정보 조회.
+     * @return
+     */
+    @GetMapping("/v1/my-info/{managerId}")
+    public Response searchManagerInfo(@PathVariable("managerId")Long managerId){
+        try{
+            return new Response(ResponseCode.SUCCESS, managerService.searchManagerInfo(managerId),"200");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "401");
+        }
+    }
 
 }

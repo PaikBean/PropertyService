@@ -85,4 +85,12 @@ class ManagerServiceTest {
         List<ManagerInfoDto> managerInfoDtoList = managerRepository.searchManagerInfoListByDepartmentId(1L);
         System.out.println(managerInfoDtoList.get(0).getManagerTotalRevenueMonth());
     }
+
+    @Test
+    public void searchManagerInfo(){
+        ManagerInfoDto managerInfoDto = managerService.searchManagerInfo(1L);
+        System.out.println(managerInfoDto.getManagerPicClient());
+        System.out.println(managerInfoDto.getManagerTotalRevenueMonth());
+        System.out.println(managerInfoDto.getManagerTotalRevenue());
+    }
 }
