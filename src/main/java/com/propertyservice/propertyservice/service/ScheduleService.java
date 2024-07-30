@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final ClientRepository clientRepository;
+    private final CommonService commonService;
 
     public List<ScheduleTypeDto> searchScheduleTypeList() {
         return Arrays.stream(ScheduleType.values())
@@ -93,6 +94,10 @@ public class ScheduleService {
     }
 
     public List<ScheduleSummaryDto> searchScheduleList(ScheduleCondition scheduleCondition) {
+        Long companyId = commonService.getCustomUserDetailBySecurityContextHolder().getCompany().getCompanyId();
+        if(companyId == null)
+            throw new IllegalArgumentException("등록 회사를 찾을 수 없습니다.");
+        scheduleCondition.setCompanyId(companyId);
         return scheduleRepository.searchScheduleList(scheduleCondition);
     }
 

@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ScheduleCondition {
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private Long companyId;
+    private String startDate;
+    private String endDate;
     private ScheduleType scheduleType;
     private Long managerId;
     private Long clientId;

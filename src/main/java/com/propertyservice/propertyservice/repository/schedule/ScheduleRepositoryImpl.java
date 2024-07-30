@@ -13,16 +13,20 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.propertyservice.propertyservice.domain.company.QCompany.company;
+
 @RequiredArgsConstructor
-public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
+public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     //private final QProperty property = QProperty.property;
     private final QSchedule schedule = QSchedule.schedule;
-    private final QClient client =QClient.client;
-    private final QManager manager= QManager.manager;
+    private final QClient client = QClient.client;
+    private final QManager manager = QManager.manager;
 
 
     @Override
@@ -31,27 +35,25 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
                 .select(
                         new QScheduleSummaryDto(
                                 schedule.scheduleId,
-                                schedule.managerId,
-                                manager.managerName, // Todo : manager 엔티티 추가되면 manager Name 넣기
-                                schedule.clientId,
-                                client.clientName, // Todo : client 엔티티 추가되면 client Name 넣기
+                                manager.managerName,
                                 schedule.scheduleType,
                                 schedule.priority.stringValue(),
                                 schedule.scheduleDate
                         )
                 )
                 .from(schedule)
-                .leftJoin(manager).on(schedule.managerId.eq(manager.managerId))
-                .leftJoin(client).on(schedule.clientId.eq(client.clientId))
+                .join(manager).on(schedule.managerId.eq(manager.managerId))
+                .join(company).on(manager.company.companyId.eq(company.companyId))
                 .where(
+                        company.companyId.eq(scheduleCondition.getCompanyId()),
                         BooleanExpressionBuilder.andBooleanBuilder(
                                 scheduleTypeEq(scheduleCondition.getScheduleType()),
-                                scheduleDateBetween(scheduleCondition.getStartDate(), scheduleCondition.getEndDate()),
-                                managerIdEq(scheduleCondition.getManagerId()), // Todo : manager 엔티티 추가되면 manager 조건 넣기
-                                clientIdEq(scheduleCondition.getClientId())// Todo : client 엔티티 추가되면 client 조건 넣기
+                                scheduleDateGoe(scheduleCondition.getStartDate()),
+                                scheduleDateLoe(scheduleCondition.getEndDate()),
+                                managerIdEq(scheduleCondition.getManagerId()),
+                                clientIdEq(scheduleCondition.getClientId())
                         )
-                )
-                .fetch();
+                ).fetch();
     }
 
     // ClientId로 일정 가져옴.
@@ -77,17 +79,38 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
                 .fetch();
     }
 
-    private BooleanExpression scheduleTypeEq(ScheduleType scheduleType){
+    private BooleanExpression scheduleTypeEq(ScheduleType scheduleType) {
         return scheduleType != null ? schedule.scheduleType.eq(scheduleType) : null;
     }
-    private BooleanExpression scheduleDateBetween(LocalDateTime startDate, LocalDateTime endDate){
-        return startDate != null && endDate != null ? schedule.scheduleDate.between(startDate, endDate) : null;
+
+    private BooleanExpression scheduleDateBetween(String startDate, String endDate) {
+        return (startDate != null && endDate != null) && (startDate.isEmpty() && endDate.isEmpty()) ? schedule.scheduleDate.between(
+                LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyyMMdd")).atStartOfDay(),
+                LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyyMMdd")).atStartOfDay()
+        ) : null;
     }
 
-    private BooleanExpression managerIdEq(Long managerId){
+    private BooleanExpression scheduleDateGoe(String startDate) {
+        if (startDate != null && !startDate.isEmpty()) {
+            LocalDateTime startDateTime = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyyMMdd")).atStartOfDay();
+            return schedule.scheduleDate.goe(startDateTime);
+        }
+        return null;
+    }
+
+    private BooleanExpression scheduleDateLoe(String endDate) {
+        if (endDate != null && !endDate.isEmpty()) {
+            LocalDateTime endDateTime = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyyMMdd")).atStartOfDay();
+            return schedule.scheduleDate.loe(endDateTime);
+        }
+        return null;
+    }
+
+    private BooleanExpression managerIdEq(Long managerId) {
         return managerId != null ? manager.managerId.eq(managerId) : null;
     }
-    private BooleanExpression clientIdEq(Long clientId){
+
+    private BooleanExpression clientIdEq(Long clientId) {
         return clientId != null ? client.clientId.eq(clientId) : null;
     }
 }

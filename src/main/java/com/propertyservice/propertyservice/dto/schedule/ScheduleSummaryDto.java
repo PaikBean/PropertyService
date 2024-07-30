@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 public class ScheduleSummaryDto {
@@ -17,6 +18,7 @@ public class ScheduleSummaryDto {
     private ScheduleType scheduleType;
     private String priority;
     private LocalDateTime scheduleDate;
+    private String scheduleDateTxt;
 
     @QueryProjection
     public ScheduleSummaryDto(Long scheduleId, Long managerId, String managerName, Long clientId, String clientName, ScheduleType scheduleType, String priority, LocalDateTime scheduleDate) {
@@ -28,5 +30,14 @@ public class ScheduleSummaryDto {
         this.scheduleType = scheduleType;
         this.priority = priority;
         this.scheduleDate = scheduleDate;
+    }
+
+    @QueryProjection
+    public ScheduleSummaryDto(Long scheduleId, String managerName, ScheduleType scheduleType, String priority, LocalDateTime scheduleDate) {
+        this.scheduleId = scheduleId;
+        this.managerName = managerName;
+        this.scheduleType = scheduleType;
+        this.priority = priority;
+        this.scheduleDateTxt = scheduleDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));;
     }
 }
