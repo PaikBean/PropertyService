@@ -6,6 +6,7 @@ import com.propertyservice.propertyservice.domain.company.Department;
 import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
+import com.propertyservice.propertyservice.dto.manager.ManagerInfoForm;
 import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
@@ -92,8 +93,6 @@ public class ManagerService  {
 
     /**
      * 사용자 회원가입.
-     * @param managerSignUpForm
-     * @return
      */
     @Transactional
     public Long createManager(ManagerSignUpForm managerSignUpForm) {
@@ -205,7 +204,6 @@ public class ManagerService  {
 
     /**
      * jwt 마이페이지 정보 조회.
-     * @return
      */
     public ManagerInfoDto searchManagerInfo(){
         CustomUserDetail customUserDetail = commonService.getCustomUserDetailBySecurityContextHolder();
@@ -218,7 +216,6 @@ public class ManagerService  {
 
     /**
      * 매니저 id를 통한 마이페이지 정보 조회.
-     * @return
      */
     public ManagerInfoDto searchManagerInfo(Long managerId){
         Manager manager = searchManagerById(managerId);
@@ -247,6 +244,15 @@ public class ManagerService  {
                 .managerTotalRevenueMonth(managerRepository.managerTotalRevenueMonth(manager.getManagerId()))
                 .managerTotalRevenue(managerRepository.managerTotalRevenue(manager.getManagerId()))
                 .build();
+    }
+
+    /**
+     * 마이페이지 update.
+     */
+    public Long updateManagerInfo(ManagerInfoForm managerInfoForm){
+        Manager manager = searchManagerById(managerInfoForm.getManagerId());
+        manager.updateManagerInfo(managerInfoForm);
+        return managerRepository.save(manager).getManagerId();
     }
 
 
