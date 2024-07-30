@@ -239,7 +239,7 @@ public class ManagerService  {
                 .departmentName(department.getDepartmentName())
                 .managerPosition(manager.getManagerPosition())
                 .managerRank(manager.getManagerRank())
-                //.managerPicProperty(managerRepository.managerPicProperty(manager.getManagerId()))
+                .managerPicProperty(managerRepository.managerPicProperty(manager.getManagerId()))
                 .managerPicClient(managerRepository.managerPicClient(manager.getManagerId()))
                 .managerTotalRevenueMonth(managerRepository.managerTotalRevenueMonth(manager.getManagerId()))
                 .managerTotalRevenue(managerRepository.managerTotalRevenue(manager.getManagerId()))
