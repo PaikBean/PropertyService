@@ -249,10 +249,19 @@ public class ManagerService  {
     /**
      * 마이페이지 update.
      */
+    @Transactional
     public Long updateManagerInfo(ManagerInfoForm managerInfoForm){
         Manager manager = searchManagerById(managerInfoForm.getManagerId());
         manager.updateManagerInfo(managerInfoForm);
         return managerRepository.save(manager).getManagerId();
+    }
+
+    /**
+     * 매니저 탈퇴.
+     */
+    @Transactional
+    public void deleteManager(Long managerId){
+        managerRepository.delete(searchManagerById(managerId));
     }
 
 

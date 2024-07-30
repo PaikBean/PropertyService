@@ -146,4 +146,14 @@ public class ManagerController {
         }
     }
 
+    @DeleteMapping("/v1/my-info/{managerId}")
+    public Response deleteManager(@PathVariable("managerId")Long managerId){
+        try{
+            managerService.deleteManager(managerId);
+            return new Response(ResponseCode.SUCCESS, null,"200");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "401");
+        }
+    }
+
 }
