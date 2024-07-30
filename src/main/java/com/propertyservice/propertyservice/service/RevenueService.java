@@ -72,6 +72,7 @@ public class RevenueService {
                 .build();
     }
 
+    @Transactional
     public void deleteRevenue(Long revenueId) {
         revenueRepository.deleteById(revenueId);
     }
