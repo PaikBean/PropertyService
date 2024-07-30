@@ -10,6 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.DateFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,25 +34,31 @@ public class ScheduleService {
     @Transactional
     public void createSchedule(ScheduleForm scheduleForm) {
         scheduleRepository.save(Schedule.builder()
-                        .managerId(scheduleForm.getManagerId())
-                        .clientId(scheduleForm.getClientId())
-                        .scheduleDate(scheduleForm.getScheduleDate())
-                        .scheduleType(scheduleForm.getScheduleType())
-                        .priority(scheduleForm.getPriority())
-                        .remark(scheduleForm.getRemark())
+                .managerId(scheduleForm.getManagerId())
+                .clientId(scheduleForm.getClientId())
+                .scheduleDate(
+                        LocalDate.parse(scheduleForm.getScheduleDate(),
+                                DateTimeFormatter.ofPattern("yyyyMMdd")
+                        ).atStartOfDay())
+                .scheduleType(scheduleForm.getScheduleType())
+                .priority(scheduleForm.getPriority())
+                .remark(scheduleForm.getRemark())
                 .build());
     }
 
     @Transactional
     public void updateSchedule(ScheduleForm scheduleForm) {
         scheduleRepository.findById(scheduleForm.getScheduleId()).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 일정입니다."))
+                        () -> new EntityNotFoundException("등록되지 않은 일정입니다."))
                 .updateSchedule(
                         scheduleForm.getManagerId(),
                         scheduleForm.getClientId(),
                         scheduleForm.getScheduleType(),
                         scheduleForm.getPriority(),
-                        scheduleForm.getScheduleDate(),
+                        LocalDate.parse(
+                                scheduleForm.getScheduleDate(),
+                                DateTimeFormatter.ofPattern("yyyyMMdd")
+                        ).atStartOfDay(),
                         scheduleForm.getRemark()
                 );
     }
@@ -77,6 +87,7 @@ public class ScheduleService {
     public List<ScheduleSummaryDto> searchScheduleList(ScheduleCondition scheduleCondition) {
         return scheduleRepository.searchScheduleList(scheduleCondition);
     }
+
     public List<ScheduleSummaryDto> searchScheduleList(Long clientId) {
         return scheduleRepository.searchScheduleList(clientId);
     }

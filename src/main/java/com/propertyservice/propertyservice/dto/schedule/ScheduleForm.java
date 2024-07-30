@@ -14,10 +14,10 @@ public class ScheduleForm {
     private Long scheduleId;
     private Long managerId;
     private Long clientId;
-    //@NotNull
+    @NotNull
     private ScheduleType scheduleType;
     @NotNull
-    private LocalDateTime scheduleDate;
+    private String scheduleDate;
     private Priority priority;
     private String remark;
 }
