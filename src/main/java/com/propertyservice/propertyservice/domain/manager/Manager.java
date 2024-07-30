@@ -5,6 +5,7 @@ import com.propertyservice.propertyservice.domain.common.Gender;
 import com.propertyservice.propertyservice.domain.common.Role;
 import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.company.Department;
+import com.propertyservice.propertyservice.dto.manager.ManagerInfoForm;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -67,5 +68,13 @@ public class Manager extends BaseTimeEntity{
 
     public void resetPassword(String managerPassword){
         this.managerPassword = managerPassword;
+    }
+
+    public void updateManagerInfo(ManagerInfoForm managerInfoForm){
+        this.managerName = managerInfoForm.getManagerName();
+        this.gender = Gender.valueOf(managerInfoForm.getManagerGender());
+        this.managerPhoneNumber = managerInfoForm.getManagerPhoneNumber();
+        this.managerPosition = managerInfoForm.getManagerPosition();
+        this.managerRank = managerInfoForm.getManagerRank();
     }
 }

@@ -3,6 +3,7 @@ package com.propertyservice.propertyservice.controller;
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
 import com.propertyservice.propertyservice.domain.manager.Manager;
+import com.propertyservice.propertyservice.dto.manager.ManagerInfoForm;
 import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
 import com.propertyservice.propertyservice.service.ManagerService;
 import lombok.RequiredArgsConstructor;
@@ -131,6 +132,15 @@ public class ManagerController {
     public Response searchManagerInfo(@PathVariable("managerId")Long managerId){
         try{
             return new Response(ResponseCode.SUCCESS, managerService.searchManagerInfo(managerId),"200");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "401");
+        }
+    }
+
+    @PutMapping("/v1/my-info")
+    public Response updateManagerInfo(@RequestBody ManagerInfoForm managerInfoForm){
+        try{
+            return new Response(ResponseCode.SUCCESS, managerService.updateManagerInfo(managerInfoForm),"200");
         }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "401");
         }
