@@ -58,7 +58,13 @@ public class RevenueService {
         //UserDetails userDetails = .getCustomUserDetail();
         log.info("CustomuserDetail : " + customUserDetail.getManagerName());
 
-        log.info(revenueCondition.toString());
+        Long companyId = commonService.getCustomUserDetailBySecurityContextHolder().getCompany().getCompanyId();
+        if(companyId == null)
+            throw new IllegalArgumentException("등록 회사를 찾을 수 없습니다.");
+
+        // log.info(revenueCondition.toString());
+        revenueCondition.setCompanyId(companyId);
+
         return RevenueTotalDto.builder()
                 .totalCount(revenueRepository.totalCount(revenueCondition))
                 .totalCommission(revenueRepository.totalCommission(revenueCondition))

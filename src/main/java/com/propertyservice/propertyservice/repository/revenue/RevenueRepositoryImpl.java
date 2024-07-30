@@ -76,11 +76,13 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                         revenueLedger.addressLevel2Id.eq(addressLevel2.addressLevel2Id)
                 )
                 .where(
+                        revenueLedger.companyId.companyId.eq(revenueCondition.getCompanyId()),
                         managerIdEq(revenueCondition.getManagerId()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),
                         contractStartDateGoe(revenueCondition.getContractStartDate()),
-                        contractEndDateLoe(revenueCondition.getContractEndDate())
+                        contractEndDateLoe(revenueCondition.getContractEndDate()),
+                        transactionTypeEq(revenueCondition.getTransactionType())
                 )
                 .fetch();
     }
@@ -102,11 +104,13 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                         revenueLedger.addressLevel2Id.eq(addressLevel2.addressLevel2Id)
                 )
                 .where(
+                        revenueLedger.companyId.companyId.eq(revenueCondition.getCompanyId()),
                         managerIdEq(revenueCondition.getManagerId()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),
                         contractStartDateGoe(revenueCondition.getContractStartDate()),
-                        contractEndDateLoe(revenueCondition.getContractEndDate())
+                        contractEndDateLoe(revenueCondition.getContractEndDate()),
+                        transactionTypeEq(revenueCondition.getTransactionType())
                 )
                 .fetchOne();
     }
@@ -126,11 +130,13 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                         revenueLedger.addressLevel2Id.eq(addressLevel2.addressLevel2Id)
                 )
                 .where(
+                        revenueLedger.companyId.companyId.eq(revenueCondition.getCompanyId()),
                         managerIdEq(revenueCondition.getManagerId()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),
                         contractStartDateGoe(revenueCondition.getContractStartDate()),
-                        contractEndDateLoe(revenueCondition.getContractEndDate())
+                        contractEndDateLoe(revenueCondition.getContractEndDate()),
+                        transactionTypeEq(revenueCondition.getTransactionType())
                 )
                 .fetchOne();
     }
