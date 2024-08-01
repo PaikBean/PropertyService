@@ -158,6 +158,9 @@ public class BuildingService {
             return null;
     }
 
+    /**
+     * 건물 상세 정보 수정.
+     */
     @Transactional
     public Long updateBuildingDetail(BuildingPropertyForm buildingPropertyForm) {
         validAddressLevel1(buildingPropertyForm.getAddressLevel1());
@@ -199,4 +202,7 @@ public class BuildingService {
         }
         return buildingRemarkDtoList;
     }
+
+
+
 }
