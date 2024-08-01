@@ -41,7 +41,10 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
                                         addressLevel1.addressLevel1,
                                         addressLevel2.addressLevel2,
                                         buildingAddress.addressLevel3
-                                )
+                                ),
+                                owner.ownerRelation,
+                                owner.ownerPhoneNumber
+
                         )
                 )
                 .from(owner)
