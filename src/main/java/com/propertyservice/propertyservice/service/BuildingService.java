@@ -125,8 +125,11 @@ public class BuildingService {
     }
 
     @Transactional
-    public void deleteBuildingRemark(BuildingRemarkIdForm buildingRemarkIdForm) {
-        buildingRemarkRepository.deleteById(buildingRemarkIdForm.getBuildingRemarkId());
+    public void deleteBuildingRemark(Long buildingRemarkId) {
+        BuildingRemark buildingRemark = buildingRemarkRepository.findById(buildingRemarkId).orElseThrow(
+                () -> new EntityNotFoundException("등록되지 않은 빌딩입니다."));
+
+        buildingRemarkRepository.delete(buildingRemark);
     }
 
     public BuildingPropertyDto searchBuildingPropertyList(Long buildingId) {

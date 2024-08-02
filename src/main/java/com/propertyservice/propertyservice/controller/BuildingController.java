@@ -72,14 +72,12 @@ public class BuildingController {
 
     /**
      * 건물 특이사항 제거
-     * @param buildingRemarkIdForm
-     * @param bindingResult
      * @return
      */
-    @DeleteMapping("/v1/building-remark")
-    public Response deleteBuildingRemark(@RequestBody @Valid BuildingRemarkIdForm buildingRemarkIdForm, BindingResult bindingResult) {
+    @DeleteMapping("/v1/building-remark/{buildingRemarkId}")
+    public Response deleteBuildingRemark(@PathVariable("buildingRemarkId") Long buildingRemarkId) {
         try {
-            buildingService.deleteBuildingRemark(buildingRemarkIdForm);
+            buildingService.deleteBuildingRemark(buildingRemarkId);
             return new Response(ResponseCode.SUCCESS, null, "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
