@@ -91,6 +91,27 @@ public class BuildingService {
         }
     }
 
+    //건물 상세 단건 조회 - 건물 관리
+    public BuildingInfoDto searchBuildingInfo(Long buildingId){
+        Building building = buildingRepository.findById(buildingId).orElseThrow(
+                () -> new EntityNotFoundException("등록되지 않은 빌딩입니다."));
+        Owner owner = ownerRepository.findById(building.getOwner().getOwnerId()).orElseThrow(
+                () -> new EntityNotFoundException("등록되지 않은 임대인입니다."));
+        BuildingAddress buildingAddress = buildingAddressRepository.findById(building.getBuildingAddress().getBuildingAddressId()).orElseThrow(
+                () -> new EntityNotFoundException("등록되지 않은 주소입니다."));
+        return BuildingInfoDto.builder()
+                .buildingId(building.getBuildingId())
+                .ownerName(owner.getOwnerName())
+                .ownerRelation(owner.getOwnerRelation())
+                .ownerPhoneNumber(owner.getOwnerPhoneNumber())
+                .buildingAddressLevel1(buildingAddress.getAddressLevel1Id())
+                .buildingAddressLevel2(buildingAddress.getAddressLevel2Id())
+                .buildingAddressLevel3(buildingAddress.getAddressLevel3())
+                .buildingRemarkList(searchBuildingRemarkList(building.getBuildingId()))
+                .build();
+    }
+
+
     @Transactional
     public Long createBuildingRemark(BuildingRemarkForm buildingRemarkForm) {
         return buildingRemarkRepository.save(BuildingRemark.builder()
@@ -127,15 +148,7 @@ public class BuildingService {
             );
         }
         // BuildingRemarkList
-        List<BuildingRemarkDto> buildingRemarkList = new ArrayList<>();
-        for (BuildingRemark buildingRemark : buildingRemarkRepository.findAllByBuildingBuildingId(buildingId)) {
-            buildingRemarkList.add(BuildingRemarkDto.builder()
-                    .buildingRemarkId(buildingRemark.getRemarkId())
-                    .remark(buildingRemark.getRemark())
-                    .createdDate(buildingRemark.getCreatedDate())
-                    .updatedDate(buildingRemark.getUpdatedDate())
-                    .build());
-        }
+        List<BuildingRemarkDto> buildingRemarkList = searchBuildingRemarkList(building.getBuildingId());
 
         return BuildingPropertyDto.builder()
                 .buildingId(building.getBuildingId())

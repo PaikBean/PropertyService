@@ -88,7 +88,6 @@ public class BuildingController {
 
     /**
      * 건물 상세 및 매물 목록 조회
-     *
      * @param buildingId
      * @return
      */
@@ -96,6 +95,20 @@ public class BuildingController {
     public Response searchBuildingPropertyList(@PathVariable(name = "buildingId") Long buildingId) {
         try {
             return new Response(ResponseCode.SUCCESS, buildingService.searchBuildingPropertyList(buildingId), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 건물 상세 단건 조회 - 건물 관리
+     * @param buildingId0
+     * @return
+     */
+    @GetMapping("/v1/building-info/{buildingId}")
+    public Response searchBuildingInfo(@PathVariable("buildingId")Long buildingId0){
+        try {
+            return new Response(ResponseCode.SUCCESS, buildingService.searchBuildingInfo(buildingId0), "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
