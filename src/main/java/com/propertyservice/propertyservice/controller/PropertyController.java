@@ -68,14 +68,12 @@ public class PropertyController {
 
     /**
      * 매물 삭제
-     *
-     * @param propertyIdForm
      * @return
      */
-    @DeleteMapping("/v1/property")
-    public Response deleteProperty(@RequestBody @Valid PropertyIdForm propertyIdForm) {
+    @DeleteMapping("/v1/property/{propertyId}")
+    public Response deleteProperty(@PathVariable("propertyId")Long propertyId) {
         try {
-            propertyService.deleteProperty(propertyIdForm);
+            propertyService.deleteProperty(propertyId);
             return new Response(ResponseCode.SUCCESS, null, "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");

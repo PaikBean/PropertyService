@@ -143,8 +143,8 @@ public class PropertyService {
     }
 
     @Transactional
-    public void deleteProperty(PropertyIdForm propertyIdForm) {
-        Property property = propertyRepository.findById(propertyIdForm.getPropertyId()).orElseThrow(
+    public void deleteProperty(Long propertyId) {
+        Property property = propertyRepository.findById(propertyId).orElseThrow(
                 () -> new EntityNotFoundException("등록되지 않은 매물입니다."));
         maintenanceItemRepository.delete(property.getMaintenanceItem());
         propertyRemarkRepository.deleteAllByProperty(property);
