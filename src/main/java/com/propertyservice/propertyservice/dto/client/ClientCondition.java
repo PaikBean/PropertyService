@@ -11,7 +11,7 @@ public class ClientCondition {
     @Getter
     @Setter
     public static class clientListCondition{
-        private Long managerId;
+        private String clientName;
         private String clientPhoneNumber;
     }
 

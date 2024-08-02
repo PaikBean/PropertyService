@@ -29,18 +29,18 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
 
     // 고객 목록 조회
     @Override
-    public List<ClientDto.ClientListResponseDto> searchClientList(Long managerId, String clientPhoneNumber) {
+    public List<ClientDto.ClientListResponseDto> searchClientList(String clientName, String clientPhoneNumber) {
         return  queryFactory
                 .select(
-                        Projections.constructor(ClientDto.ClientListResponseDto.class,
-                            client.managerId,
-                            manager.managerName,
-                            client.clientName,
-                            client.clientId
-                    ))
+                        new QClientDto_ClientListResponseDto(
+                                client.clientId,
+                                manager.managerName,
+                                client.clientName
+                        )
+                    )
                 .from(client).leftJoin(manager).on(client.managerId.eq(manager.managerId))
                 .where(
-                        client.managerId.eq(managerId).and(client.clientPhoneNumber.contains(clientPhoneNumber))
+                        client.clientName.eq(clientName).and(client.clientPhoneNumber.contains(clientPhoneNumber))
                 )
                 .fetch();
 

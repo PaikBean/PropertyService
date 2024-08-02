@@ -132,7 +132,7 @@ public class ClientService {
 
 
     public List<ClientDto.ClientListResponseDto> searchClientList(ClientCondition.clientListCondition clientListCondition){
-        return clientRepository.searchClientList(clientListCondition.getManagerId(), clientListCondition.getClientPhoneNumber());
+        return clientRepository.searchClientList(clientListCondition.getClientName(), clientListCondition.getClientPhoneNumber());
     }
 
 
