@@ -41,7 +41,7 @@ public class PropertyRepositoryImpl implements PropertyRepositoryCustom {
                         new QShowingPropertyCandidateDto(
                                 property.propertyId,
                                 property.transactionType,
-                                owner.ownerName,
+                                //owner.ownerName,
                                 Expressions.stringTemplate(
                                         "concat_ws(' ', {0}, {1}, {2}, {3})",
                                         addressLevel1.addressLevel1,
@@ -53,7 +53,7 @@ public class PropertyRepositoryImpl implements PropertyRepositoryCustom {
                 )
                 .from(property)
                 .join(building).on(property.building.eq(building))
-                .join(owner).on(building.owner.eq(owner))
+                //.join(owner).on(building.owner.eq(owner))
                 .join(buildingAddress).on(buildingAddress.eq(buildingAddress))
                 .join(addressLevel1).on(buildingAddress.addressLevel1Id.eq(addressLevel1.addressLevel1Id))
                 .join(addressLevel2).on(buildingAddress.addressLevel2Id.eq(addressLevel2.addressLevel2Id))
@@ -62,7 +62,7 @@ public class PropertyRepositoryImpl implements PropertyRepositoryCustom {
                                 BooleanExpressionBuilder.orBooleanBuilder(
                                         buildingAddress1Eq(showingPropertyCandidateCondition.getAddressLevel1Id()),
                                         buildingAddress2Eq(showingPropertyCandidateCondition.getAddressLevel2Id()),
-                                        ownerNameLike(showingPropertyCandidateCondition.getOwnerName()),
+                                        //ownerNameLike(showingPropertyCandidateCondition.getOwnerName()),
                                         propertyTransactionTypeEq(showingPropertyCandidateCondition.getPropertyTransactionType()),
                                         propertyTypeEq(showingPropertyCandidateCondition.getPropertyType())
                                 )

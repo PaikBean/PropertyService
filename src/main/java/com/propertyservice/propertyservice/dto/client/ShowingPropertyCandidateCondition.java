@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class ShowingPropertyCandidateCondition {
-    private String ownerName;
+//    private String ownerName;
     private Long addressLevel1Id;
     private Long addressLevel2Id;
     private TransactionType propertyTransactionType;

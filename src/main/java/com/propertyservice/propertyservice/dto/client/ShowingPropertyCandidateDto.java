@@ -9,16 +9,16 @@ import lombok.Setter;
 public class ShowingPropertyCandidateDto {
     private Long propertyId;
     private TransactionType transactionType;
-    private String ownerName;
+    //private String ownerName;
     private String address;
     @Setter
     private String price;
 
     @QueryProjection
-    public ShowingPropertyCandidateDto(Long propertyId, TransactionType transactionType, String ownerName, String address) {
+    public ShowingPropertyCandidateDto(Long propertyId, TransactionType transactionType, String address) {
         this.propertyId = propertyId;
         this.transactionType = transactionType;
-        this.ownerName = ownerName;
+       // this.ownerName = ownerName;
         this.address = address;
     }
 }

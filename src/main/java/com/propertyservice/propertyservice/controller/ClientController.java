@@ -43,10 +43,10 @@ public class ClientController {
     @GetMapping("/v1/showing-property-list")
     public Response searchShowingPropertyCandidateList(ShowingPropertyCandidateCondition showingPropertyCandidateCondition) {
         try {
-            List<ShowingPropertyCandidateDto> showingPropertyCandidateDtos = clientService.searchShowingPropertyCandidateList(showingPropertyCandidateCondition);
-            return showingPropertyCandidateDtos.isEmpty()
-                    ? new Response(ResponseCode.SUCCESS, showingPropertyCandidateDtos, "204")
-                    : new Response(ResponseCode.SUCCESS, showingPropertyCandidateDtos, "200");
+            List<ShowingPropertyCandidateDto> showingPropertyCandidateDto = clientService.searchShowingPropertyCandidateList(showingPropertyCandidateCondition);
+            return showingPropertyCandidateDto.isEmpty()
+                    ? new Response(ResponseCode.SUCCESS, showingPropertyCandidateDto, "204")
+                    : new Response(ResponseCode.SUCCESS, showingPropertyCandidateDto, "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
