@@ -134,4 +134,17 @@ public class BuildingController {
         }
     }
 
+    /**
+     * 건물 상세 단건 조회 - 매물 상세
+     * @param buildingId
+     * @return
+     */
+    @GetMapping("/v1/building-detail/{buildingId}")
+    public Response searchBuildingDetail(@PathVariable("buildingId") Long buildingId){
+        try {
+            return new Response(ResponseCode.SUCCESS, buildingService.searchBuildingPropertyList(buildingId), "200");
+        } catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 }

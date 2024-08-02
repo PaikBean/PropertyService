@@ -16,12 +16,12 @@ public class BuildingPropertyDto {
     private Long addressLevel2;
     private String addressLevel3;
 
-    private List<BuildingRemarkDto> buildingRemarkDtoList;
+    private List<BuildingRemarkDto> buildingRemarkList;
 
-    private List<PropertySummaryDto> propertySummaryDtoList;
+    private List<PropertySummaryDto> buildingPropertyList;
 
     @Builder
-    public BuildingPropertyDto(Long buildingId, String ownerName, String ownerRelation, String ownerPhoneNumber, Long addressLevel1, Long addressLevel2, String addressLevel3, List<BuildingRemarkDto> buildingRemarkDtoList, List<PropertySummaryDto> propertySummaryDtoList) {
+    public BuildingPropertyDto(Long buildingId, String ownerName, String ownerRelation, String ownerPhoneNumber, Long addressLevel1, Long addressLevel2, String addressLevel3, List<BuildingRemarkDto> buildingRemarkList, List<PropertySummaryDto> buildingPropertyList) {
         this.buildingId = buildingId;
         this.ownerName = ownerName;
         this.ownerRelation = ownerRelation;
@@ -29,7 +29,7 @@ public class BuildingPropertyDto {
         this.addressLevel1 = addressLevel1;
         this.addressLevel2 = addressLevel2;
         this.addressLevel3 = addressLevel3;
-        this.buildingRemarkDtoList = buildingRemarkDtoList;
-        this.propertySummaryDtoList = propertySummaryDtoList;
+        this.buildingRemarkList = buildingRemarkList;
+        this.buildingPropertyList = buildingPropertyList;
     }
 }

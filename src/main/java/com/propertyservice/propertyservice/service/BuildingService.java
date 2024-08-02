@@ -109,11 +109,13 @@ public class BuildingService {
     }
 
     public BuildingPropertyDto searchBuildingPropertyList(Long buildingId) {
+        // 예외처리.
         Building building = buildingRepository.findById(buildingId).orElseThrow(
                 () -> new EntityNotFoundException("등록되지 않은 빌딩입니다."));
-        List<PropertySummaryDto> propertySummaryDtoList = new ArrayList<>();
+        //buildingPropertyList
+        List<PropertySummaryDto> buildingPropertyList = new ArrayList<>();
         for (Property property : propertyRepository.findAllByBuildingBuildingId(buildingId)) {
-            propertySummaryDtoList.add(
+            buildingPropertyList.add(
                     PropertySummaryDto.builder()
                             .propertyId(property.getPropertyId())
                             .unitNumber(property.getUnitNumber())
@@ -124,9 +126,10 @@ public class BuildingService {
                             .build()
             );
         }
-        List<BuildingRemarkDto> buildingRemarkDtoList = new ArrayList<>();
+        // BuildingRemarkList
+        List<BuildingRemarkDto> buildingRemarkList = new ArrayList<>();
         for (BuildingRemark buildingRemark : buildingRemarkRepository.findAllByBuildingBuildingId(buildingId)) {
-            buildingRemarkDtoList.add(BuildingRemarkDto.builder()
+            buildingRemarkList.add(BuildingRemarkDto.builder()
                     .buildingRemarkId(buildingRemark.getRemarkId())
                     .remark(buildingRemark.getRemark())
                     .createdDate(buildingRemark.getCreatedDate())
@@ -142,8 +145,8 @@ public class BuildingService {
                 .addressLevel1(building.getBuildingAddress().getAddressLevel1Id())
                 .addressLevel2(building.getBuildingAddress().getAddressLevel2Id())
                 .addressLevel3(building.getBuildingAddress().getAddressLevel3())
-                .buildingRemarkDtoList(buildingRemarkDtoList)
-                .propertySummaryDtoList(propertySummaryDtoList)
+                .buildingRemarkList(buildingRemarkList)
+                .buildingPropertyList(buildingPropertyList)
                 .build();
     }
 
@@ -202,6 +205,8 @@ public class BuildingService {
         }
         return buildingRemarkDtoList;
     }
+
+
 
 
 
