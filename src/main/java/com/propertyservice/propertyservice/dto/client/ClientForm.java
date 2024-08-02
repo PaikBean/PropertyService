@@ -17,7 +17,7 @@ public class ClientForm {
     private Long managerId; // 담당 매니저
     private String remark; //특이사항 작성 후 저장.
 
-    private List<Property> propertyList;// 보여줄 매물 리스트.
+    private List<Long> propertyList;// 보여줄 매물 리스트.
 
 //    private Long companyId;
 }
