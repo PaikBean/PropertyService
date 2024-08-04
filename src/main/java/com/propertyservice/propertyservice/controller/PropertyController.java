@@ -3,7 +3,6 @@ package com.propertyservice.propertyservice.controller;
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
 import com.propertyservice.propertyservice.dto.property.PropertyForm;
-import com.propertyservice.propertyservice.dto.property.PropertyIdForm;
 import com.propertyservice.propertyservice.service.PropertyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

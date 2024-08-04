@@ -91,4 +91,13 @@ public class CompanyController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
+    @GetMapping("/v1/manager-list")
+    public Response searchManagerList(){
+        try {
+            return new Response(ResponseCode.SUCCESS, companyService.searchManagerList(), "200");
+        } catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 }

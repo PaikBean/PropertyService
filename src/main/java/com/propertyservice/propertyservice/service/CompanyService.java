@@ -1,11 +1,13 @@
 package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.company.Company;
+import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.dto.company.CompanyInfoForm;
 import com.propertyservice.propertyservice.dto.company.CompanyManagerDto;
 import com.propertyservice.propertyservice.dto.company.CompanyRegistryForm;
 import com.propertyservice.propertyservice.dto.company.CompanySimpleDto;
 import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
+import com.propertyservice.propertyservice.dto.manager.ManagerSimpleInfoDto;
 import com.propertyservice.propertyservice.repository.company.CompanyRepository;
 import com.propertyservice.propertyservice.repository.company.ManagerRepository;
 import com.propertyservice.propertyservice.repository.property.CompanyAddressRepository;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -26,6 +30,7 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
     private final ManagerRepository managerRepository;
+    private final CommonService commonService;
 
     public Company searchCompany(String companyCode) {
         return companyRepository.findByCompanyCode(companyCode).orElseThrow(
@@ -79,5 +84,16 @@ public class CompanyService {
                 .companyId(companyId)
                 .managerInfoDtoList(managerRepository.searchManagerInfoListByCompanyId(companyId))
                 .build();
+    }
+
+    public List<ManagerSimpleInfoDto> searchManagerList() {
+        List<ManagerSimpleInfoDto> managerSimpleInfoDtoList = new ArrayList<>();
+        for (Manager manager : managerRepository.findAllByCompany(commonService.getCustomUserDetailBySecurityContextHolder().getCompany())) {
+            managerSimpleInfoDtoList.add(ManagerSimpleInfoDto.builder()
+                            .managerId(manager.getManagerId())
+                            .managerName(manager.getManagerName())
+                    .build());
+        }
+        return managerSimpleInfoDtoList;
     }
 }

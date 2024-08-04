@@ -21,18 +21,18 @@ const ManagerState = ({ value, onChange, label = '근무 상태' }) => {
   }, [dispatch, status])
 
   const handleChange = (event, value) => {
-    onChange(value ? value.managerStateId : '')
+    onChange(value ? value.name : '')
   }
 
   return (
     <Autocomplete
       value={
         options
-          ? options.find((option) => option.managerStateId === value) || null
+          ? options.find((option) => option.name === value) || null
           : null
       }
       options={options || []}
-      getOptionLabel={(option) => option.managerState || ''}
+      getOptionLabel={(option) => option.label || ''}
       onChange={handleChange}
       renderInput={(params) => <TextField {...params} label={label} />}
     />
