@@ -15,13 +15,13 @@ public class RevenueDto {
     private String address;
     private String contractStartDate;
     private String contractEndDate;
-    private TransactionType transactionType;
+    private String transactionType;
     private String price;
     private BigDecimal commission;
     private String remark;
 
     @QueryProjection
-    public RevenueDto(Long revenueId, String managerName, String ownerName, String clientName, String address, String contractStartDate, String contractEndDate, TransactionType transactionType, String price, BigDecimal commission, String remark) {
+    public RevenueDto(Long revenueId, String managerName, String ownerName, String clientName, String address, String contractStartDate, String contractEndDate, String transactionType, String price, BigDecimal commission, String remark) {
         this.id = revenueId;
         this.managerName = managerName;
         this.ownerName = ownerName;

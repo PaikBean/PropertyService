@@ -53,7 +53,17 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                                         "DATE_FORMAT({0}, '%Y-%m-%d')",
                                         revenueLedger.contractEndDate
                                 ),
-                                revenueLedger.transactionType,
+                                new CaseBuilder()
+                                        .when(revenueLedger.transactionType.eq(TransactionType.MONTHLY))
+                                        .then(TransactionType.MONTHLY.getLabel())
+                                        .when(revenueLedger.transactionType.eq(TransactionType.JEONSE))
+                                        .then(TransactionType.JEONSE.getLabel())
+                                        .when(revenueLedger.transactionType.eq(TransactionType.TRADE))
+                                        .then(TransactionType.TRADE.getLabel())
+                                        .when(revenueLedger.transactionType.eq(TransactionType.SHORTERM))
+                                        .then(TransactionType.SHORTERM.getLabel())
+                                        .otherwise("")
+                                        .as("transactionTypeLabel"),
                                 new CaseBuilder()
                                         .when(revenueLedger.transactionType.eq(TransactionType.MONTHLY).or(revenueLedger.transactionType.eq(TransactionType.SHORTERM)))
                                         .then(Expressions.stringTemplate("CONCAT({0}, '/', {1})", revenueLedger.deposit, revenueLedger.monthlyFee))
