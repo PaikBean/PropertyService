@@ -79,4 +79,16 @@ public class PropertyController {
         }
     }
 
+    /**
+     * 매물 유형 목록 조회
+     * @return
+     */
+    @GetMapping("/v1/property-type-list")
+    public Response searchPropertyTypeList(){
+        try {
+            return new Response(ResponseCode.SUCCESS, propertyService.searchPropertyTypeList(), "200");
+        } catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 }

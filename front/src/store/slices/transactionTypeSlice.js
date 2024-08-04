@@ -3,9 +3,19 @@ const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit')
 export const fetchTransactionTypeList = createAsyncThunk(
   'transactionType/fetchTransactionTypeList',
   async () => {
-    const response = await fetch('/api/common//v1/transaction-type-list')
-    const data = await response.json()
-    return data
+    try {
+      const response = await fetchGet(
+        '/api/property/v1/property-type-list'
+      )
+      console.log(response)
+      if (response.responseCode === 'SUCCESS') {
+        return response.data
+      } else {
+        throw new Error(response.message || 'Error!')
+      }
+    } catch (error) {
+      return new Error(error.message) // 에러 발생 시 null 반환
+    }
   }
 )
 
@@ -24,7 +34,7 @@ const transactionType = createSlice({
       })
       .addCase(fetchTransactionTypeList.fulfilled, (state, action) => {
         state.status = 'succeeded'
-        state.options = action.payload.data
+        state.options = action.payload
       })
       .addCase(fetchTransactionTypeList.rejected, (state, action) => {
         state.status = 'failed'
