@@ -16,7 +16,7 @@ export const fetchDepartmentList = createAsyncThunk(
       )
 
       if (response.responseCode === 'SUCCESS') {
-        return response.data
+        return response.data.departmentInfoDtoList
       } else {
         throw new Error(response.message || 'Error!')
       }
