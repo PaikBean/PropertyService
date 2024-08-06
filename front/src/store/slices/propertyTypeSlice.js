@@ -3,25 +3,19 @@ const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit')
 export const fetchPropertyTypeList = createAsyncThunk(
   'common/fetchPropertyTypeList',
   async () => {
-    // const response = await fetch('/api/schedule/v1/schedule-type-list')
-    // if (!response.ok) {
-    //   // throw new Error('Network response was not ok')
-    //   throw new Error(response.statusText)
-    // }
-    // const result = await response.json()
-    const result = {
-      data: [
-        {
-          propertyTypeId: '1',
-          propertyType: '상업용',
-        },
-        {
-          propertyTypeId: '2',
-          propertyType: '주거용',
-        },
-      ],
+    try {
+      const response = await fetchGet(
+        '/api/property/v1/property-type-list'
+      )
+      console.log(response)
+      if (response.responseCode === 'SUCCESS') {
+        return response.data
+      } else {
+        throw new Error(response.message || 'Error!')
+      }
+    } catch (error) {
+      return new Error(error.message) // 에러 발생 시 null 반환
     }
-    return result
   }
 )
 

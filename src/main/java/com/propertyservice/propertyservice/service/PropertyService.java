@@ -1,9 +1,13 @@
 package com.propertyservice.propertyservice.service;
 
+import com.propertyservice.propertyservice.controller.PropertyController;
 import com.propertyservice.propertyservice.domain.building.Building;
+import com.propertyservice.propertyservice.domain.manager.ManagerState;
 import com.propertyservice.propertyservice.domain.property.MaintenanceItem;
 import com.propertyservice.propertyservice.domain.property.Property;
 import com.propertyservice.propertyservice.domain.property.PropertyRemark;
+import com.propertyservice.propertyservice.domain.property.PropertyType;
+import com.propertyservice.propertyservice.dto.common.ManagerStateDto;
 import com.propertyservice.propertyservice.dto.property.*;
 import com.propertyservice.propertyservice.repository.building.BuildingRemarkRepository;
 import com.propertyservice.propertyservice.repository.building.BuildingRepository;
@@ -15,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -150,5 +156,11 @@ public class PropertyService {
         propertyRemarkRepository.deleteAllByProperty(property);
         propertyImageRepository.deleteAllByProperty(property);
         propertyRepository.delete(property);
+    }
+
+    public List<PropertyTypeDto> searchPropertyTypeList() {
+        return Arrays.stream(PropertyType.values())
+                .map(propertyType -> new PropertyTypeDto(propertyType.name(), propertyType.getLabel()))
+                .collect(Collectors.toList());
     }
 }

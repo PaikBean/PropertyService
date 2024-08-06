@@ -3,7 +3,6 @@ package com.propertyservice.propertyservice.controller;
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
 import com.propertyservice.propertyservice.dto.property.PropertyForm;
-import com.propertyservice.propertyservice.dto.property.PropertyIdForm;
 import com.propertyservice.propertyservice.service.PropertyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -80,4 +79,16 @@ public class PropertyController {
         }
     }
 
+    /**
+     * 매물 유형 목록 조회
+     * @return
+     */
+    @GetMapping("/v1/property-type-list")
+    public Response searchPropertyTypeList(){
+        try {
+            return new Response(ResponseCode.SUCCESS, propertyService.searchPropertyTypeList(), "200");
+        } catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 }

@@ -19,11 +19,11 @@ const { Box, Stack, Grid, Typography, Divider } = require('@mui/material')
 const RevenueListPage = () => {
   const initialData = {
     managerId: null,
-    addressL1: null,
-    addressL2: null,
-    startDate: '',
-    endDate: '',
-    transactionTypeId: null,
+    addressL1Id: null,
+    addressL2Id: null,
+    contractStartDate: '',
+    contractEndDate: '',
+    transactionType: null,
   }
 
   const [searchCondition, setSearchCondition] = useState(initialData)
@@ -71,19 +71,19 @@ const RevenueListPage = () => {
             </Grid>
             <Grid item xs={1.5}>
               <AddressL1
-                value={searchCondition.addressL1} // Add this line
+                value={searchCondition.addressL1Id} // Add this line
                 onChange={(value) => {
-                  handleInputChange('addressL1', value)
+                  handleInputChange('addressL1Id', value)
                 }}
                 label="시/도"
               />
             </Grid>
             <Grid item xs={1.5}>
               <AddressL2
-                value={searchCondition.addressL2} // Add this line
-                addressLevel1={searchCondition.addressL1}
+                value={searchCondition.addressL2Id} // Add this line
+                addressLevel1={searchCondition.addressL1Id}
                 onChange={(value) => {
-                  handleInputChange('addressL2', value)
+                  handleInputChange('addressL2Id', value)
                 }}
                 label="시/구/동"
               />
@@ -92,27 +92,27 @@ const RevenueListPage = () => {
               <Grid item xs={1.3}>
                 <BasicDatePicker
                   label="계약 시작일"
-                  value={dayjs(searchCondition.startDate)}
+                  value={dayjs(searchCondition.contractStartDate)}
                   onChange={(value) => {
-                    handleInputChange('startDate', value.format('YYYYMMDD'))
+                    handleInputChange('contractStartDate', value.format('YYYYMMDD'))
                   }}
                 />
               </Grid>
               <Grid item xs={1.3}>
                 <BasicDatePicker
                   label="계약 종료일"
-                  value={dayjs(searchCondition.endDate)}
+                  value={dayjs(searchCondition.contractEndDate)}
                   onChange={(value) => {
-                    handleInputChange('endDate', value.format('YYYYMMDD'))
+                    handleInputChange('contractEndDate', value.format('YYYYMMDD'))
                   }}
                 />
               </Grid>
             </LocalizationProvider>
             <Grid item xs={1}>
               <TransactionType
-                value={searchCondition.transactionTypeId} // Add this line
+                value={searchCondition.transactionType} // Add this line
                 onChange={(value) => {
-                  handleInputChange('transactionTypeId', value)
+                  handleInputChange('transactionType', value)
                 }}
               />
             </Grid>

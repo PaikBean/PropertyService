@@ -14,30 +14,37 @@ const handleResponse = async (response) => {
 
 export const fetchGet = async (url, pathParams = {}, queryParams = {}) => {
   try {
-    let path = url
+    let path = url;
     for (const [key, value] of Object.entries(pathParams)) {
-      path = path.replace(`:${key}`, value)
+      path = path.replace(`:${key}`, value);
     }
 
-    const queryString = new URLSearchParams(queryParams).toString()
-    const finalUrl = queryString ? `${path}?${queryString}` : path
+    const filteredQueryParams = Object.entries(queryParams).reduce((acc, [key, value]) => {
+      if (value !== null && value !== '') {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+
+    const queryString = new URLSearchParams(filteredQueryParams).toString();
+    const finalUrl = queryString ? `${path}?${queryString}` : path;
 
     const headers = {
       'Content-Type': 'application/json',
       ...getAuthHeader(),
-    }
+    };
 
     const response = await fetch(finalUrl, {
       method: 'GET',
       headers,
-    })
+    });
 
-    return await handleResponse(response)
+    return await handleResponse(response);
   } catch (error) {
-    console.error('Error fetching data:', error)
-    throw error
+    console.error('Error fetching data:', error);
+    throw error;
   }
-}
+};
 
 export const fetchPost = async (url, data) => {
   try {
