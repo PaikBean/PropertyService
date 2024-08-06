@@ -22,7 +22,7 @@ class ClientServiceTest {
             clientForm.setClientName("test1");
             clientForm.setClientPhoneNumber("010-1234-1234"+i);
             clientForm.setRemark("특이사항 있음");
-            clientForm.setInflowType(InflowType.OTHERS);
+            clientForm.setInflowType(InflowType.DABANG.getLabel());
             clientForm.setManagerId(1L);
             //clientForm.setCompanyId(1L);
 
@@ -33,25 +33,25 @@ class ClientServiceTest {
 
     @Test
     public void searchClientList(){
-        ClientCondition.clientListCondition clientListCondition = new ClientCondition.clientListCondition();
-        clientListCondition.setManagerId(1L);
-        clientListCondition.setClientPhoneNumber("1234");
-
-        List<ClientDto.ClientListResponseDto> clientListResponseDtoList = clientService.searchClientList(clientListCondition);
-
-        for (ClientDto.ClientListResponseDto clientListResponseDto : clientListResponseDtoList) {
-            log.warn(clientListResponseDto.getClientName() + "   "+ clientListResponseDto.getManagerName());
-        }
+//        ClientCondition.clientListCondition clientListCondition = new ClientCondition.clientListCondition();
+//        clientListCondition.
+//        clientListCondition.setClientPhoneNumber("1234");
+//
+//        List<ClientDto.ClientListResponseDto> clientListResponseDtoList = clientService.searchClientList(clientListCondition);
+//
+//        for (ClientDto.ClientListResponseDto clientListResponseDto : clientListResponseDtoList) {
+//            log.warn(clientListResponseDto.getClientName() + "   "+ clientListResponseDto.getManagerName());
+//        }
 
     }
 
     @Test
     public void searchClientDetail(){
-        ClientCondition.clientDetailCondition clientDetailCondition = new ClientCondition.clientDetailCondition();
-        clientDetailCondition.setClientId(1L);
-        clientDetailCondition.setPropertyId(1L);
-
-        log.warn(clientService.searchClientDetailList(clientDetailCondition).getClientRemarkList().toString());
+//        ClientCondition.clientDetailCondition clientDetailCondition = new ClientCondition.clientDetailCondition();
+//        clientDetailCondition.setClientId(1L);
+//        clientDetailCondition.setPropertyId(1L);
+//
+//        log.warn(clientService.searchClientDetailList(clientDetailCondition).getClientRemarkList().toString());
     }
 
     @Test

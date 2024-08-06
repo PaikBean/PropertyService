@@ -15,14 +15,5 @@ public class ClientCondition {
         private String clientPhoneNumber;
     }
 
-    /**
-     * 고객 상세 조회 dto
-     */
-    @Getter
-    @Setter
-    public static class clientDetailCondition{
-        private Long clientId;
-        private Long propertyId;
-    }
 
 }

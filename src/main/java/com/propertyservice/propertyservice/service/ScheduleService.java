@@ -104,4 +104,11 @@ public class ScheduleService {
     public List<ScheduleSummaryDto> searchScheduleList(Long clientId) {
         return scheduleRepository.searchScheduleList(clientId);
     }
+
+    /**
+     * 고객 정보 단건 조회 - 고객 상세 ( 일정표)
+     */
+    public List<ScheduleSummaryDto> searchScheduleListByClientId(Long clientId) {
+        return scheduleRepository.searchScheduleListByClientId(clientId);
+    }
 }

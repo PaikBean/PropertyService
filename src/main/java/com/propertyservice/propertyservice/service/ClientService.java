@@ -35,7 +35,7 @@ public class ClientService {
     private final PropertyRepository propertyRepository;
     private final ScheduleService scheduleService;
     private final ManagerService managerService;
-    private final CompanyService companyService;
+
 
     public Client searchClientByClientId(Long clientid){
         return clientRepository.findById(clientid).orElseThrow(
@@ -183,23 +183,27 @@ public class ClientService {
         return clientRepository.searchClientList(clientListCondition.getClientName(), clientListCondition.getClientPhoneNumber());
     }
 
+    public ClientDetailDto searchClientDetailList(Long clientId){
+        Client client = searchClientByClientId(clientId);
 
-    public ClientDetailDto searchClientDetailList(ClientCondition.clientDetailCondition clientDetailCondition){
         //고객 일정
-        List<ScheduleSummaryDto> scheduleSummaryDtoList = scheduleService.searchScheduleList(clientDetailCondition.getClientId());
+        List<ScheduleSummaryDto> scheduleSummaryList = scheduleService.searchScheduleListByClientId(client.getClientId());
 
         // 고객 매물
-        List<ShowingPropertySummaryDto> showingPropertySummaryDtoList = clientRepository.searchShowingPropertyList(clientDetailCondition.getClientId(), clientDetailCondition.getPropertyId());
+        List<ShowingPropertySummaryDto> showingPropertySummaryList = clientRepository.searchShowingPropertyList(client.getClientId());
 
         // 고객 특이사항.
-        List<ClientRemarkDto> clientRemarkDtoList = clientRepository.searchClientRemark(clientDetailCondition.getClientId());
+        List<ClientRemarkDto> clientRemarkList = clientRepository.searchClientRemark(client.getClientId());
 
         return ClientDetailDto.builder()
-                .clientId(clientDetailCondition.getClientId())
-                .propertyId(clientDetailCondition.getPropertyId())
-                .scheduleList(scheduleSummaryDtoList)
-                .showingPropertyList(showingPropertySummaryDtoList)
-                .clientRemarkList(clientRemarkDtoList)
+                .clientId(client.getClientId())
+                .clientName(client.getClientName())
+                .inflowType(client.getInflowType().getLabel())
+                .clientPhoneNumber(client.getClientPhoneNumber())
+                .managerId(client.getManagerId())
+                .scheduleList(scheduleSummaryList)
+                .showingPropertyList(showingPropertySummaryList)
+                .clientRemarkList(clientRemarkList)
                 .build();
     }
 

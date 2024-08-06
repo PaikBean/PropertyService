@@ -1,6 +1,7 @@
 package com.propertyservice.propertyservice.repository.schedule;
 
 import com.propertyservice.propertyservice.domain.client.QClient;
+import com.propertyservice.propertyservice.domain.company.QCompany;
 import com.propertyservice.propertyservice.domain.manager.QManager;
 import com.propertyservice.propertyservice.domain.property.QProperty;
 import com.propertyservice.propertyservice.domain.schedule.QSchedule;
@@ -27,6 +28,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     private final QSchedule schedule = QSchedule.schedule;
     private final QClient client = QClient.client;
     private final QManager manager = QManager.manager;
+    private final QCompany company = QCompany.company;
 
 
     @Override
@@ -76,6 +78,25 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .leftJoin(schedule).on(client.clientId.eq(schedule.clientId))
                 .leftJoin(manager).on(manager.managerId.eq(schedule.managerId))
                 .where(client.clientId.eq(clientId))
+                .fetch();
+    }
+
+    @Override
+    public List<ScheduleSummaryDto> searchScheduleListByClientId(Long clientId) {
+        return queryFactory
+                .select(
+                        new QScheduleSummaryDto(
+                                schedule.scheduleId,
+                                manager.managerName,
+                                schedule.scheduleType,
+                                schedule.scheduleDate,
+                                schedule.remark
+                        )
+                )
+                .from(schedule)
+                .join(manager).on(schedule.managerId.eq(manager.managerId))
+                .join(client).on(schedule.clientId.eq(client.clientId))
+                .where(schedule.clientId.eq(clientId))
                 .fetch();
     }
 

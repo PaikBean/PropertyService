@@ -11,7 +11,7 @@ import java.util.List;
 public interface ClientRepositoryCustom {
     List<ClientDto.ClientListResponseDto> searchClientList(String clientName, String clinetPhoneNumber);
 
-    List<ShowingPropertySummaryDto> searchShowingPropertyList(Long clientId, Long prorpertyId);
+    List<ShowingPropertySummaryDto> searchShowingPropertyList(Long clientId);
 
     List<ClientRemarkDto> searchClientRemark(Long clientId);
 

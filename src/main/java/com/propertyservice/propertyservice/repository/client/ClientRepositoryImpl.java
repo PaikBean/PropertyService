@@ -47,29 +47,21 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
     }
 
     @Override
-    public List<ShowingPropertySummaryDto> searchShowingPropertyList(Long clientId, Long propertyId) {
-        return queryFactory
-                .select(
-                        new QShowingPropertySummaryDto(
-                                client.clientId,
-                                showingProperty.propertyId,
-                                property.unitNumber,
-                                property.propertyType,
-                                property.transactionType,
-                                property.deposit,
-                                property.monthlyFee,
-                                property.jeonseFee,
-                                property.tradeFee,
-                                propertyRemark.remarkId,
-                                propertyRemark.remark
-                        )
-                )
-                .from(client)
-                .leftJoin(showingProperty).on(client.clientId.eq(showingProperty.clientId))
-                .leftJoin(property).on(property.propertyId.eq(showingProperty.propertyId))
-                .leftJoin(propertyRemark).on(property.eq(propertyRemark.property))
-                .where(client.clientId.eq(clientId).and(showingProperty.propertyId.eq(propertyId)))
-                .fetch();
+    public List<ShowingPropertySummaryDto> searchShowingPropertyList(Long clientId) {
+//        return queryFactory
+//                .select(
+//                        new QShowingPropertySummaryDto(
+//                                showingProperty.propertyId,
+//                                property.transactionType,
+//                        )
+//                )
+//                .from(client)
+//                .leftJoin(showingProperty).on(client.clientId.eq(showingProperty.clientId))
+//                .leftJoin(property).on(property.propertyId.eq(showingProperty.propertyId))
+//
+//                .where(client.clientId.eq(clientId))
+//                .fetch();
+        return null;
     }
 
     //@Override

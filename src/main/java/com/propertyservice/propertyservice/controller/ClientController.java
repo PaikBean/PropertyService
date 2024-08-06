@@ -172,18 +172,19 @@ public class ClientController {
     }
 
     /**
-     * 고객 상세 정보.
-     * @param clientDetailCondition
+     * 고객 정보 단건 조회 - 고객 상세
+     * @param clientId
      * @return
      */
-    @GetMapping("/v1/client-detail")
-    public Response searchClientDetail(ClientCondition.clientDetailCondition clientDetailCondition){
+    @GetMapping("/v1/client-detail/{clientId}")
+    public Response searchClientDetail(@PathVariable("clientId")Long clientId){
         try{
-            return new Response(ResponseCode.SUCCESS, clientService.searchClientDetailList(clientDetailCondition), "204");
+            return new Response(ResponseCode.SUCCESS,null, "204");
         }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
 
     /**
      * 고객 특이사항 목록 조회
