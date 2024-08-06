@@ -37,6 +37,11 @@ public class ClientService {
     private final ManagerService managerService;
     private final CompanyService companyService;
 
+    public Client searchClientByClientId(Long clientid){
+        return clientRepository.findById(clientid).orElseThrow(
+                ()-> new EntityNotFoundException("등록되지 않은 고객입니다. 관리자에게 문의하세요."));
+    }
+
     public List<InflowTypeDto> searchInflowTypeList() {
         return Arrays.stream(InflowType.values())
                 .map(inflowType -> new InflowTypeDto(inflowType.name(), inflowType.getLabel()))
@@ -121,6 +126,24 @@ public class ClientService {
         return client.getClientId();
     }
 
+    /**
+     * 고객 정보 단건 조회 - 고객 관리
+     */
+    public ClientInfoDto searchClientInfo(Long clientId){
+        Client client =searchClientByClientId(clientId);
+        return ClientInfoDto.builder()
+                .clientId(client.getClientId())
+                .clientName(client.getClientName())
+                .inflowType(client.getInflowType().getLabel())
+                .clientPhoneNumber(client.getClientPhoneNumber())
+                .managerId(client.getManagerId())
+                .clientRemarkList(searchClientRemarkList(clientId))
+                .build();
+    }
+
+    /**
+     * 고객 특이사항 추가.
+     */
     public Long createClientRemark(ClientRemarkForm clientRemarkForm){
         return  clientRemarkRepository.save(ClientRemark.builder()
                 .clientId(clientRepository.findById(clientRemarkForm.getClientId()).orElseThrow( () ->
@@ -155,10 +178,19 @@ public class ClientService {
                 .build();
     }
 
+    /**
+     * 고객 특이사항 리스트.
+     * @param clientId
+     * @return
+     */
     public List<ClientRemarkDto> searchClientRemarkList(Long clientId){
         return clientRepository.searchClientRemark(clientId);
     }
 
+    /**
+     * 고객 특이사항 삭제
+     * @param clientRemarkId
+     */
     public void deleteClientRemark(Long clientRemarkId){
         ClientRemark clientRemark = clientRemarkRepository.findById(clientRemarkId).orElseThrow(
                 () -> new EntityNotFoundException("해당 특이사항이 존재 하지 않습니다.")
@@ -170,4 +202,9 @@ public class ClientService {
 //        Company company = companyService.searchCompany(companyId);
         return clientRepository.searchClientList(companyId);
     }
+    
+    
+   
+
+
 }

@@ -115,12 +115,27 @@ public class ClientController {
     }
 
     /**
+     * 고객 정보 단건 조회 - 고객 관리
+     * @return
+     */
+    @GetMapping("/v1/client/{clientId}")
+    public Response searchClientInfo(@PathVariable("clientId") Long clientId){
+        try{
+            return new Response(ResponseCode.SUCCESS, clientService.searchClientInfo(clientId), "201");
+
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+
+    /**
      * 고객 상세 정보.
      * @param clientDetailCondition
      * @return
      */
     @GetMapping("/v1/client-detail")
-    public Response searchClientDetailList(ClientCondition.clientDetailCondition clientDetailCondition){
+    public Response searchClientDetail(ClientCondition.clientDetailCondition clientDetailCondition){
         try{
             return new Response(ResponseCode.SUCCESS, clientService.searchClientDetailList(clientDetailCondition), "204");
         }catch (Exception e){

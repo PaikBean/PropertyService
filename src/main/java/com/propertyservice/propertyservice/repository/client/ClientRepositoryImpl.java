@@ -77,9 +77,8 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
         return queryFactory
                 .select(
                         new QClientRemarkDto(
-                                client.managerId,
+                                clientRemark.clientRemarkId,
                                 manager.managerName,
-                                client.clientId,
                                 clientRemark.remark,
                                 clientRemark.createdDate
                         )
