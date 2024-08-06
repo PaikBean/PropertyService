@@ -166,9 +166,17 @@ public class ClientService {
         clientRemarkRepository.delete(clientRemark);
     }
 
+    /**
+     * 고객 정보 수정
+     */
     public Long updateClient(ClientForm clientForm){
         Client client = searchClientByClientId(clientForm.getClientId());
-        return null;
+
+        client.updateClient(clientForm);
+
+        clientRepository.save(client);
+
+        return client.getClientId();
     }
 
     public List<ClientDto.ClientListResponseDto> searchClientList(ClientCondition.clientListCondition clientListCondition){

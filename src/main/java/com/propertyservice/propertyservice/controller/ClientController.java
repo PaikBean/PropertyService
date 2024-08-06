@@ -157,6 +157,19 @@ public class ClientController {
         }
     }
 
+    /**
+     * 고객 정보 수정
+     * @param clientForm
+     * @return
+     */
+    @PutMapping("/v1/client/")
+    public Response updateClient(@RequestBody ClientForm clientForm){
+        try{
+            return new Response(ResponseCode.SUCCESS, clientService.updateClient(clientForm), "200");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "404");
+        }
+    }
 
     /**
      * 고객 상세 정보.
@@ -188,7 +201,6 @@ public class ClientController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
-
 
 
 

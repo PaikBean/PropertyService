@@ -2,6 +2,7 @@ package com.propertyservice.propertyservice.domain.client;
 
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
 import com.propertyservice.propertyservice.domain.company.Company;
+import com.propertyservice.propertyservice.dto.client.ClientForm;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -46,5 +47,12 @@ public class Client extends BaseTimeEntity {
         this.registrationManagerId =registrationManagerId;
         this.modifiedManagerId = modifiedManagerId;
 //        this.company = company;
+    }
+
+    public void updateClient(ClientForm clientForm){
+        this.clientName = clientForm.getClientName();
+        this.inflowType = InflowType.valueOf(clientForm.getInflowType());
+        this.clientPhoneNumber = clientForm.getClientPhoneNumber();
+        this.managerId = clientForm.getManagerId();
     }
 }
