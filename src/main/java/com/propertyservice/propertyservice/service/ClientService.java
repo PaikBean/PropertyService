@@ -90,12 +90,14 @@ public class ClientService {
             return null;
     }
 
+
+    // 고객 등록.
     public Long createClient(ClientForm clientForm){
         Client client =   clientRepository.save(Client.builder()
                 .clientName(clientForm.getClientName())
                 .clientPhoneNumber(clientForm.getClientPhoneNumber())
                 .managerId(managerService.searchManagerIdById(clientForm.getManagerId()))
-                .inflowType(clientForm.getInflowType())
+                .inflowType(InflowType.valueOf(clientForm.getInflowType()))
                 .registrationManagerId(managerService.searchManagerIdById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
                 .modifiedManagerId(managerService.searchManagerIdById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
 //                .company(companyService.searchCompany(clientForm.getCompanyId()))
@@ -153,8 +155,21 @@ public class ClientService {
                 .remark(clientRemarkForm.getRemark())
                 .build()).getClientId();
     }
+    /**
+     * 고객 특이사항 삭제
+     * @param clientRemarkId
+     */
+    public void deleteClientRemark(Long clientRemarkId){
+        ClientRemark clientRemark = clientRemarkRepository.findById(clientRemarkId).orElseThrow(
+                () -> new EntityNotFoundException("해당 특이사항이 존재 하지 않습니다.")
+        );
+        clientRemarkRepository.delete(clientRemark);
+    }
 
-
+    public Long updateClient(ClientForm clientForm){
+        Client client = searchClientByClientId(clientForm.getClientId());
+        return null;
+    }
 
     public List<ClientDto.ClientListResponseDto> searchClientList(ClientCondition.clientListCondition clientListCondition){
         return clientRepository.searchClientList(clientListCondition.getClientName(), clientListCondition.getClientPhoneNumber());
@@ -189,16 +204,7 @@ public class ClientService {
         return clientRepository.searchClientRemark(clientId);
     }
 
-    /**
-     * 고객 특이사항 삭제
-     * @param clientRemarkId
-     */
-    public void deleteClientRemark(Long clientRemarkId){
-        ClientRemark clientRemark = clientRemarkRepository.findById(clientRemarkId).orElseThrow(
-                () -> new EntityNotFoundException("해당 특이사항이 존재 하지 않습니다.")
-        );
-        clientRemarkRepository.delete(clientRemark);
-    }
+
 
     public List<ClientDto.ClientListDto> searchClientList(Long companyId){
 //        Company company = companyService.searchCompany(companyId);
