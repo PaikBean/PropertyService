@@ -145,6 +145,8 @@ public class ClientService {
      * 고객 특이사항 추가.
      */
     public Long createClientRemark(ClientRemarkForm clientRemarkForm){
+        // remark가 null인지 확인하는 작업 필요.
+
         return  clientRemarkRepository.save(ClientRemark.builder()
                 .clientId(clientRepository.findById(clientRemarkForm.getClientId()).orElseThrow( () ->
                         new EntityNotFoundException("고객 정보가 없습니다.")).getClientId())

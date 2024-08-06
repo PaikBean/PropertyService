@@ -128,6 +128,35 @@ public class ClientController {
         }
     }
 
+    /**
+     * 고객 특이사항 등록.
+     * @param clientRemarkForm
+     * @return
+     */
+    @PostMapping("/v1/client-remark")
+    public Response createClientRemark(@RequestBody ClientRemarkForm clientRemarkForm){
+        try{
+            return new Response(ResponseCode.SUCCESS, clientService.createClientRemark(clientRemarkForm), "201");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "404");
+        }
+    }
+
+    /**
+     * 고객 특이사항 제거
+     * @param clientRemarkId
+     * @return
+     */
+    @DeleteMapping("/v1/client-remark/{clientRemarkId}")
+    public Response deleteClientRemark(@PathVariable(name = "clientRemarkId")Long clientRemarkId){
+        try{
+            clientService.deleteClientRemark(clientRemarkId);
+            return new Response(ResponseCode.SUCCESS, null, "200");
+        }catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "404");
+        }
+    }
+
 
     /**
      * 고객 상세 정보.
@@ -160,34 +189,8 @@ public class ClientController {
         }
     }
 
-    /**
-     * 고객 특이사항 등록.
-     * @param clientRemarkForm
-     * @return
-     */
-    @PostMapping("/v1/client-remark")
-    public Response createClientRemark(@RequestBody ClientRemarkForm clientRemarkForm){
-        try{
-            return new Response(ResponseCode.SUCCESS, clientService.createClientRemark(clientRemarkForm), "201");
-        }catch (Exception e){
-            return new Response(ResponseCode.FAIL, e.getMessage(), "404");
-        }
-    }
 
-    /**
-     * 고객 특이사항 제거
-     * @param clientRemarkId
-     * @return
-     */
-    @DeleteMapping("/v1/client-remark/{clientRemarkId}")
-    public Response deleteClientRemark(@PathVariable(name = "clientRemarkId")Long clientRemarkId){
-        try{
-            clientService.deleteClientRemark(clientRemarkId);
-            return new Response(ResponseCode.SUCCESS, null, "200");
-        }catch (Exception e){
-            return new Response(ResponseCode.FAIL, e.getMessage(), "404");
-        }
-    }
+
 
 
     @GetMapping("/v1/client-list/{companyId}")
