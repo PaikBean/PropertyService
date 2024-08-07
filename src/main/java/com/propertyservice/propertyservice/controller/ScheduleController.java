@@ -36,13 +36,11 @@ public class ScheduleController {
 
     /**
      * 일정 등록
-     *
      * @param scheduleForm
-     * @param bindingResult
      * @return
      */
     @PostMapping("/v1/schedule")
-    public Response createSchedule(@RequestBody @Valid ScheduleForm scheduleForm, BindingResult bindingResult) {
+    public Response createSchedule(@RequestBody @Valid ScheduleForm scheduleForm) {
         try {
             scheduleService.createSchedule(scheduleForm);
             return new Response(ResponseCode.SUCCESS, null, "200");

@@ -5,6 +5,7 @@ import com.propertyservice.propertyservice.domain.schedule.Schedule;
 import com.propertyservice.propertyservice.domain.schedule.ScheduleType;
 import com.propertyservice.propertyservice.dto.schedule.*;
 import com.propertyservice.propertyservice.repository.client.ClientRepository;
+import com.propertyservice.propertyservice.repository.company.ManagerRepository;
 import com.propertyservice.propertyservice.repository.schedule.ScheduleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final ClientRepository clientRepository;
     private final CommonService commonService;
+    private final ManagerRepository managerRepository;
+
 
     public List<ScheduleTypeDto> searchScheduleTypeList() {
         return Arrays.stream(ScheduleType.values())
@@ -39,8 +42,11 @@ public class ScheduleService {
     @Transactional
     public void createSchedule(ScheduleForm scheduleForm) {
         scheduleRepository.save(Schedule.builder()
-                .managerId(scheduleForm.getManagerId())
-                .clientId(scheduleForm.getClientId())
+                .managerId(managerRepository.findById(scheduleForm.getManagerId()).orElseThrow(
+                        () -> new EntityNotFoundException("매니저를 찾을 수 없습니다.")).getManagerId()
+                )
+                .clientId(clientRepository.findById(scheduleForm.getClientId()).orElseThrow(
+                        () -> new EntityNotFoundException("고객을 찾을 수 없습니다.")).getClientId())
                 .scheduleDate(
                         LocalDate.parse(scheduleForm.getScheduleDate(),
                                 DateTimeFormatter.ofPattern("yyyyMMdd")
