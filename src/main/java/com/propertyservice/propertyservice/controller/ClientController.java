@@ -179,7 +179,7 @@ public class ClientController {
     @GetMapping("/v1/client-detail/{clientId}")
     public Response searchClientDetail(@PathVariable("clientId")Long clientId){
         try{
-            return new Response(ResponseCode.SUCCESS,null, "204");
+            return new Response(ResponseCode.SUCCESS,clientService.searchClientDetail(clientId), "204");
         }catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }

@@ -183,7 +183,10 @@ public class ClientService {
         return clientRepository.searchClientList(clientListCondition.getClientName(), clientListCondition.getClientPhoneNumber());
     }
 
-    public ClientDetailDto searchClientDetailList(Long clientId){
+    /**
+     * 고객 정보 단건 조회 - 고객 상세
+     */
+    public ClientDetailDto searchClientDetail(Long clientId){
         Client client = searchClientByClientId(clientId);
 
         //고객 일정
