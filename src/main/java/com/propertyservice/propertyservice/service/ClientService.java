@@ -31,7 +31,6 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientRemarkRepository clientRemarkRepository;
     private final ShowingPropertyRepository showingPropertyRepository;
-    //private final InflowTypeRepository inflowTypeRepository;
     private final PropertyRepository propertyRepository;
     private final ScheduleService scheduleService;
     private final ManagerService managerService;
@@ -169,6 +168,7 @@ public class ClientService {
     /**
      * 고객 정보 수정
      */
+    @Transactional
     public Long updateClient(ClientForm clientForm){
         Client client = searchClientByClientId(clientForm.getClientId());
 
