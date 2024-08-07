@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ShowingProrpertyForm {
+public class ShowingPropertyForm {
     private Long clientId;
     private Long propertyId;
-    private Long managerId; //수정자.
+//    private Long managerId; //수정자.
 }

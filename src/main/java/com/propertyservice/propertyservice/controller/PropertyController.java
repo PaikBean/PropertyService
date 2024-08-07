@@ -2,6 +2,7 @@ package com.propertyservice.propertyservice.controller;
 
 import com.propertyservice.propertyservice.domain.common.Response;
 import com.propertyservice.propertyservice.domain.common.ResponseCode;
+import com.propertyservice.propertyservice.dto.client.ShowingPropertyForm;
 import com.propertyservice.propertyservice.dto.property.PropertyForm;
 import com.propertyservice.propertyservice.service.PropertyService;
 import jakarta.validation.Valid;
@@ -16,6 +17,38 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/property")
 public class PropertyController {
     private final PropertyService propertyService;
+
+
+    /**
+     * 보여줄 매물 등록.
+     * @param showingPropertyForm
+     * @return
+     */
+    @PostMapping("/v1/showing-property")
+    public Response createShowingProperty(@RequestBody ShowingPropertyForm showingPropertyForm){
+        try {
+            return new Response(ResponseCode.SUCCESS, propertyService.createShowingProrperty(showingPropertyForm), "201");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 보여줄 매물 삭제.
+     * @param showingPropertyId
+     * @return
+     */
+    @DeleteMapping("/v1/showing-property/{showingPropertyId}")
+    public Response createShowingProperty(@PathVariable(name = "showingPropertyId")Long showingPropertyId){
+        try {
+            propertyService.deleteShowingProperty(showingPropertyId);
+            return new Response(ResponseCode.SUCCESS, null, "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+
 
     /**
      * 매물 등록
@@ -88,6 +121,19 @@ public class PropertyController {
         try {
             return new Response(ResponseCode.SUCCESS, propertyService.searchPropertyTypeList(), "200");
         } catch (Exception e){
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+    /**
+     * 매물 상세 정보 조회
+     * @param propertyId
+     * @return
+     */
+    @GetMapping("/v1/property-detail/{propertyId}")
+    public Response searchPropertyDetail(@PathVariable("propertyId")Long propertyId){
+        try {
+            return new Response(ResponseCode.SUCCESS, null, "200");
+        } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }

@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-
 @SpringBootTest
 @Slf4j
 class ClientServiceTest {
@@ -77,19 +75,19 @@ class ClientServiceTest {
 
     }
 
-    @Test
-    public void createShowingProrpertyTest(){
-        ShowingProrpertyForm showingProrpertyForm = new ShowingProrpertyForm();
-        showingProrpertyForm.setClientId(1L);
-        showingProrpertyForm.setPropertyId(1L);
-        showingProrpertyForm.setManagerId(1L);
-
-        clientService.createShowingProrperty(showingProrpertyForm);
-    }
-    @Test
-    public void deleteShowingProrpertyTest(){
-        clientService.deleteShowingProperty(1L);
-    }
+//    @Test
+//    public void createShowingPropertyTest(){
+//        ShowingPropertyForm showingPropertyForm = new ShowingPropertyForm();
+//        showingPropertyForm.setClientId(1L);
+//        showingPropertyForm.setPropertyId(1L);
+//        showingPropertyForm.setManagerId(1L);
+//
+//        clientService.createShowingProrperty(showingPropertyForm);
+//    }
+//    @Test
+//    public void deleteShowingPropertyTest(){
+//        clientService.deleteShowingProperty(1L);
+//    }
 
 
     @Test

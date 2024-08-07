@@ -4,7 +4,6 @@ import com.propertyservice.propertyservice.domain.client.Client;
 import com.propertyservice.propertyservice.domain.client.ClientRemark;
 import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.domain.common.TransactionType;
-import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.property.Property;
 import com.propertyservice.propertyservice.domain.property.ShowingProperty;
 import com.propertyservice.propertyservice.dto.client.*;
@@ -18,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,18 +33,27 @@ public class ClientService {
     private final ScheduleService scheduleService;
     private final ManagerService managerService;
 
-
+    /**
+     * 고객 id로 고객 찾기.
+     */
     public Client searchClientByClientId(Long clientid){
         return clientRepository.findById(clientid).orElseThrow(
                 ()-> new EntityNotFoundException("등록되지 않은 고객입니다. 관리자에게 문의하세요."));
     }
 
+    /**
+     * 유입 경로 목록 조회.
+     * @return
+     */
     public List<InflowTypeDto> searchInflowTypeList() {
         return Arrays.stream(InflowType.values())
                 .map(inflowType -> new InflowTypeDto(inflowType.name(), inflowType.getLabel()))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 보여줄 매물 목록 조회.
+     */
     public List<ShowingPropertyCandidateDto> searchShowingPropertyCandidateList(ShowingPropertyCandidateCondition showingPropertyCandidateCondition) {
         List<ShowingPropertyCandidateDto> showingPropertyCandidateDtoList = propertyRepository.searchShowingPropertyCandidateList(showingPropertyCandidateCondition);
         for (ShowingPropertyCandidateDto showingPropertyCandidateDto : showingPropertyCandidateDtoList) {
@@ -55,27 +62,6 @@ public class ClientService {
             showingPropertyCandidateDto.setPrice(getClientSummaryPrice(property));
         }
         return showingPropertyCandidateDtoList;
-    }
-
-    public Long createShowingProrperty(ShowingProrpertyForm showingProrpertyForm ){
-        return showingPropertyRepository.save(ShowingProperty.builder()
-                .clientId(clientRepository.findById(showingProrpertyForm.getClientId()).orElseThrow(
-                                () -> new EntityNotFoundException("고객 정보를 찾을수 없습니다.")
-                        ).getClientId()
-                )
-                .propertyId(propertyRepository.findById(showingProrpertyForm.getClientId()).orElseThrow(
-                                () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
-                        ).getPropertyId()
-                )
-                .registrationManagerId(managerService.searchManagerIdById(showingProrpertyForm.getManagerId()))
-                .modifiedManagerId(managerService.searchManagerIdById(showingProrpertyForm.getManagerId()))
-                .build()).getClientId();
-    }
-    public void deleteShowingProperty(Long showingPropertyId){
-        ShowingProperty showingProperty = showingPropertyRepository.findById(showingPropertyId).orElseThrow(
-                () -> new EntityNotFoundException("보여줄 매물 정보를 찾을 수 없습니다.")
-        );
-        showingPropertyRepository.delete(showingProperty);
     }
 
     private String getClientSummaryPrice(Property property) {

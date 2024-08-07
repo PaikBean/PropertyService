@@ -16,7 +16,9 @@ public class CustomUserDetail implements UserDetails {
     public CustomUserDetail(Manager manager){
         this.manager = manager;
     }
-
+    public Manager getManager(){
+        return manager;
+    }
     public Company getCompany(){
         return manager.getCompany();
     }

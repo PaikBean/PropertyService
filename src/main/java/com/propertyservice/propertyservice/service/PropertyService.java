@@ -1,16 +1,13 @@
 package com.propertyservice.propertyservice.service;
 
-import com.propertyservice.propertyservice.controller.PropertyController;
 import com.propertyservice.propertyservice.domain.building.Building;
-import com.propertyservice.propertyservice.domain.manager.ManagerState;
-import com.propertyservice.propertyservice.domain.property.MaintenanceItem;
-import com.propertyservice.propertyservice.domain.property.Property;
-import com.propertyservice.propertyservice.domain.property.PropertyRemark;
-import com.propertyservice.propertyservice.domain.property.PropertyType;
-import com.propertyservice.propertyservice.dto.common.ManagerStateDto;
+import com.propertyservice.propertyservice.domain.manager.Manager;
+import com.propertyservice.propertyservice.domain.property.*;
+import com.propertyservice.propertyservice.dto.client.ShowingPropertyForm;
 import com.propertyservice.propertyservice.dto.property.*;
-import com.propertyservice.propertyservice.repository.building.BuildingRemarkRepository;
 import com.propertyservice.propertyservice.repository.building.BuildingRepository;
+import com.propertyservice.propertyservice.repository.client.ClientRepository;
+import com.propertyservice.propertyservice.repository.client.ShowingPropertyRepository;
 import com.propertyservice.propertyservice.repository.property.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +29,40 @@ public class PropertyService {
     private final PropertyRepository propertyRepository;
     private final MaintenanceItemRepository maintenanceItemRepository;
     private final PropertyRemarkRepository propertyRemarkRepository;
-    private final BuildingRemarkRepository buildingRemarkRepository;
     private final PropertyImageRepository propertyImageRepository;
+    private final ShowingPropertyRepository showingPropertyRepository;
+    private final ClientRepository clientRepository;
+    private final ManagerService managerService;
+    private final CommonService commonService;
+
+    /**
+     *
+     * @param showingPropertyForm
+     * @return
+     */
+    public Long createShowingProrperty(ShowingPropertyForm showingPropertyForm){
+        Manager manager = commonService.getCustomUserDetailBySecurityContextHolder().getManager();
+
+        return showingPropertyRepository.save(ShowingProperty.builder()
+                .clientId(clientRepository.findById(showingPropertyForm.getClientId()).orElseThrow(
+                                () -> new EntityNotFoundException("고객 정보를 찾을수 없습니다.")
+                        ).getClientId()
+                )
+                .propertyId(propertyRepository.findById(showingPropertyForm.getClientId()).orElseThrow(
+                                () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
+                        ).getPropertyId()
+                )
+                .registrationManagerId(managerService.searchManagerIdById(manager.getManagerId()))
+                .modifiedManagerId(managerService.searchManagerIdById(manager.getManagerId()))
+                .build()).getClientId();
+    }
+
+    public void deleteShowingProperty(Long showingPropertyId){
+        ShowingProperty showingProperty = showingPropertyRepository.findById(showingPropertyId).orElseThrow(
+                () -> new EntityNotFoundException("보여줄 매물 정보를 찾을 수 없습니다.")
+        );
+        showingPropertyRepository.delete(showingProperty);
+    }
 
     @Transactional
     public void createProperty(PropertyForm propertyForm) {
