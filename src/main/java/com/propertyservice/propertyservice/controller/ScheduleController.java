@@ -73,7 +73,6 @@ public class ScheduleController {
 
     /**
      * 일정 삭제
-     *
      * @param scheduleId
      * @return
      */
@@ -82,8 +81,6 @@ public class ScheduleController {
         try {
             scheduleService.deleteSchedule(scheduleId);
             return new Response(ResponseCode.SUCCESS, null, "200");
-        } catch (EntityNotFoundException e) {
-            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }

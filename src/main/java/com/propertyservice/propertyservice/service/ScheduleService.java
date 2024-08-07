@@ -32,7 +32,11 @@ public class ScheduleService {
     private final CommonService commonService;
     private final ManagerRepository managerRepository;
 
-
+    public Schedule searchScheduleByScheduleId(Long scheduleId){
+        return scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new EntityNotFoundException("일정을 찾을 수 없습니다.")
+        );
+    }
     public List<ScheduleTypeDto> searchScheduleTypeList() {
         return Arrays.stream(ScheduleType.values())
                 .map(scheduleType -> new ScheduleTypeDto(scheduleType.name(), scheduleType.getLabel()))
@@ -76,7 +80,8 @@ public class ScheduleService {
 
     @Transactional
     public void deleteSchedule(Long scheduleId) {
-        scheduleRepository.deleteById(scheduleId);
+        Schedule schedule = searchScheduleByScheduleId(scheduleId);
+        scheduleRepository.delete(schedule);
     }
 
     public ScheduleDto searchSchedule(Long scheduleId) {
