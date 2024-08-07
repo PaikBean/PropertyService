@@ -36,9 +36,7 @@ public class PropertyService {
     private final CommonService commonService;
 
     /**
-     *
-     * @param showingPropertyForm
-     * @return
+     * 보여줄 매물 추가.
      */
     public Long createShowingProrperty(ShowingPropertyForm showingPropertyForm){
         Manager manager = commonService.getCustomUserDetailBySecurityContextHolder().getManager();
@@ -57,6 +55,9 @@ public class PropertyService {
                 .build()).getClientId();
     }
 
+    /**
+     * 보여줄 매물 삭제.
+     */
     public void deleteShowingProperty(Long showingPropertyId){
         ShowingProperty showingProperty = showingPropertyRepository.findById(showingPropertyId).orElseThrow(
                 () -> new EntityNotFoundException("보여줄 매물 정보를 찾을 수 없습니다.")
