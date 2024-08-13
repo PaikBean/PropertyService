@@ -16,27 +16,30 @@ public class PropertyForm {
     private Long propertyId;
     @NotNull
     private Long buildingId;
-    @NotNull @NotBlank
-    private String unitNumber;
     private Long picManagerId;
     private PropertyType propertyType;
+    @NotNull @NotBlank
+    private String unitNumber;
     //@NotNull
     private TransactionType transactionType;
     private BigDecimal deposit;
     private BigDecimal monthlyFee;
     private BigDecimal jeonseFee;
     private BigDecimal tradeFee;
+    private BigDecimal shortTermDeposit;
+    private BigDecimal shortTermMonthlyFee;
     @NotNull
-    private BigDecimal maintenanceFee;
+    private boolean maintenanceItemWater; // 관리비 수도
     @NotNull
-    private boolean maintenanceItemWater;
+    private boolean maintenanceItemElectricity; // 관리비 전기
     @NotNull
-    private boolean maintenanceItemElectricity;
+    private boolean maintenanceItemInternet; // 관리비 인터넷
     @NotNull
-    private boolean maintenanceItemInternet;
+    private boolean maintenanceItemGas; // 관리비 난방
+    private String maintenanceItemOthers;// 관리비 기타
     @NotNull
-    private boolean maintenanceItemGas;
-    private String maintenanceItemOthers;
+    private BigDecimal maintenanceFee; // 관리비
     private TransactionState transactionState;
+    private BigDecimal commision; // 중개수수료
     private String remark;
 }

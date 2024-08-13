@@ -70,32 +70,35 @@ public class PropertyService {
         Building building = buildingRepository.findById(propertyForm.getBuildingId()).orElseThrow(
                 () -> new EntityNotFoundException("등록되지 않은 빌딩입니다.")
         );
-
         validPropertyDuplicate(building, propertyForm.getUnitNumber());
+
         Property property = propertyRepository.save(
                 Property.builder()
                         .building(building)
-                        .unitNumber(propertyForm.getUnitNumber())
                         .picManagerId(propertyForm.getPicManagerId())
                         .propertyType(propertyForm.getPropertyType())
                         .transactionType(propertyForm.getTransactionType())
+                        .unitNumber(propertyForm.getUnitNumber())
                         .deposit(propertyForm.getDeposit())
                         .monthlyFee(propertyForm.getMonthlyFee())
                         .jeonseFee(propertyForm.getJeonseFee())
                         .tradeFee(propertyForm.getTradeFee())
-                        .tradeFee(propertyForm.getTradeFee())
+                        .shortTermDeposit(propertyForm.getShortTermDeposit())
+                        .shortTermMonthlyFee(propertyForm.getShortTermMonthlyFee())
                         .maintenanceFee(propertyForm.getMaintenanceFee())
                         .maintenanceItem(createMaintenanceItem(propertyForm))
                         .transactionState(propertyForm.getTransactionState())
+                        .commision(propertyForm.getCommision())
                         .build()
         );
-        System.out.println("propertyForm = " + propertyForm.getTransactionType().toString());
-        propertyRemarkRepository.save(
-                PropertyRemark.builder()
-                        .property(property)
-                        .remark(propertyForm.getRemark())
-                        .build()
-        );
+        if(propertyForm.getRemark() != null){
+            propertyRemarkRepository.save(
+                    PropertyRemark.builder()
+                            .property(property)
+                            .remark(propertyForm.getRemark())
+                            .build()
+            );
+        }
     }
 
     private MaintenanceItem createMaintenanceItem(PropertyForm propertyForm) {
