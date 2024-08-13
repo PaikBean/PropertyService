@@ -161,7 +161,7 @@ public class PropertyService {
     }
 
     @Transactional
-    public Long updateProperty(PropertyForm propertyForm) {
+    public void updateProperty(PropertyForm propertyForm) {
         Property property = propertyRepository.findById(propertyForm.getPropertyId()).orElseThrow(
                 () -> new EntityNotFoundException("등록되지 않은 매물입니다."));
 
@@ -195,7 +195,6 @@ public class PropertyService {
                 propertyForm.getCommision(),
                 propertyForm.getRemark()
         );
-        return property.getPropertyId();
     }
 
     @Transactional

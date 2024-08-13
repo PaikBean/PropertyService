@@ -91,7 +91,8 @@ public class PropertyController {
     @PutMapping("/v1/property")
     public Response updateProperty(@RequestBody @Valid PropertyForm propertyForm) {
         try {
-            return new Response(ResponseCode.SUCCESS, propertyService.updateProperty(propertyForm), "200");
+            propertyService.updateProperty(propertyForm);
+            return new Response(ResponseCode.SUCCESS, null, "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
