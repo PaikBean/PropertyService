@@ -133,16 +133,20 @@ public class PropertyService {
 //                    .build());
 //        }
 
+
         return PropertyDto.builder()
                 .propertyId(property.getPropertyId())
                 .unitNumber(property.getUnitNumber())
                 .picManagerId(property.getPicManagerId())
-                .picManagerName(null)   // Todo 추후 manager 엔티티 주가되면 가져오기
+                .picManagerName(managerService.searchManagerById(property.getPicManagerId()).getManagerName())   // Todo 추후 manager 엔티티 주가되면 가져오기
+                .propertyType(property.getPropertyType())
                 .transactionType(property.getTransactionType())
                 .deposit(property.getDeposit())
                 .monthlyFee(property.getMonthlyFee())
                 .jeonseFee(property.getJeonseFee())
                 .tradeFee(property.getTradeFee())
+                .shortTermDeposit(property.getShortTermDeposit())
+                .shortTermMonthlyFee(property.getShortTermMonthlyFee())
                 .maintenanceFee(property.getMaintenanceFee())
                 .maintenanceItemWater(property.getMaintenanceItem().isWater())
                 .maintenanceItemElectricity(property.getMaintenanceItem().isElectricity())
@@ -151,6 +155,8 @@ public class PropertyService {
                 .maintenanceItemOthers(property.getMaintenanceItem().getOthers())
                 .transactionState(property.getTransactionState())
                 //.propertyRemarkDtoList(propertyRemarkDtoList)
+                .commision(property.getCommision())
+                .remark(property.getRemark())
                 .build();
     }
 

@@ -86,11 +86,10 @@ public class PropertyController {
      * 매물 수정
      *
      * @param propertyForm
-     * @param bindingResult
      * @return
      */
     @PutMapping("/v1/property")
-    public Response updateProperty(@RequestBody @Valid PropertyForm propertyForm, BindingResult bindingResult) {
+    public Response updateProperty(@RequestBody @Valid PropertyForm propertyForm) {
         try {
             return new Response(ResponseCode.SUCCESS, propertyService.updateProperty(propertyForm), "200");
         } catch (Exception e) {
@@ -132,7 +131,7 @@ public class PropertyController {
     @GetMapping("/v1/property-detail/{propertyId}")
     public Response searchPropertyDetail(@PathVariable("propertyId")Long propertyId){
         try {
-            return new Response(ResponseCode.SUCCESS, null, "200");
+            return new Response(ResponseCode.SUCCESS, propertyService.searchProperty(propertyId), "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
