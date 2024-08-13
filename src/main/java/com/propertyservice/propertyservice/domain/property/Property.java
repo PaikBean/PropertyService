@@ -44,9 +44,10 @@ public class Property extends BaseTimeEntity {
 
     private TransactionState transactionState;
     private BigDecimal commision;
+    private String remark;
 
     @Builder
-    public Property(Long propertyId, Building building, String unitNumber, Long picManagerId, PropertyType propertyType, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal shortTermDeposit, BigDecimal shortTermMonthlyFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, TransactionState transactionState, BigDecimal commision) {
+    public Property(Long propertyId, Building building, String unitNumber, Long picManagerId, PropertyType propertyType, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal shortTermDeposit, BigDecimal shortTermMonthlyFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, TransactionState transactionState, BigDecimal commision, String remark) {
         this.propertyId = propertyId;
         this.building = building;
         this.unitNumber = unitNumber;
@@ -63,9 +64,11 @@ public class Property extends BaseTimeEntity {
         this.maintenanceItem = maintenanceItem;
         this.transactionState = transactionState;
         this.commision = commision;
+        this.remark = remark;
     }
 
-    public void updateProperty(String unitNumber, Long picManagerId, PropertyType propertyType, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, TransactionState transactionState) {
+    public void updateProperty(Building building, String unitNumber, Long picManagerId, PropertyType propertyType, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal shortTermDeposit, BigDecimal shortTermMonthlyFee,  BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, TransactionState transactionState, BigDecimal commision, String remark) {
+        this.building = building;
         this.unitNumber = unitNumber;
         this.picManagerId = picManagerId;
         this.propertyType = propertyType;
@@ -74,8 +77,12 @@ public class Property extends BaseTimeEntity {
         this.monthlyFee = monthlyFee;
         this.jeonseFee = jeonseFee;
         this.tradeFee = tradeFee;
+        this.shortTermDeposit = shortTermMonthlyFee;
+        this.shortTermMonthlyFee = shortTermDeposit;
         this.maintenanceFee = maintenanceFee;
         this.maintenanceItem = maintenanceItem;
         this.transactionState = transactionState;
+        this.commision = commision;
+        this.remark = remark;
     }
 }

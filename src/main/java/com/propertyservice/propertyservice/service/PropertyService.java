@@ -72,7 +72,7 @@ public class PropertyService {
         );
         validPropertyDuplicate(building, propertyForm.getUnitNumber());
 
-        Property property = propertyRepository.save(
+       propertyRepository.save(
                 Property.builder()
                         .building(building)
                         .picManagerId(propertyForm.getPicManagerId())
@@ -89,16 +89,17 @@ public class PropertyService {
                         .maintenanceItem(createMaintenanceItem(propertyForm))
                         .transactionState(propertyForm.getTransactionState())
                         .commision(propertyForm.getCommision())
+                        .remark(propertyForm.getRemark())
                         .build()
         );
-        if(propertyForm.getRemark() != null){
-            propertyRemarkRepository.save(
-                    PropertyRemark.builder()
-                            .property(property)
-                            .remark(propertyForm.getRemark())
-                            .build()
-            );
-        }
+//        if(propertyForm.getRemark() != null){
+//            propertyRemarkRepository.save(
+//                    PropertyRemark.builder()
+//                            .property(property)
+//                            .remark(propertyForm.getRemark())
+//                            .build()
+//            );
+//        }
     }
 
     private MaintenanceItem createMaintenanceItem(PropertyForm propertyForm) {
@@ -122,15 +123,15 @@ public class PropertyService {
                 () -> new EntityNotFoundException("등록되지 않은 매물입니다.")
         );
 
-        List<PropertyRemarkDto> propertyRemarkDtoList = new ArrayList<>();
-        for (PropertyRemark propertyRemark : propertyRemarkRepository.findByPropertyPropertyId(propertyId)) {
-            propertyRemarkDtoList.add(PropertyRemarkDto.builder()
-                    .propertyRemarkId(propertyRemark.getRemarkId())
-                    .propertyRemark(propertyRemark.getRemark())
-                    .createdDate(propertyRemark.getCreatedDate())
-                    .updatedDate(propertyRemark.getUpdatedDate())
-                    .build());
-        }
+//        List<PropertyRemarkDto> propertyRemarkDtoList = new ArrayList<>();
+//        for (PropertyRemark propertyRemark : propertyRemarkRepository.findByPropertyPropertyId(propertyId)) {
+//            propertyRemarkDtoList.add(PropertyRemarkDto.builder()
+//                    .propertyRemarkId(propertyRemark.getRemarkId())
+//                    .propertyRemark(propertyRemark.getRemark())
+//                    .createdDate(propertyRemark.getCreatedDate())
+//                    .updatedDate(propertyRemark.getUpdatedDate())
+//                    .build());
+//        }
 
         return PropertyDto.builder()
                 .propertyId(property.getPropertyId())
@@ -149,7 +150,7 @@ public class PropertyService {
                 .maintenanceItemGas(property.getMaintenanceItem().isGas())
                 .maintenanceItemOthers(property.getMaintenanceItem().getOthers())
                 .transactionState(property.getTransactionState())
-                .propertyRemarkDtoList(propertyRemarkDtoList)
+                //.propertyRemarkDtoList(propertyRemarkDtoList)
                 .build();
     }
 
@@ -157,6 +158,8 @@ public class PropertyService {
     public Long updateProperty(PropertyForm propertyForm) {
         Property property = propertyRepository.findById(propertyForm.getPropertyId()).orElseThrow(
                 () -> new EntityNotFoundException("등록되지 않은 매물입니다."));
+
+        //관리비 업데이트.
         MaintenanceItem maintenanceItem = property.getMaintenanceItem();
         maintenanceItem.updateMaintenanceItem(
                 propertyForm.isMaintenanceItemWater(),
@@ -165,7 +168,11 @@ public class PropertyService {
                 propertyForm.isMaintenanceItemGas(),
                 propertyForm.getMaintenanceItemOthers()
         );
+
         property.updateProperty(
+                buildingRepository.findById(propertyForm.getBuildingId()).orElseThrow(
+                        () -> new EntityNotFoundException("등록되지 않은 빌딩입니다.")
+                ),
                 propertyForm.getUnitNumber(),
                 propertyForm.getPicManagerId(),
                 propertyForm.getPropertyType(),
@@ -174,9 +181,13 @@ public class PropertyService {
                 propertyForm.getMonthlyFee(),
                 propertyForm.getJeonseFee(),
                 propertyForm.getTradeFee(),
+                propertyForm.getShortTermDeposit(),
+                propertyForm.getShortTermMonthlyFee(),
                 propertyForm.getMaintenanceFee(),
                 maintenanceItem,
-                propertyForm.getTransactionState()
+                propertyForm.getTransactionState(),
+                propertyForm.getCommision(),
+                propertyForm.getRemark()
         );
         return property.getPropertyId();
     }
@@ -186,7 +197,7 @@ public class PropertyService {
         Property property = propertyRepository.findById(propertyId).orElseThrow(
                 () -> new EntityNotFoundException("등록되지 않은 매물입니다."));
         maintenanceItemRepository.delete(property.getMaintenanceItem());
-        propertyRemarkRepository.deleteAllByProperty(property);
+        //propertyRemarkRepository.deleteAllByProperty(property);
         propertyImageRepository.deleteAllByProperty(property);
         propertyRepository.delete(property);
     }

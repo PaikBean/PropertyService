@@ -28,10 +28,10 @@ public class PropertyDto {
     private String maintenanceItemOthers;
     private TransactionState transactionState;
 
-    private List<PropertyRemarkDto> propertyRemarkDtoList;
+    //private List<PropertyRemarkDto> propertyRemarkDtoList;
 
     @Builder
-    public PropertyDto(Long propertyId, String unitNumber, Long picManagerId, String picManagerName, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, boolean maintenanceItemWater, boolean maintenanceItemElectricity, boolean maintenanceItemInternet, boolean maintenanceItemGas, String maintenanceItemOthers, TransactionState transactionState, List<PropertyRemarkDto> propertyRemarkDtoList) {
+    public PropertyDto(Long propertyId, String unitNumber, Long picManagerId, String picManagerName, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, boolean maintenanceItemWater, boolean maintenanceItemElectricity, boolean maintenanceItemInternet, boolean maintenanceItemGas, String maintenanceItemOthers, TransactionState transactionState) {
         this.propertyId = propertyId;
         this.unitNumber = unitNumber;
         this.picManagerId = picManagerId;
@@ -48,6 +48,6 @@ public class PropertyDto {
         this.maintenanceItemGas = maintenanceItemGas;
         this.maintenanceItemOthers = maintenanceItemOthers;
         this.transactionState = transactionState;
-        this.propertyRemarkDtoList = propertyRemarkDtoList;
+        //this.propertyRemarkDtoList = propertyRemarkDtoList;
     }
 }
