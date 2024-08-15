@@ -258,7 +258,7 @@ public class ClientService {
         // 예외처리.
        entityExceptionService.validateEntityExists(
                 () -> companyRepository.findById(companyId),
-                "회사 존재하지 않습니다. 관리자에게 문의하세요."
+                "회사가 존재하지 않습니다. 관리자에게 문의하세요."
         );
         return clientRepository.searchClientList(companyId);
     }
