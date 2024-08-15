@@ -40,13 +40,6 @@ public class ClientService {
     private final ManagerRepository managerRepository;
     private final CompanyRepository companyRepository;
 
-    /**
-     * 고객 id로 고객 찾기.
-     */
-    public Client searchClientByClientId(Long clientid){
-        return clientRepository.findById(clientid).orElseThrow(
-                ()-> new EntityNotFoundException("등록되지 않은 고객입니다. 관리자에게 문의하세요."));
-    }
 
     /**
      * 유입 경로 목록 조회.

@@ -31,35 +31,14 @@ public class ManagerService  {
 
     private final PasswordEncoder passwordEncoder;
     private final ManagerRepository managerRepository;
-    private final CompanyService companyService;
-    //private final DepartmentService departmentService;
     private final AddressLevel1Repository addressLevel1Repository;
     private final AddressLevel2Respository addressLevel2Respository;
     private final DepartmentRepository departmentRepository;
-    private final CommonService commonService;
-    private final EntityExceptionService entityExceptionService;
     private final CompanyRepository companyRepository;
 
-    /**
-     * 사용자 id를 통해 정보 가져오기
-     * @param managerId : 사용자 ID
-     * @return Long
-     */
-    public Long searchManagerIdById(Long managerId){
-        return managerRepository.findByManagerId(managerId).orElseThrow(
-                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요.")).getManagerId();
+    private final CommonService commonService;
+    private final EntityExceptionService entityExceptionService;
 
-    }
-    /**
-     * 사용자 id를 통해 정보 가져오기
-     * @param managerId : 사용자 ID
-     * @return manager
-     */
-    public Manager searchManagerById(Long managerId){
-        return managerRepository.findByManagerId(managerId).orElseThrow(
-                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요."));
-
-    }
 
     /**
      *  이메일 중복확인.
@@ -284,11 +263,10 @@ public class ManagerService  {
      */
     @Transactional
     public void deleteManager(Long managerId){
-         entityExceptionService.validateEntityExists(
+        managerRepository.delete(entityExceptionService.findEntityById(
                 () -> managerRepository.findById(managerId),
-                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
-
-        managerRepository.delete(searchManagerById(managerId));
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.")
+        );
     }
 
 

@@ -30,16 +30,6 @@ public class DepartmentService {
     private final ManagerService managerService;
     private final ManagerRepository managerRepository;
 
-    public Department searchDepartmentByDepartmentName(String departmentName){
-        return departmentRepository.findByDepartmentName(departmentName).orElseThrow(
-                ()-> new EntityNotFoundException("부서가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
-    }
-    public Department searchDepartmentByDepartmentId(Long departmentId){
-        return departmentRepository.findByDepartmentId(departmentId).orElseThrow(
-                ()-> new EntityNotFoundException("부서가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
-    }
-
-
     /**
      * 부서 등록.
      */
@@ -151,7 +141,6 @@ public class DepartmentService {
      */
     @Transactional
     public Long updateDepartmentInfo(DepartmentInfoForm departmentInfoForm){
-//        Department department = searchDepartmentByDepartmentId(departmentInfoForm.getDepartmentId());
         Department department = entityExceptionService.findEntityById(
                 () -> departmentRepository.findByDepartmentId(departmentInfoForm.getDepartmentId()),
                 "부서가 존재하지 않습니다. 관리자에게 문의해주세요."
@@ -177,10 +166,10 @@ public class DepartmentService {
      */
     @Transactional
     public void deleteDepartment(Long departmentId){
-        entityExceptionService.validateEntityExists(
-            () -> departmentRepository.findByDepartmentId(departmentId),
-            "부서가 존재하지 않습니다. 관리자에게 문의해주세요."
+        departmentRepository.delete(entityExceptionService.findEntityById(
+                () -> departmentRepository.findByDepartmentId(departmentId),
+                "부서가 존재하지 않습니다. 관리자에게 문의해주세요."
+        )
         );
-        departmentRepository.delete(searchDepartmentByDepartmentId(departmentId));
     }
 }

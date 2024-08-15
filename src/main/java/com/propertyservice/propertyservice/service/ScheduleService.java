@@ -33,11 +33,7 @@ public class ScheduleService {
     private final ManagerRepository managerRepository;
     private final EntityExceptionService entityExceptionService;
 
-    public Schedule searchScheduleByScheduleId(Long scheduleId){
-        return scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new EntityNotFoundException("일정을 찾을 수 없습니다.")
-        );
-    }
+
     public List<ScheduleTypeDto> searchScheduleTypeList() {
         return Arrays.stream(ScheduleType.values())
                 .map(scheduleType -> new ScheduleTypeDto(scheduleType.name(), scheduleType.getLabel()))

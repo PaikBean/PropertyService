@@ -33,16 +33,6 @@ public class CompanyService {
     private final CommonService commonService;
     private final EntityExceptionService entityExceptionService;
 
-    public Company searchCompany(String companyCode) {
-        return companyRepository.findByCompanyCode(companyCode).orElseThrow(
-                () -> new EntityNotFoundException("회사코드가 존재하지 않습니다.\n 관리자에게 문의해주세요."));
-    }
-
-    public Company searchCompany(Long companyId) {
-        return companyRepository.findById(companyId).orElseThrow(
-                () -> new EntityNotFoundException("회사가 존재하지 않습니다.")
-        );
-    }
 
     /**
      * 회사 등록.
