@@ -25,12 +25,16 @@ import java.time.format.DateTimeFormatter;
 public class RevenueService {
     private final ManagerRepository managerRepository;
     private final RevenueRepository revenueRepository;
+
+    private final EntityExceptionService entityExceptionService;
     private final CommonService commonService;
 
     @Transactional
     public void registryRevenue(RevenueForm revenueForm) {
-        Manager manager = managerRepository.findById(revenueForm.getManagerId()).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 매니저 입니다."));
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findById(revenueForm.getManagerId()),
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요."
+        );
         revenueRepository.save(RevenueLedger.builder()
                         .manager(manager)
                         .company(manager.getCompany())
@@ -74,6 +78,9 @@ public class RevenueService {
 
     @Transactional
     public void deleteRevenue(Long revenueId) {
-        revenueRepository.deleteById(revenueId);
+        revenueRepository.delete(entityExceptionService.findEntityById(
+                () -> revenueRepository.findById(revenueId),
+                "장부 정보가 존재하지 않습니다. 관리자에게 문의하세요.")
+        );
     }
 }
