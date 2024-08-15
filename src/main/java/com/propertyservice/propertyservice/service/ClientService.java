@@ -4,11 +4,14 @@ import com.propertyservice.propertyservice.domain.client.Client;
 import com.propertyservice.propertyservice.domain.client.ClientRemark;
 import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.domain.common.TransactionType;
+import com.propertyservice.propertyservice.domain.company.Company;
 import com.propertyservice.propertyservice.domain.property.Property;
 import com.propertyservice.propertyservice.domain.property.ShowingProperty;
 import com.propertyservice.propertyservice.dto.client.*;
 import com.propertyservice.propertyservice.dto.schedule.ScheduleSummaryDto;
 import com.propertyservice.propertyservice.repository.client.*;
+import com.propertyservice.propertyservice.repository.company.CompanyRepository;
+import com.propertyservice.propertyservice.repository.company.ManagerRepository;
 import com.propertyservice.propertyservice.repository.property.PropertyRepository;
 import com.propertyservice.propertyservice.utils.SummaryPrice;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,7 +34,11 @@ public class ClientService {
     private final ShowingPropertyRepository showingPropertyRepository;
     private final PropertyRepository propertyRepository;
     private final ScheduleService scheduleService;
-    private final ManagerService managerService;
+//    private final ManagerService managerService;
+//    private final CompanyService companyService;
+    private final EntityExceptionService entityExceptionService;
+    private final ManagerRepository managerRepository;
+    private final CompanyRepository companyRepository;
 
     /**
      * 고객 id로 고객 찾기.
@@ -43,7 +50,6 @@ public class ClientService {
 
     /**
      * 유입 경로 목록 조회.
-     * @return
      */
     public List<InflowTypeDto> searchInflowTypeList() {
         return Arrays.stream(InflowType.values())
@@ -57,13 +63,18 @@ public class ClientService {
     public List<ShowingPropertyCandidateDto> searchShowingPropertyCandidateList(ShowingPropertyCandidateCondition showingPropertyCandidateCondition) {
         List<ShowingPropertyCandidateDto> showingPropertyCandidateDtoList = propertyRepository.searchShowingPropertyCandidateList(showingPropertyCandidateCondition);
         for (ShowingPropertyCandidateDto showingPropertyCandidateDto : showingPropertyCandidateDtoList) {
-            Property property = propertyRepository.findById(showingPropertyCandidateDto.getPropertyId()).orElseThrow(
-                    () -> new EntityNotFoundException("정보가 잘못되었습니다. 관리자에게 문의하세요."));
+            Property property = entityExceptionService.findEntityById(
+                    () -> propertyRepository.findById(showingPropertyCandidateDto.getPropertyId()),
+                    "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
+            );
             showingPropertyCandidateDto.setPrice(getClientSummaryPrice(property));
         }
         return showingPropertyCandidateDtoList;
     }
 
+    /**
+     * 고객 가격 요약.
+     */
     private String getClientSummaryPrice(Property property) {
         if (property.getTransactionType() == TransactionType.MONTHLY || property.getTransactionType() == TransactionType.SHORTERM)
             return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getDeposit(), property.getMonthlyFee());
@@ -81,11 +92,22 @@ public class ClientService {
         Client client =   clientRepository.save(Client.builder()
                 .clientName(clientForm.getClientName())
                 .clientPhoneNumber(clientForm.getClientPhoneNumber())
-                .managerId(managerService.searchManagerIdById(clientForm.getManagerId()))
+                .managerId(
+                        entityExceptionService.findEntityById(
+                                () -> managerRepository.findById(clientForm.getManagerId()),
+                                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                )
                 .inflowType(InflowType.valueOf(clientForm.getInflowType()))
-                .registrationManagerId(managerService.searchManagerIdById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
-                .modifiedManagerId(managerService.searchManagerIdById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
-//                .company(companyService.searchCompany(clientForm.getCompanyId()))
+                .registrationManagerId(
+                        entityExceptionService.findEntityById(
+                                () -> managerRepository.findById(clientForm.getManagerId()),
+                                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                ) // 등록자 id는 담당자 id로 init
+                .modifiedManagerId(
+                        entityExceptionService.findEntityById(
+                                () -> managerRepository.findById(clientForm.getManagerId()),
+                        "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                ) // 수정자 id는 담당자 id로 init
                 .build());
 
         // 특이사항이 있는 경우.
@@ -99,14 +121,23 @@ public class ClientService {
         // 매물리스트가 있는 경우.
         if(clientForm.getPropertyList()!= null) {
             for (Long propertyId : clientForm.getPropertyList()) {
-                Property property = propertyRepository.findById(propertyId).orElseThrow(
-                        () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
+                Property property = entityExceptionService.findEntityById(
+                        () -> propertyRepository.findById(propertyId),
+                        "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
                 );
                 showingPropertyRepository.save(ShowingProperty.builder()
                         .clientId(client.getClientId())
                         .propertyId(property.getPropertyId())
-                        .registrationManagerId(managerService.searchManagerIdById(clientForm.getManagerId())) // 등록자 id는 담당자 id로 init
-                        .modifiedManagerId(managerService.searchManagerIdById(clientForm.getManagerId())) // 수정자 id는 담당자 id로 init
+                        .registrationManagerId(
+                                entityExceptionService.findEntityById(
+                                        () -> managerRepository.findById(clientForm.getManagerId()),
+                                        "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                        ) // 등록자 id는 담당자 id로 init
+                        .modifiedManagerId(
+                                entityExceptionService.findEntityById(
+                                        () -> managerRepository.findById(clientForm.getManagerId()),
+                                        "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                        ) // 수정자 id는 담당자 id로 init
                         .build());
             }
         }
@@ -117,7 +148,10 @@ public class ClientService {
      * 고객 정보 단건 조회 - 고객 관리
      */
     public ClientInfoDto searchClientInfo(Long clientId){
-        Client client =searchClientByClientId(clientId);
+        Client client = entityExceptionService.findEntityById(
+                    () -> clientRepository.findById(clientId),
+                    "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요."
+        );
         return ClientInfoDto.builder()
                 .clientId(client.getClientId())
                 .clientName(client.getClientName())
@@ -135,18 +169,22 @@ public class ClientService {
         // remark가 null인지 확인하는 작업 필요.
 
         return  clientRemarkRepository.save(ClientRemark.builder()
-                .clientId(clientRepository.findById(clientRemarkForm.getClientId()).orElseThrow( () ->
-                        new EntityNotFoundException("고객 정보가 없습니다.")).getClientId())
+                .clientId(
+                        entityExceptionService.findEntityById(
+                                () -> clientRepository.findById(clientRemarkForm.getClientId()),
+                                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                )
                 .remark(clientRemarkForm.getRemark())
                 .build()).getClientId();
     }
     /**
      * 고객 특이사항 삭제
-     * @param clientRemarkId
      */
     public void deleteClientRemark(Long clientRemarkId){
-        ClientRemark clientRemark = clientRemarkRepository.findById(clientRemarkId).orElseThrow(
-                () -> new EntityNotFoundException("해당 특이사항이 존재 하지 않습니다.")
+        ClientRemark clientRemark =
+                entityExceptionService.findEntityById(
+                    () -> clientRemarkRepository.findById(clientRemarkId),
+                    "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요."
         );
         clientRemarkRepository.delete(clientRemark);
     }
@@ -156,7 +194,10 @@ public class ClientService {
      */
     @Transactional
     public Long updateClient(ClientForm clientForm){
-        Client client = searchClientByClientId(clientForm.getClientId());
+        Client client = entityExceptionService.findEntityById(
+                () -> clientRepository.findById(clientForm.getClientId()),
+                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요."
+        );
 
         client.updateClient(clientForm);
 
@@ -173,7 +214,10 @@ public class ClientService {
      * 고객 정보 단건 조회 - 고객 상세
      */
     public ClientDetailDto searchClientDetail(Long clientId){
-        Client client = searchClientByClientId(clientId);
+        Client client = entityExceptionService.findEntityById(
+                () -> clientRepository.findById(clientId),
+                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요."
+        );
 
         //고객 일정
         List<ScheduleSummaryDto> scheduleSummaryList = scheduleService.searchScheduleListByClientId(client.getClientId());
@@ -198,22 +242,26 @@ public class ClientService {
 
     /**
      * 고객 특이사항 리스트.
-     * @param clientId
-     * @return
      */
     public List<ClientRemarkDto> searchClientRemarkList(Long clientId){
+        // 예외처리.
+        Client client = entityExceptionService.findEntityById(
+                () -> clientRepository.findById(clientId),
+                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요."
+        );
         return clientRepository.searchClientRemark(clientId);
     }
 
 
 
     public List<ClientDto.ClientListDto> searchClientList(Long companyId){
-//        Company company = companyService.searchCompany(companyId);
+        // 예외처리.
+       entityExceptionService.validateEntityExists(
+                () -> companyRepository.findById(companyId),
+                "회사 존재하지 않습니다. 관리자에게 문의하세요."
+        );
         return clientRepository.searchClientList(companyId);
     }
-    
-    
-   
 
 
 }
