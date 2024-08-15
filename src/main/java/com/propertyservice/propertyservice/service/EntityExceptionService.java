@@ -29,6 +29,10 @@ public class EntityExceptionService {
                 () -> new EntityNotFoundException(notFoundMessage));
     }
 
+    public <T> T findEntityByIdNotExistsThenNull(Supplier<Optional<T>> findEntityFunction) {
+        return findEntityFunction.get().orElse(null);
+    }
+
 
 //    // 제네릭 메소드: 엔티티와 레포지토리 타입을 파라미터로 받아서 처리
 //    public <T> T findByIdOrThrow(Long id, JpaRepository<T, Long> repository, String errorMessage) {
