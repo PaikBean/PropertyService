@@ -38,14 +38,57 @@ public class BuildingService {
     private final AddressLevel1Repository addressLevel1Repository;
     private final AddressLevel2Respository addressLevel2Respository;
     private final PropertyRepository propertyRepository;
+    private final EntityExceptionService entityExceptionService;
 
+    /**
+     * 임대인 중복 확인( api 미지정 )
+     */
+    private Owner validOwnerDuplicate(String phoneNumber) {
+        return ownerRepository.findByOwnerPhoneNumber(phoneNumber).orElse(null);
+    }
+
+    /**
+     * 주소 validation
+     */
+    private void validBuildingDuplicate(Long addressLevel1Id, Long addressLevel2Id, String addressLevel3) {
+        if (buildingAddressRepository.existsByAddressLevel1IdAndAddressLevel2IdAndAddressLevel3(addressLevel1Id, addressLevel2Id, addressLevel3)) {
+            throw new IllegalStateException("등록된 건물의 주소입니다.");
+        }
+    }
+
+    /**
+     * 주소1 validation
+     */
+    private Long validAddressLevel1(Long addressLevel1Id) {
+        return entityExceptionService.findEntityById(
+                () -> addressLevel1Repository.findById(addressLevel1Id),
+                "주소 입력이 잘못되었습니다."
+        ).getAddressLevel1Id();
+    }
+    /**
+     * 주소2 validation
+     */
+    private Long validAddressLevel2(Long addressLevel2Id) {
+        return entityExceptionService.findEntityById(
+                () -> addressLevel2Respository.findById(addressLevel2Id),
+                "주소 입력이 잘못되었습니다."
+        ).getAddressLevel2Id();
+    }
+
+    /**
+     * 건물 목록 조회.
+     */
     public List<BuildingDto> searchBuildingList(BuildingCondition buildingCondition) {
         return buildingRepository.searchBuildingList(buildingCondition);
     }
 
     @Transactional
     public void createBuilding(BuildingOwnerForm buildingOwnerForm) {
-        Owner isOwnerExsit = validOwnerDuplicate(buildingOwnerForm.getOwnerPhoneNumber());
+        Owner isOwnerExsit = entityExceptionService.findEntityById(
+                () -> ownerRepository.findByOwnerPhoneNumber(buildingOwnerForm.getOwnerPhoneNumber()),
+                "임대인 정보가 존재하지 않습니다. 관리자에게 문의하세요."
+        );
+
         Owner owner = isOwnerExsit == null ?
                 ownerRepository.save(Owner.builder()
                         .ownerName(buildingOwnerForm.getOwnerName())
@@ -53,52 +96,43 @@ public class BuildingService {
                         .ownerPhoneNumber(buildingOwnerForm.getOwnerPhoneNumber())
                         .build())
                 : isOwnerExsit;
+
         validBuildingDuplicate(buildingOwnerForm.getBuildingAddressLevel1(), buildingOwnerForm.getBuildingAddressLevel2(), buildingOwnerForm.getBuildingAddressLevel3());
+
         BuildingAddress buildingAddress = buildingAddressRepository.save(BuildingAddress.builder()
                 .addressLevel1Id(validAddressLevel1(buildingOwnerForm.getBuildingAddressLevel1()))
                 .addressLevel2Id(validAddressLevel2(buildingOwnerForm.getBuildingAddressLevel2()))
                 .addressLevel3(buildingOwnerForm.getBuildingAddressLevel3())
                 .build());
+
         Building building = buildingRepository.save(Building.builder()
                 .owner(owner)
                 .buildingAddress(buildingAddress)
                 .build());
+
         buildingRemarkRepository.save(BuildingRemark.builder()
                 .building(building)
                 .remark(buildingOwnerForm.getBuildingRemark())
                 .build());
     }
 
-    private Long validAddressLevel1(Long addressLevel1Id) {
-        return addressLevel1Repository.findById(addressLevel1Id).orElseThrow(
-                () -> new IllegalStateException("주소의 입력이 잘못되었습니다.")
-        ).getAddressLevel1Id();
-    }
-
-    private Long validAddressLevel2(Long addressLevel2Id) {
-        return addressLevel2Respository.findById(addressLevel2Id).orElseThrow(
-                () -> new IllegalStateException("주소의 입력이 잘못되었습니다.")
-        ).getAddressLevel2Id();
-    }
-
-    private Owner validOwnerDuplicate(String phoneNumber) {
-        return ownerRepository.findByOwnerPhoneNumber(phoneNumber).orElse(null);
-    }
-
-    private void validBuildingDuplicate(Long addressLevel1Id, Long addressLevel2Id, String addressLevel3) {
-        if (buildingAddressRepository.existsByAddressLevel1IdAndAddressLevel2IdAndAddressLevel3(addressLevel1Id, addressLevel2Id, addressLevel3)) {
-            throw new IllegalStateException("등록된 건물의 주소입니다.");
-        }
-    }
 
     //건물 상세 단건 조회 - 건물 관리
     public BuildingInfoDto searchBuildingInfo(Long buildingId){
-        Building building = buildingRepository.findById(buildingId).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 빌딩입니다."));
-        Owner owner = ownerRepository.findById(building.getOwner().getOwnerId()).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 임대인입니다."));
-        BuildingAddress buildingAddress = buildingAddressRepository.findById(building.getBuildingAddress().getBuildingAddressId()).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 주소입니다."));
+        Building building = entityExceptionService.findEntityById(
+                () -> buildingRepository.findById(buildingId),
+                "빌딩 정보가 존재하지 않습니다. 관리자에게 문의하세요"
+        );
+
+        Owner owner = entityExceptionService.findEntityById(
+                () -> ownerRepository.findById(building.getOwner().getOwnerId()),
+                "임대인 정보가 존재하지 않습니다. 관리자에게 문의하세요"
+        );
+
+        BuildingAddress buildingAddress = entityExceptionService.findEntityById(
+                () -> buildingAddressRepository.findById(building.getBuildingAddress().getBuildingAddressId()),
+                "빌딩 주소 정보가 존재하지 않습니다. 관리자에게 문의하세요"
+        );
         return BuildingInfoDto.builder()
                 .buildingId(building.getBuildingId())
                 .ownerName(owner.getOwnerName())
@@ -111,31 +145,47 @@ public class BuildingService {
                 .build();
     }
 
-
+    /**
+     * 건물 특이사항 추가.
+     */
     @Transactional
     public Long createBuildingRemark(BuildingRemarkForm buildingRemarkForm) {
         return buildingRemarkRepository.save(BuildingRemark.builder()
                         .building(
-                                buildingRepository.findById(buildingRemarkForm.getBuildingId()).orElseThrow(
-                                        () -> new EntityNotFoundException("등록되지 않은 빌딩입니다."))
+                                entityExceptionService.findEntityById(
+                                        () -> buildingRepository.findById(buildingRemarkForm.getBuildingId()),
+                                        "빌딩 정보가 존재하지 않습니다. 관리자에게 문의하세요"
+                                )
                         )
                         .remark(buildingRemarkForm.getRemark())
                         .build())
                 .getBuilding().getBuildingId();
     }
 
+    /**
+     * 건물 특이사항 제거.
+     * @param buildingRemarkId
+     */
     @Transactional
     public void deleteBuildingRemark(Long buildingRemarkId) {
-        BuildingRemark buildingRemark = buildingRemarkRepository.findById(buildingRemarkId).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 빌딩입니다."));
-
+        BuildingRemark buildingRemark = entityExceptionService.findEntityById(
+                () -> buildingRemarkRepository.findById(buildingRemarkId),
+                "특이사항 정보가 존재하지 않습니다. 관리자에게 문의하세요"
+        );
         buildingRemarkRepository.delete(buildingRemark);
     }
 
+
+    /**
+     * 건물 매물 몰고
+     */
     public BuildingPropertyDto searchBuildingPropertyList(Long buildingId) {
         // 예외처리.
-        Building building = buildingRepository.findById(buildingId).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 빌딩입니다."));
+        Building building = entityExceptionService.findEntityById(
+                () -> buildingRepository.findById(buildingId),
+                "빌딩 정보가 존재하지 않습니다. 관리자에게 문의하세요"
+        );
+
         //buildingPropertyList
         List<PropertySummaryDto> buildingPropertyList = new ArrayList<>();
         for (Property property : propertyRepository.findAllByBuildingBuildingId(buildingId)) {
@@ -166,6 +216,7 @@ public class BuildingService {
                 .build();
     }
 
+
     private String getSummaryPrice(Property property) {
         if (property.getTransactionType() == TransactionType.MONTHLY || property.getTransactionType() == TransactionType.SHORTERM)
             return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getDeposit(), property.getMonthlyFee());
@@ -184,8 +235,12 @@ public class BuildingService {
     public Long updateBuildingDetail(BuildingPropertyForm buildingPropertyForm) {
         validAddressLevel1(buildingPropertyForm.getAddressLevel1());
         validAddressLevel2(buildingPropertyForm.getAddressLevel2());
-        Building building = buildingRepository.findById(buildingPropertyForm.getBuildingId()).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 빌딩입니다."));
+
+        Building building = entityExceptionService.findEntityById(
+                () -> buildingRepository.findById(buildingPropertyForm.getBuildingId()),
+                "빌딩 정보가 존재하지 않습니다. 관리자에게 문의하세요"
+        );
+
         Owner owner = building.getOwner();
         BuildingAddress buildingAddress = building.getBuildingAddress();
 
@@ -209,6 +264,11 @@ public class BuildingService {
         return building.getBuildingId();
     }
 
+    /**
+     * 건물 특이사항 목록 조회.
+     * @param buildingId
+     * @return
+     */
     public List<BuildingRemarkDto> searchBuildingRemarkList(Long buildingId) {
         List<BuildingRemarkDto> buildingRemarkDtoList = new ArrayList<>();
         for (BuildingRemark buildingRemark : buildingRemarkRepository.findAllByBuildingBuildingId(buildingId)) {
@@ -221,9 +281,4 @@ public class BuildingService {
         }
         return buildingRemarkDtoList;
     }
-
-
-
-
-
 }
