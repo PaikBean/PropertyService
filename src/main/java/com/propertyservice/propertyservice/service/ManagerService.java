@@ -37,6 +37,9 @@ public class ManagerService  {
     private final AddressLevel2Respository addressLevel2Respository;
     private final DepartmentRepository departmentRepository;
     private final CommonService commonService;
+    private final EntityExceptionService entityExceptionService;
+    private final CompanyRepository companyRepository;
+
     /**
      * 사용자 id를 통해 정보 가져오기
      * @param managerId : 사용자 ID
@@ -59,32 +62,15 @@ public class ManagerService  {
     }
 
     /**
-     * 사용자 email를 통해 정보 가져오기
-     * @param managerEmail : 사용자 email
-     * @return manager
-     */
-    public Long searchManagerIdByEmail(String managerEmail){
-        return managerRepository.findByManagerEmail(managerEmail).orElseThrow(
-                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요.")).getManagerId();
-    }
-    /**
-     * 사용자 email를 통해 정보 가져오기
-     * @param managerEmail : 사용자 email
-     * @return manager
-     */
-    public Manager searchManagerByEmail(String managerEmail){
-        return managerRepository.findByManagerEmail(managerEmail).orElseThrow(
-                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요."));
-    }
-
-    /**
      *  이메일 중복확인.
      * @param email : 사용자가 입력한 email
      * @return 중복시 false, 아니면 true
      */
     public boolean checkDuplicate(String email){
         try{
-            Long manager = searchManagerIdByEmail(email);
+            entityExceptionService.validateEntityExists(
+                    () -> managerRepository.findByManagerEmail(email),
+                    "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
             return false;
         }catch (Exception e){
             return true;
@@ -97,10 +83,17 @@ public class ManagerService  {
     @Transactional
     public Long createManager(ManagerSignUpForm managerSignUpForm) {
         log.info("departmentId : {}",managerSignUpForm.getDepartmentId());
+
         return managerRepository.save(Manager.builder()
-                .company(companyService.searchCompany(managerSignUpForm.getCompanyCode()))
-//                .department_id(departmentService.searchDepartment(managerSignUpForm.getDepartmentName()))
-                .department(departmentRepository.findById(managerSignUpForm.getDepartmentId()).orElse(null))
+                .company(
+                        entityExceptionService.findEntityById(
+                                () -> companyRepository.findByCompanyCode(managerSignUpForm.getCompanyCode()),
+                                "회사 정보가 존재하지 않습니다. 관리자에게 문의하세요.")
+                )
+                .department(
+                        entityExceptionService.findEntityByIdNotExistsThenNull(
+                                () -> departmentRepository.findByDepartmentId(managerSignUpForm.getDepartmentId())) // 없으면 null
+                )
                 .managerName(managerSignUpForm.getManagerName())
                 .managerRank(managerSignUpForm.getManagerRank())
                 .managerPosition(managerSignUpForm.getManagerPosition())
@@ -119,27 +112,32 @@ public class ManagerService  {
 
 
     private Long validAddressLevel1(Long addressLevel1Id) {
-
-        return addressLevel1Repository.findById(addressLevel1Id).orElseThrow(
-                () -> new IOException("주소의 입력이 잘못되었습니다.")
-        ).getAddressLevel1Id();
+        return entityExceptionService.findEntityById(
+                () -> addressLevel1Repository.findById(addressLevel1Id),
+                "주소가 정확하지 않습니다.").getAddressLevel1Id();
     }
 
     private Long validAddressLevel2(Long addressLevel2Id) {
-        return addressLevel2Respository.findById(addressLevel2Id).orElseThrow(
-                () -> new IOException("주소의 입력이 잘못되었습니다.")
-        ).getAddressLevel2Id();
+        return entityExceptionService.findEntityById(
+                () -> addressLevel2Respository.findById(addressLevel2Id),
+                "주소가 정확하지 않습니다.").getAddressLevel2Id();
     }
 
 
     public String searchPassword(String managerEmail, String companyCode) {
         // 1. 회원 가져오기.
-        Manager manager = searchManagerByEmail(managerEmail);
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findByManagerEmail(managerEmail),
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
 
         // 2. 회사코드로 회사 가져오기.
         if (companyCode.equals(""))
             throw new IOException("회사코드가 입력되지 않았습니다.");
-        Company company = companyService.searchCompany(companyCode);
+
+        // 3. 회사 validation.
+       entityExceptionService.validateEntityExists(
+                () -> companyRepository.findByCompanyCode(companyCode),
+                "회사 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
 
         // 2. 회원의 회사코드가 일치하는지 확인.
 //        if (!(manager.getCompany_id() == company))
@@ -149,7 +147,6 @@ public class ManagerService  {
         System.out.println("current Password : " + manager.getManagerPassword());
         String password = manager.getManagerPassword().substring(5, 13);
         manager.resetPassword(passwordEncoder.encode(password));
-
 
         //4. 저장
         managerRepository.save(manager);
@@ -171,7 +168,9 @@ public class ManagerService  {
         }
 
         // 3. 비밀번호 재설정.
-        Manager manager = searchManagerByEmail(userDetails.getUsername());
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findByManagerEmail(userDetails.getManagerName()),
+                "비밀번호가 일치하지 않거나 존재하지 않은 회원입니다.");
         manager.resetPassword( passwordEncoder.encode(curPassword) );
         managerRepository.save(manager);
 
@@ -183,7 +182,11 @@ public class ManagerService  {
      * 회사에 속한 매니저 리스트 조회.
      */
     public List<Manager> searchManagerList(Long companyId){
-        Company company = companyService.searchCompany(companyId);
+        // 예외처리.
+        Company company = entityExceptionService.findEntityById(
+                () -> companyRepository.findById(companyId),
+                "회사 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+
         List<Manager> managerList = new ArrayList<>();
         for(Manager manager : managerRepository.findAllByCompany(company)){
             managerList.add(Manager.builder()
@@ -207,10 +210,19 @@ public class ManagerService  {
      */
     public ManagerInfoDto searchManagerInfo(){
         CustomUserDetail customUserDetail = commonService.getCustomUserDetailBySecurityContextHolder();
-        Manager manager = searchManagerByEmail(customUserDetail.getUsername());
-        Department department = departmentRepository.findById(manager.getDepartment().getDepartmentId()).orElseThrow(
-                () -> new IllegalStateException("부서가 존재하지 않습니다."));
-        Company company = companyService.searchCompany(manager.getCompany().getCompanyId());
+
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findByManagerEmail(customUserDetail.getManagerName()),
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+
+        Department department = entityExceptionService.findEntityById(
+                () -> departmentRepository.findById(manager.getDepartment().getDepartmentId()),
+                "부서 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+
+
+        Company company = entityExceptionService.findEntityById(
+                () -> companyRepository.findById(manager.getCompany().getCompanyId()),
+                "회사 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
         return createManagerInfo(manager, department, company);
     }
 
@@ -218,10 +230,17 @@ public class ManagerService  {
      * 매니저 id를 통한 마이페이지 정보 조회.
      */
     public ManagerInfoDto searchManagerInfo(Long managerId){
-        Manager manager = searchManagerById(managerId);
-        Department department = departmentRepository.findById(manager.getDepartment().getDepartmentId()).orElseThrow(
-                () -> new IllegalStateException("부서가 존재하지 않습니다."));
-        Company company = companyService.searchCompany(manager.getCompany().getCompanyId());
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findById(managerId),
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+        
+        Department department = entityExceptionService.findEntityById(
+                () -> departmentRepository.findById(manager.getDepartment().getDepartmentId()),
+                "부서 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+        
+        Company company = entityExceptionService.findEntityById(
+                () -> companyRepository.findById(manager.getCompany().getCompanyId()),
+                "회사 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
         return createManagerInfo(manager, department, company);
     }
 
@@ -251,8 +270,12 @@ public class ManagerService  {
      */
     @Transactional
     public Long updateManagerInfo(ManagerInfoForm managerInfoForm){
-        Manager manager = searchManagerById(managerInfoForm.getManagerId());
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findById(managerInfoForm.getManagerId()),
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+
         manager.updateManagerInfo(managerInfoForm);
+
         return managerRepository.save(manager).getManagerId();
     }
 
@@ -261,6 +284,10 @@ public class ManagerService  {
      */
     @Transactional
     public void deleteManager(Long managerId){
+         entityExceptionService.validateEntityExists(
+                () -> managerRepository.findById(managerId),
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+
         managerRepository.delete(searchManagerById(managerId));
     }
 
