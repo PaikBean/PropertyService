@@ -31,6 +31,7 @@ public class ScheduleService {
     private final ClientRepository clientRepository;
     private final CommonService commonService;
     private final ManagerRepository managerRepository;
+    private final EntityExceptionService entityExceptionService;
 
     public Schedule searchScheduleByScheduleId(Long scheduleId){
         return scheduleRepository.findById(scheduleId).orElseThrow(
@@ -46,11 +47,16 @@ public class ScheduleService {
     @Transactional
     public void createSchedule(ScheduleForm scheduleForm) {
         scheduleRepository.save(Schedule.builder()
-                .managerId(managerRepository.findById(scheduleForm.getManagerId()).orElseThrow(
-                        () -> new EntityNotFoundException("매니저를 찾을 수 없습니다.")).getManagerId()
+                .managerId(
+                        entityExceptionService.findEntityById(
+                                () -> managerRepository.findByManagerId(scheduleForm.getManagerId()),
+                                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
                 )
-                .clientId(clientRepository.findById(scheduleForm.getClientId()).orElseThrow(
-                        () -> new EntityNotFoundException("고객을 찾을 수 없습니다.")).getClientId())
+                .clientId(
+                        entityExceptionService.findEntityById(
+                                () -> clientRepository.findById(scheduleForm.getClientId()),
+                                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getClientId()
+                )
                 .scheduleDate(
                         LocalDate.parse(scheduleForm.getScheduleDate(),
                                 DateTimeFormatter.ofPattern("yyyyMMdd")
@@ -63,8 +69,9 @@ public class ScheduleService {
 
     @Transactional
     public void updateSchedule(ScheduleForm scheduleForm) {
-        scheduleRepository.findById(scheduleForm.getScheduleId()).orElseThrow(
-                        () -> new EntityNotFoundException("등록되지 않은 일정입니다."))
+        entityExceptionService.findEntityById(
+                        () -> scheduleRepository.findById(scheduleForm.getScheduleId()),
+                        "일정 정보가 존재하지 않습니다. 관리자에게 문의하세요.")
                 .updateSchedule(
                         scheduleForm.getManagerId(),
                         scheduleForm.getClientId(),
@@ -80,13 +87,16 @@ public class ScheduleService {
 
     @Transactional
     public void deleteSchedule(Long scheduleId) {
-        Schedule schedule = searchScheduleByScheduleId(scheduleId);
-        scheduleRepository.delete(schedule);
+        scheduleRepository.delete(entityExceptionService.findEntityById(
+                () -> scheduleRepository.findById(scheduleId),
+                "일정 정보가 존재하지 않습니다. 관리자에게 문의하세요.")
+        );
     }
 
     public ScheduleDto searchSchedule(Long scheduleId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 일정입니다."));
+        Schedule schedule = entityExceptionService.findEntityById(
+                    () -> scheduleRepository.findById(scheduleId),
+                "일정 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
 
         Optional<Client> client = clientRepository.findById(schedule.getClientId());
 
@@ -106,6 +116,7 @@ public class ScheduleService {
 
     public List<ScheduleSummaryDto> searchScheduleList(ScheduleCondition scheduleCondition) {
         Long companyId = commonService.getCustomUserDetailBySecurityContextHolder().getCompany().getCompanyId();
+        
         if(companyId == null)
             throw new IllegalArgumentException("등록 회사를 찾을 수 없습니다.");
         scheduleCondition.setCompanyId(companyId);
@@ -113,6 +124,9 @@ public class ScheduleService {
     }
 
     public List<ScheduleSummaryDto> searchScheduleList(Long clientId) {
+        entityExceptionService.validateEntityExists(
+                () -> clientRepository.findById(clientId),
+                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
         return scheduleRepository.searchScheduleList(clientId);
     }
 
@@ -120,6 +134,9 @@ public class ScheduleService {
      * 고객 정보 단건 조회 - 고객 상세 ( 일정표)
      */
     public List<ScheduleSummaryDto> searchScheduleListByClientId(Long clientId) {
+        entityExceptionService.validateEntityExists(
+                () -> clientRepository.findById(clientId),
+                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
         return scheduleRepository.searchScheduleListByClientId(clientId);
     }
 }
