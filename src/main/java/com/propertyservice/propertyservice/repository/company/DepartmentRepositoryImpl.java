@@ -92,7 +92,7 @@ public class DepartmentRepositoryImpl implements DepartmentRepositoryCustom {
                         revenueLedger.commission.sum()
                 )
                 .from(manager)
-                .innerJoin(revenueLedger).on(manager.eq(revenueLedger.managerId))
+                .innerJoin(revenueLedger).on(manager.eq(revenueLedger.manager))
                 .where(manager.department.departmentId.eq(departmentTotalRevenueCondition.getDepartmentId())
                         .and(
                                 formattedDate.between(departmentTotalRevenueCondition.getStartDate(), departmentTotalRevenueCondition.getEndDate())

@@ -36,7 +36,7 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 .select(
                         new QRevenueDto(
                                 revenueLedger.id,
-                                revenueLedger.managerId.managerName,
+                                revenueLedger.manager.managerName,
                                 revenueLedger.ownerName,
                                 revenueLedger.clientName,
                                 Expressions.stringTemplate(
@@ -77,7 +77,7 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 )
                 .from(revenueLedger)
                 .join(manager).on(
-                        revenueLedger.managerId.eq(manager)
+                        revenueLedger.manager.eq(manager)
                 )
                 .join(addressLevel1).on(
                         revenueLedger.addressLevel1Id.eq(addressLevel1.addressLevel1Id)
@@ -86,7 +86,7 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                         revenueLedger.addressLevel2Id.eq(addressLevel2.addressLevel2Id)
                 )
                 .where(
-                        revenueLedger.companyId.companyId.eq(revenueCondition.getCompanyId()),
+                        revenueLedger.company.companyId.eq(revenueCondition.getCompanyId()),
                         managerIdEq(revenueCondition.getManagerId()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),
@@ -105,7 +105,7 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 )
                 .from(revenueLedger)
                 .join(manager).on(
-                        revenueLedger.managerId.eq(manager)
+                        revenueLedger.manager.eq(manager)
                 )
                 .join(addressLevel1).on(
                         revenueLedger.addressLevel1Id.eq(addressLevel1.addressLevel1Id)
@@ -114,7 +114,7 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                         revenueLedger.addressLevel2Id.eq(addressLevel2.addressLevel2Id)
                 )
                 .where(
-                        revenueLedger.companyId.companyId.eq(revenueCondition.getCompanyId()),
+                        revenueLedger.company.companyId.eq(revenueCondition.getCompanyId()),
                         managerIdEq(revenueCondition.getManagerId()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),
@@ -131,7 +131,7 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 .select(revenueLedger.count())
                 .from(revenueLedger)
                 .join(manager).on(
-                        revenueLedger.managerId.eq(manager)
+                        revenueLedger.manager.eq(manager)
                 )
                 .join(addressLevel1).on(
                         revenueLedger.addressLevel1Id.eq(addressLevel1.addressLevel1Id)
@@ -140,7 +140,7 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                         revenueLedger.addressLevel2Id.eq(addressLevel2.addressLevel2Id)
                 )
                 .where(
-                        revenueLedger.companyId.companyId.eq(revenueCondition.getCompanyId()),
+                        revenueLedger.company.companyId.eq(revenueCondition.getCompanyId()),
                         managerIdEq(revenueCondition.getManagerId()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),

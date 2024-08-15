@@ -18,9 +18,9 @@ public class Company extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "company_id")
     private Long companyId;             // 사업체 Id
+    private String companyName;         // 사업체 이름
     @Column(nullable = false)
     private String companyCode;         // 사업체 코드
-    private String companyName;         // 사업체 이름
     @Column(nullable = false)
     private String bizNumber;           // 사업체 사업자 등록번호
     private String presidentName;       // 대표자명
@@ -28,7 +28,7 @@ public class Company extends BaseTimeEntity {
     private String companyEmail;        // 사업체 이메일
     private String companyNumber;       // 사업체 전화번호
     private LocalDateTime serviceStartDate;         // 서비스 시작일
-    private LocalDateTime serviceEndDate;           // 서비스 시작일
+    private LocalDateTime serviceEndDate;           // 서비스 종료일
 
     @Builder
     public Company(Long companyId, String companyCode, String companyName, String bizNumber, String presidentName, String companyEmail, String companyNumber, LocalDateTime serviceStartDate, LocalDateTime serviceEndDate) {

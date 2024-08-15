@@ -25,10 +25,10 @@ public class RevenueLedger extends BaseTimeEntity {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
-    private Manager managerId;
+    private Manager manager;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
-    private Company companyId;
+    private Company company;
     private String companyCode;
     private String departmentCode;
     private String ownerName;
@@ -38,6 +38,7 @@ public class RevenueLedger extends BaseTimeEntity {
     @Column(name = "address_level2_id")
     private Long addressLevel2Id;
     private String addressLevel3;
+
     private LocalDateTime contractStartDate;
     private LocalDateTime contractEndDate;
 
@@ -51,10 +52,10 @@ public class RevenueLedger extends BaseTimeEntity {
     private String remark;
 
     @Builder
-    public RevenueLedger(Long id, Manager managerId, Company companyId, String companyCode, String departmentCode, String ownerName, String clientName, Long addressLevel1Id, Long addressLevel2Id, String addressLevel3, LocalDateTime contractStartDate, LocalDateTime contractEndDate, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal commission, String remark) {
+    public RevenueLedger(Long id, Manager manager, Company company, String companyCode, String departmentCode, String ownerName, String clientName, Long addressLevel1Id, Long addressLevel2Id, String addressLevel3, LocalDateTime contractStartDate, LocalDateTime contractEndDate, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal commission, String remark) {
         this.id = id;
-        this.managerId = managerId;
-        this.companyId = companyId;
+        this.manager = manager;
+        this.company = company;
         this.companyCode = companyCode;
         this.departmentCode = departmentCode;
         this.ownerName = ownerName;

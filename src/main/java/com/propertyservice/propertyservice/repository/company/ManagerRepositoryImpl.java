@@ -69,11 +69,11 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                         )
                 )
                 .from(manager)
-                .leftJoin(revenueLedger).on(manager.eq(revenueLedger.managerId))
+                .leftJoin(revenueLedger).on(manager.eq(revenueLedger.manager))
                 .where(manager.department.departmentId.eq(departmentId)
                         .and(formattedDate.eq(currentDate))
                 )
-                .groupBy(revenueLedger.managerId)
+                .groupBy(revenueLedger.manager)
                 .fetch();
     }
 
@@ -89,7 +89,7 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                         revenueLedger.commission.sum()
                 )
                 .from(manager)
-                .innerJoin(revenueLedger).on(manager.eq(revenueLedger.managerId))
+                .innerJoin(revenueLedger).on(manager.eq(revenueLedger.manager))
                 .groupBy(manager.managerId)
                 .having(manager.managerId.eq(managerId))
                 .fetchOne();
@@ -107,7 +107,7 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                         revenueLedger.commission.sum()
                 )
                 .from(manager)
-                .innerJoin(revenueLedger).on(manager.eq(revenueLedger.managerId))
+                .innerJoin(revenueLedger).on(manager.eq(revenueLedger.manager))
                 .where(formattedDate.eq(currentDate))
                 .groupBy(manager.managerId, formattedDate)
                 .having(manager.managerId.eq(managerId))
