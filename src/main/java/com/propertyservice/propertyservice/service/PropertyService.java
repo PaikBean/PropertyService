@@ -8,6 +8,7 @@ import com.propertyservice.propertyservice.dto.property.*;
 import com.propertyservice.propertyservice.repository.building.BuildingRepository;
 import com.propertyservice.propertyservice.repository.client.ClientRepository;
 import com.propertyservice.propertyservice.repository.client.ShowingPropertyRepository;
+import com.propertyservice.propertyservice.repository.company.ManagerRepository;
 import com.propertyservice.propertyservice.repository.property.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +29,13 @@ public class PropertyService {
     private final BuildingRepository buildingRepository;
     private final PropertyRepository propertyRepository;
     private final MaintenanceItemRepository maintenanceItemRepository;
-    private final PropertyRemarkRepository propertyRemarkRepository;
     private final PropertyImageRepository propertyImageRepository;
     private final ShowingPropertyRepository showingPropertyRepository;
     private final ClientRepository clientRepository;
-    private final ManagerService managerService;
+    private final ManagerRepository managerRepository;
+
     private final CommonService commonService;
+    private final EntityExceptionService entityExceptionService;
 
     /**
      * 보여줄 매물 추가.
@@ -42,16 +44,23 @@ public class PropertyService {
         Manager manager = commonService.getCustomUserDetailBySecurityContextHolder().getManager();
 
         return showingPropertyRepository.save(ShowingProperty.builder()
-                .clientId(clientRepository.findById(showingPropertyForm.getClientId()).orElseThrow(
-                                () -> new EntityNotFoundException("고객 정보를 찾을수 없습니다.")
-                        ).getClientId()
+                .clientId(
+                        entityExceptionService.findEntityById(
+                        () -> clientRepository.findById(showingPropertyForm.getClientId()),
+                        "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getClientId()
                 )
-                .propertyId(propertyRepository.findById(showingPropertyForm.getClientId()).orElseThrow(
-                                () -> new EntityNotFoundException("매물 정보를 찾을 수 없습니다.")
-                        ).getPropertyId()
+                .propertyId(entityExceptionService.findEntityById(
+                        () -> propertyRepository.findById(showingPropertyForm.getPropertyId()),
+                        "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getPropertyId()
                 )
-                .registrationManagerId(managerService.searchManagerIdById(manager.getManagerId()))
-                .modifiedManagerId(managerService.searchManagerIdById(manager.getManagerId()))
+                .registrationManagerId(entityExceptionService.findEntityById(
+                        () -> managerRepository.findById(manager.getManagerId()),
+                        "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                )
+                .modifiedManagerId(entityExceptionService.findEntityById(
+                        () -> managerRepository.findById(manager.getManagerId()),
+                        "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                )
                 .build()).getClientId();
     }
 
@@ -59,17 +68,20 @@ public class PropertyService {
      * 보여줄 매물 삭제.
      */
     public void deleteShowingProperty(Long showingPropertyId){
-        ShowingProperty showingProperty = showingPropertyRepository.findById(showingPropertyId).orElseThrow(
-                () -> new EntityNotFoundException("보여줄 매물 정보를 찾을 수 없습니다.")
+        ShowingProperty showingProperty = entityExceptionService.findEntityById(
+                () -> showingPropertyRepository.findById(showingPropertyId),
+                "보여줄 매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
         );
         showingPropertyRepository.delete(showingProperty);
     }
 
     @Transactional
     public void createProperty(PropertyForm propertyForm) {
-        Building building = buildingRepository.findById(propertyForm.getBuildingId()).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 빌딩입니다.")
+        Building building = entityExceptionService.findEntityById(
+                () -> buildingRepository.findById(propertyForm.getBuildingId()),
+                "건물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
         );
+
         validPropertyDuplicate(building, propertyForm.getUnitNumber());
 
        propertyRepository.save(
@@ -119,8 +131,9 @@ public class PropertyService {
     }
 
     public PropertyDto searchProperty(Long propertyId) {
-        Property property = propertyRepository.findById(propertyId).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 매물입니다.")
+        Property property = entityExceptionService.findEntityById(
+                () -> propertyRepository.findById(propertyId),
+                "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
         );
 
 //        List<PropertyRemarkDto> propertyRemarkDtoList = new ArrayList<>();
@@ -138,7 +151,10 @@ public class PropertyService {
                 .propertyId(property.getPropertyId())
                 .unitNumber(property.getUnitNumber())
                 .picManagerId(property.getPicManagerId())
-                .picManagerName(managerService.searchManagerById(property.getPicManagerId()).getManagerName())   // Todo 추후 manager 엔티티 주가되면 가져오기
+                .picManagerName(
+                        entityExceptionService.findEntityById(
+                                () -> managerRepository.findById(property.getPropertyId()),
+                                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerName())
                 .propertyType(property.getPropertyType())
                 .transactionType(property.getTransactionType())
                 .deposit(property.getDeposit())
@@ -162,8 +178,10 @@ public class PropertyService {
 
     @Transactional
     public void updateProperty(PropertyForm propertyForm) {
-        Property property = propertyRepository.findById(propertyForm.getPropertyId()).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 매물입니다."));
+        Property property = entityExceptionService.findEntityById(
+                () -> propertyRepository.findById(propertyForm.getPropertyId()),
+                "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
+        );
 
         //관리비 업데이트.
         MaintenanceItem maintenanceItem = property.getMaintenanceItem();
@@ -176,8 +194,9 @@ public class PropertyService {
         );
 
         property.updateProperty(
-                buildingRepository.findById(propertyForm.getBuildingId()).orElseThrow(
-                        () -> new EntityNotFoundException("등록되지 않은 빌딩입니다.")
+                entityExceptionService.findEntityById(
+                        () -> buildingRepository.findById(property.getPropertyId()),
+                        "건물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
                 ),
                 propertyForm.getUnitNumber(),
                 propertyForm.getPicManagerId(),
@@ -199,9 +218,13 @@ public class PropertyService {
 
     @Transactional
     public void deleteProperty(Long propertyId) {
-        Property property = propertyRepository.findById(propertyId).orElseThrow(
-                () -> new EntityNotFoundException("등록되지 않은 매물입니다."));
+        Property property = entityExceptionService.findEntityById(
+                () -> propertyRepository.findById(propertyId),
+                "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
+        );
+
         maintenanceItemRepository.delete(property.getMaintenanceItem());
+
         //propertyRemarkRepository.deleteAllByProperty(property);
         propertyImageRepository.deleteAllByProperty(property);
         propertyRepository.delete(property);
