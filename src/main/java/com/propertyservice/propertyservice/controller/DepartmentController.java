@@ -62,7 +62,7 @@ public class DepartmentController {
     @GetMapping("/v1/department-info/{departmentId}")
     public Response searchDepartmentInfo(@PathVariable(name = "departmentId")Long departmentId){
         try {
-            return new Response(ResponseCode.SUCCESS, departmentService.searchDepartmentByDepartmentId(departmentId), "200");
+            return new Response(ResponseCode.SUCCESS, departmentService.searchDepartmentInfo(departmentId), "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
