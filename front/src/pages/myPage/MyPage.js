@@ -18,7 +18,7 @@ import {
   DialogTitle,
   Divider,
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const MyPage = () => {
   const initialData = {
@@ -41,12 +41,17 @@ const MyPage = () => {
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
+  useEffect(() => {
+   alert("초기 정보 로딩") 
+  }, [managerInfo.managerId])
+
   const handleInputChange = (field, value) => {
     setManagerInfo((prev) => ({
       ...prev,
       [field]: value,
     }))
   }
+
 
   const handleSave = () => {}
 
