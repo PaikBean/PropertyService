@@ -1,9 +1,11 @@
 package com.propertyservice.propertyservice.service;
 
+import com.propertyservice.propertyservice.domain.common.TransactionType;
 import com.propertyservice.propertyservice.domain.manager.Manager;
 import com.propertyservice.propertyservice.domain.revenue.RevenueLedger;
 import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.revenue.RevenueCondition;
+import com.propertyservice.propertyservice.dto.revenue.RevenueDto;
 import com.propertyservice.propertyservice.dto.revenue.RevenueForm;
 import com.propertyservice.propertyservice.dto.revenue.RevenueTotalDto;
 import com.propertyservice.propertyservice.repository.company.ManagerRepository;
@@ -15,8 +17,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -66,14 +70,45 @@ public class RevenueService {
         if(companyId == null)
             throw new IllegalArgumentException("등록 회사를 찾을 수 없습니다.");
 
-        // log.info(revenueCondition.toString());
         revenueCondition.setCompanyId(companyId);
 
         return RevenueTotalDto.builder()
                 .totalCount(revenueRepository.totalCount(revenueCondition))
                 .totalCommission(revenueRepository.totalCommission(revenueCondition))
-                .revenueDtoList(revenueRepository.searchRevenueList(revenueCondition))
+                .revenueDtoList(convertPricesToKorean(revenueRepository.searchRevenueList(revenueCondition)))
                 .build();
+    }
+
+    private List<RevenueDto> convertPricesToKorean(List<RevenueDto> revenueDtoList) {
+        for (RevenueDto revenueDto : revenueDtoList) {
+            if(revenueDto.getTransactionType().equals(TransactionType.MONTHLY.getLabel()) || revenueDto.getTransactionType().equals(TransactionType.SHORTERM.getLabel())){
+                String[] sp = revenueDto.getPrice().split("/");
+                revenueDto.setPrice(formatKoreanCurrency(new BigDecimal(sp[0])) + " / " + formatKoreanCurrency(new BigDecimal(sp[1])));
+            } else{
+                revenueDto.setPrice(formatKoreanCurrency(new BigDecimal(revenueDto.getPrice())));
+            }
+            revenueDto.setCommission(formatKoreanCurrency(new BigDecimal(revenueDto.getCommission())));
+        }
+        return revenueDtoList;
+    }
+
+    private String formatKoreanCurrency(BigDecimal priceValue) {
+        String[] units = {"", "만", "억", "조", "경"};
+        StringBuilder result = new StringBuilder();
+        BigDecimal unit = BigDecimal.valueOf(10000);
+        int unitIndex = 0;
+
+        while (priceValue.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal[] divisionResult = priceValue.divideAndRemainder(unit);
+            if (divisionResult[1].compareTo(BigDecimal.ZERO) > 0) {
+                String value = divisionResult[1].stripTrailingZeros().toPlainString();
+                result.insert(0, value + units[unitIndex] + " ");
+            }
+            priceValue = divisionResult[0];
+            unitIndex++;
+        }
+
+        return result.toString().trim() + "원";
     }
 
     @Transactional

@@ -8,19 +8,22 @@ import com.propertyservice.propertyservice.domain.revenue.QRevenueLedger;
 import com.propertyservice.propertyservice.dto.revenue.QRevenueDto;
 import com.propertyservice.propertyservice.dto.revenue.RevenueCondition;
 import com.propertyservice.propertyservice.dto.revenue.RevenueDto;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 import static org.springframework.util.StringUtils.hasText;
 
+@Slf4j
 @RequiredArgsConstructor
 public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
     private final JPAQueryFactory queryFactory;
@@ -67,11 +70,14 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                                 new CaseBuilder()
                                         .when(revenueLedger.transactionType.eq(TransactionType.MONTHLY).or(revenueLedger.transactionType.eq(TransactionType.SHORTERM)))
                                         .then(Expressions.stringTemplate("CONCAT({0}, '/', {1})", revenueLedger.deposit, revenueLedger.monthlyFee))
-                                        .when(revenueLedger.transactionType.eq(TransactionType.JEONSE).or(revenueLedger.transactionType.eq(TransactionType.TRADE)))
+                                        .when(revenueLedger.transactionType.eq(TransactionType.JEONSE))
                                         .then(revenueLedger.jeonseFee.stringValue())
+                                        .when(revenueLedger.transactionType.eq(TransactionType.TRADE))
+                                        .then(revenueLedger.tradeFee.stringValue())
+//                                        .then(convertKoreanCurrency(revenueLedger.tradeFee))
                                         .otherwise("")
                                         .as("price"),
-                                revenueLedger.commission,
+                                revenueLedger.commission.stringValue(),
                                 revenueLedger.remark
                         )
                 )
