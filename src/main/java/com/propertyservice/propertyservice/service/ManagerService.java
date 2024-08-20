@@ -31,8 +31,6 @@ public class ManagerService  {
 
     private final PasswordEncoder passwordEncoder;
     private final ManagerRepository managerRepository;
-    private final AddressLevel1Repository addressLevel1Repository;
-    private final AddressLevel2Respository addressLevel2Respository;
     private final DepartmentRepository departmentRepository;
     private final CompanyRepository companyRepository;
 
@@ -89,20 +87,7 @@ public class ManagerService  {
                 .build()).getManagerId();
     }
 
-
-    private Long validAddressLevel1(Long addressLevel1Id) {
-        return entityExceptionService.findEntityById(
-                () -> addressLevel1Repository.findById(addressLevel1Id),
-                "주소가 정확하지 않습니다.").getAddressLevel1Id();
-    }
-
-    private Long validAddressLevel2(Long addressLevel2Id) {
-        return entityExceptionService.findEntityById(
-                () -> addressLevel2Respository.findById(addressLevel2Id),
-                "주소가 정확하지 않습니다.").getAddressLevel2Id();
-    }
-
-
+    @Transactional
     public String searchPassword(String managerEmail, String companyCode) {
         // 1. 회원 가져오기.
         Manager manager = entityExceptionService.findEntityById(
@@ -137,6 +122,7 @@ public class ManagerService  {
     /**
      * 비밀번호 재설정.
      */
+    @Transactional
     public String resetPassword(String prePassword, String curPassword){
         //1. 현재 로그인한 사용자 정보 가져옴.
         CustomUserDetail userDetails = commonService.getCustomUserDetailBySecurityContextHolder();
@@ -181,7 +167,12 @@ public class ManagerService  {
      * 부서별 매니저 리스트 조회.
      */
     public List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId){
-        return managerRepository.searchManagerInfoListByDepartmentId(departmentId);
+        return managerRepository.searchManagerInfoListByDepartmentId(
+                entityExceptionService.findEntityById(
+                        () -> departmentRepository.findById(departmentId),
+                        "부서가 존재하지 않습니다. 관리자에게 문의하세요."
+                ).getDepartmentId()
+        );
     }
 
     /**
@@ -285,6 +276,17 @@ public class ManagerService  {
 //
 //        //return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
 //        return new CustomUserDetail(manager);
+//    }
+//private Long validAddressLevel1(Long addressLevel1Id) {
+//        return entityExceptionService.findEntityById(
+//                () -> addressLevel1Repository.findById(addressLevel1Id),
+//                "주소가 정확하지 않습니다.").getAddressLevel1Id();
+//    }
+//
+//    private Long validAddressLevel2(Long addressLevel2Id) {
+//        return entityExceptionService.findEntityById(
+//                () -> addressLevel2Respository.findById(addressLevel2Id),
+//                "주소가 정확하지 않습니다.").getAddressLevel2Id();
 //    }
 
 
