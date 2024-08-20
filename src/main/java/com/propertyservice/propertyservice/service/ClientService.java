@@ -87,27 +87,27 @@ public class ClientService {
      */
     public Long createClientRemark(ClientRemarkForm clientRemarkForm){
         // remark가 null인지 확인하는 작업 필요.
-
-        return  clientRemarkRepository.save(ClientRemark.builder()
-                .clientId(
-                        entityExceptionService.findEntityById(
-                                () -> clientRepository.findById(clientRemarkForm.getClientId()),
-                                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
-                )
-                .remark(clientRemarkForm.getRemark())
-                .build()).getClientId();
+        if(clientRemarkForm.getRemark() != null){
+            return  clientRemarkRepository.save(ClientRemark.builder()
+                    .clientId(
+                            entityExceptionService.findEntityById(
+                                    () -> clientRepository.findById(clientRemarkForm.getClientId()),
+                                    "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                    )
+                    .remark(clientRemarkForm.getRemark())
+                    .build()).getClientId();
+        }
+        return null;
     }
 
     /**
      * 고객 특이사항 삭제
      */
+    @Transactional
     public void deleteClientRemark(Long clientRemarkId){
-        ClientRemark clientRemark =
-                entityExceptionService.findEntityById(
-                    () -> clientRemarkRepository.findById(clientRemarkId),
-                    "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요."
-        );
-        clientRemarkRepository.delete(clientRemark);
+        clientRemarkRepository.delete(entityExceptionService.findEntityById(
+                () -> clientRemarkRepository.findById(clientRemarkId),
+                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요."));
     }
     /**
      * 고객 정보 수정
@@ -146,6 +146,7 @@ public class ClientService {
         List<ShowingPropertySummaryDto> showingPropertySummaryList = clientRepository.searchShowingPropertyList(client.getClientId());
 
         // 고객 특이사항.
+
         List<ClientRemarkDto> clientRemarkList = clientRepository.searchClientRemark(client.getClientId());
 
         return ClientDetailDto.builder()
@@ -165,11 +166,10 @@ public class ClientService {
      */
     public List<ClientRemarkDto> searchClientRemarkList(Long clientId){
         // 예외처리.
-        Client client = entityExceptionService.findEntityById(
+        return clientRepository.searchClientRemark(entityExceptionService.findEntityById(
                 () -> clientRepository.findById(clientId),
                 "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요."
-        );
-        return clientRepository.searchClientRemark(clientId);
+        ).getClientId());
     }
 
 
