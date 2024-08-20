@@ -67,12 +67,13 @@ public class PropertyService {
     /**
      * 보여줄 매물 삭제.
      */
+    @Transactional
     public void deleteShowingProperty(Long showingPropertyId){
-        ShowingProperty showingProperty = entityExceptionService.findEntityById(
+        showingPropertyRepository.delete( entityExceptionService.findEntityById(
                 () -> showingPropertyRepository.findById(showingPropertyId),
                 "보여줄 매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
+            )
         );
-        showingPropertyRepository.delete(showingProperty);
     }
 
     @Transactional
