@@ -16,7 +16,6 @@ import com.propertyservice.propertyservice.repository.common.AddressLevel1Reposi
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
 import com.propertyservice.propertyservice.repository.property.PropertyRepository;
 import com.propertyservice.propertyservice.utils.SummaryPrice;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,6 +38,8 @@ public class BuildingService {
     private final AddressLevel2Respository addressLevel2Respository;
     private final PropertyRepository propertyRepository;
     private final EntityExceptionService entityExceptionService;
+
+    private final CommonService commonService;
 
     /**
      * 임대인 중복 확인( api 미지정 )
@@ -79,6 +80,14 @@ public class BuildingService {
      * 건물 목록 조회.
      */
     public List<BuildingDto> searchBuildingList(BuildingCondition buildingCondition) {
+        entityExceptionService.validateEntityExists(
+                () -> addressLevel1Repository.findById(buildingCondition.getAddressLevel1Id()),
+                "주소 입력이 잘못되었습니다."
+        );
+        entityExceptionService.validateEntityExists(
+                () -> addressLevel2Respository.findById(buildingCondition.getAddressLevel2Id()),
+                "주소 입력이 잘못되었습니다."
+        );
         return buildingRepository.searchBuildingList(buildingCondition);
     }
 
@@ -195,7 +204,7 @@ public class BuildingService {
                             .unitNumber(property.getUnitNumber())
                             .propertyType(property.getPropertyType())
                             .transactionType(property.getTransactionType())
-                            .price(getSummaryPrice(property))
+                            .price(commonService.getSummaryPrice(property))
                             .transactionState(property.getTransactionState())
                             .build()
             );
@@ -217,16 +226,6 @@ public class BuildingService {
     }
 
 
-    private String getSummaryPrice(Property property) {
-        if (property.getTransactionType() == TransactionType.MONTHLY || property.getTransactionType() == TransactionType.SHORTERM)
-            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getDeposit(), property.getMonthlyFee());
-        else if (property.getTransactionType() == TransactionType.JEONSE)
-            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getJeonseFee());
-        else if (property.getTransactionType() == TransactionType.TRADE)
-            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getTradeFee());
-        else
-            return null;
-    }
 
     /**
      * 건물 상세 정보 수정.
@@ -281,4 +280,17 @@ public class BuildingService {
         }
         return buildingRemarkDtoList;
     }
+
+
+    // 중복 코드 deprecated
+//    private String getSummaryPrice(Property property) {
+//        if (property.getTransactionType() == TransactionType.MONTHLY || property.getTransactionType() == TransactionType.SHORTERM)
+//            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getDeposit(), property.getMonthlyFee());
+//        else if (property.getTransactionType() == TransactionType.JEONSE)
+//            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getJeonseFee());
+//        else if (property.getTransactionType() == TransactionType.TRADE)
+//            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getTradeFee());
+//        else
+//            return null;
+//    }
 }

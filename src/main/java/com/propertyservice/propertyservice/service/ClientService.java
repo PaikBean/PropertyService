@@ -33,13 +33,12 @@ public class ClientService {
     private final ClientRemarkRepository clientRemarkRepository;
     private final ShowingPropertyRepository showingPropertyRepository;
     private final PropertyRepository propertyRepository;
-    private final ScheduleService scheduleService;
-//    private final ManagerService managerService;
-//    private final CompanyService companyService;
-    private final EntityExceptionService entityExceptionService;
     private final ManagerRepository managerRepository;
     private final CompanyRepository companyRepository;
 
+    private final EntityExceptionService entityExceptionService;
+    private final ScheduleService scheduleService;
+    private final CommonService commonService;
 
     /**
      * 유입 경로 목록 조회.
@@ -60,81 +59,9 @@ public class ClientService {
                     () -> propertyRepository.findById(showingPropertyCandidateDto.getPropertyId()),
                     "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
             );
-            showingPropertyCandidateDto.setPrice(getClientSummaryPrice(property));
+            showingPropertyCandidateDto.setPrice(commonService.getSummaryPrice(property));
         }
         return showingPropertyCandidateDtoList;
-    }
-
-    /**
-     * 고객 가격 요약.
-     */
-    private String getClientSummaryPrice(Property property) {
-        if (property.getTransactionType() == TransactionType.MONTHLY || property.getTransactionType() == TransactionType.SHORTERM)
-            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getDeposit(), property.getMonthlyFee());
-        else if (property.getTransactionType() == TransactionType.JEONSE)
-            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getJeonseFee());
-        else if (property.getTransactionType() == TransactionType.TRADE)
-            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getTradeFee());
-        else
-            return null;
-    }
-
-
-    // 고객 등록.
-    public Long createClient(ClientForm clientForm){
-        Client client =   clientRepository.save(Client.builder()
-                .clientName(clientForm.getClientName())
-                .clientPhoneNumber(clientForm.getClientPhoneNumber())
-                .managerId(
-                        entityExceptionService.findEntityById(
-                                () -> managerRepository.findById(clientForm.getManagerId()),
-                                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
-                )
-                .inflowType(InflowType.valueOf(clientForm.getInflowType()))
-                .registrationManagerId(
-                        entityExceptionService.findEntityById(
-                                () -> managerRepository.findById(clientForm.getManagerId()),
-                                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
-                ) // 등록자 id는 담당자 id로 init
-                .modifiedManagerId(
-                        entityExceptionService.findEntityById(
-                                () -> managerRepository.findById(clientForm.getManagerId()),
-                        "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
-                ) // 수정자 id는 담당자 id로 init
-                .build());
-
-        // 특이사항이 있는 경우.
-        if(clientForm.getRemark() != null){
-            clientRemarkRepository.save(ClientRemark.builder()
-                    .clientId(client.getClientId())
-                    .remark(clientForm.getRemark())
-                    .build());
-        }
-
-        // 매물리스트가 있는 경우.
-        if(clientForm.getPropertyList()!= null) {
-            for (Long propertyId : clientForm.getPropertyList()) {
-                Property property = entityExceptionService.findEntityById(
-                        () -> propertyRepository.findById(propertyId),
-                        "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
-                );
-                showingPropertyRepository.save(ShowingProperty.builder()
-                        .clientId(client.getClientId())
-                        .propertyId(property.getPropertyId())
-                        .registrationManagerId(
-                                entityExceptionService.findEntityById(
-                                        () -> managerRepository.findById(clientForm.getManagerId()),
-                                        "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
-                        ) // 등록자 id는 담당자 id로 init
-                        .modifiedManagerId(
-                                entityExceptionService.findEntityById(
-                                        () -> managerRepository.findById(clientForm.getManagerId()),
-                                        "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
-                        ) // 수정자 id는 담당자 id로 init
-                        .build());
-            }
-        }
-        return client.getClientId();
     }
 
     /**
@@ -170,6 +97,7 @@ public class ClientService {
                 .remark(clientRemarkForm.getRemark())
                 .build()).getClientId();
     }
+
     /**
      * 고객 특이사항 삭제
      */
@@ -181,7 +109,6 @@ public class ClientService {
         );
         clientRemarkRepository.delete(clientRemark);
     }
-
     /**
      * 고객 정보 수정
      */
@@ -257,4 +184,77 @@ public class ClientService {
     }
 
 
+
+
+    // 고객 등록.
+    public Long createClient(ClientForm clientForm){
+        Client client =   clientRepository.save(Client.builder()
+                .clientName(clientForm.getClientName())
+                .clientPhoneNumber(clientForm.getClientPhoneNumber())
+                .managerId(
+                        entityExceptionService.findEntityById(
+                                () -> managerRepository.findById(clientForm.getManagerId()),
+                                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                )
+                .inflowType(InflowType.valueOf(clientForm.getInflowType()))
+                .registrationManagerId(
+                        entityExceptionService.findEntityById(
+                                () -> managerRepository.findById(clientForm.getManagerId()),
+                                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                ) // 등록자 id는 담당자 id로 init
+                .modifiedManagerId(
+                        entityExceptionService.findEntityById(
+                                () -> managerRepository.findById(clientForm.getManagerId()),
+                                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                ) // 수정자 id는 담당자 id로 init
+                .build());
+
+        // 특이사항이 있는 경우.
+        if(clientForm.getRemark() != null){
+            clientRemarkRepository.save(ClientRemark.builder()
+                    .clientId(client.getClientId())
+                    .remark(clientForm.getRemark())
+                    .build());
+        }
+
+        // 매물리스트가 있는 경우.
+        if(clientForm.getPropertyList()!= null) {
+            for (Long propertyId : clientForm.getPropertyList()) {
+                Property property = entityExceptionService.findEntityById(
+                        () -> propertyRepository.findById(propertyId),
+                        "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
+                );
+                showingPropertyRepository.save(ShowingProperty.builder()
+                        .clientId(client.getClientId())
+                        .propertyId(property.getPropertyId())
+                        .registrationManagerId(
+                                entityExceptionService.findEntityById(
+                                        () -> managerRepository.findById(clientForm.getManagerId()),
+                                        "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                        ) // 등록자 id는 담당자 id로 init
+                        .modifiedManagerId(
+                                entityExceptionService.findEntityById(
+                                        () -> managerRepository.findById(clientForm.getManagerId()),
+                                        "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                        ) // 수정자 id는 담당자 id로 init
+                        .build());
+            }
+        }
+        return client.getClientId();
+    }
+
+
+    /**
+     * 고객 가격 요약. ( 중복 코드 -> CommonService로 이동) deprecated
+     */
+//    private String getClientSummaryPrice(Property property) {
+//        if (property.getTransactionType() == TransactionType.MONTHLY || property.getTransactionType() == TransactionType.SHORTERM)
+//            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getDeposit(), property.getMonthlyFee());
+//        else if (property.getTransactionType() == TransactionType.JEONSE)
+//            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getJeonseFee());
+//        else if (property.getTransactionType() == TransactionType.TRADE)
+//            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getTradeFee());
+//        else
+//            return null;
+//    }
 }

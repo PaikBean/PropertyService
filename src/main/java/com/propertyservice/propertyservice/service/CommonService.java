@@ -5,10 +5,12 @@ import com.propertyservice.propertyservice.domain.common.AddressLevel2;
 import com.propertyservice.propertyservice.domain.common.Gender;
 import com.propertyservice.propertyservice.domain.common.TransactionType;
 import com.propertyservice.propertyservice.domain.manager.ManagerState;
+import com.propertyservice.propertyservice.domain.property.Property;
 import com.propertyservice.propertyservice.dto.common.*;
 import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
+import com.propertyservice.propertyservice.utils.SummaryPrice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -69,6 +71,16 @@ public class CommonService {
         return Arrays.stream(Gender.values())
                 .map(gender -> new GenderDto(gender.name(), gender.getLabel()))
                 .collect(Collectors.toList());
+    }
+    public String getSummaryPrice(Property property) {
+        if (property.getTransactionType() == TransactionType.MONTHLY || property.getTransactionType() == TransactionType.SHORTERM)
+            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getDeposit(), property.getMonthlyFee());
+        else if (property.getTransactionType() == TransactionType.JEONSE)
+            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getJeonseFee());
+        else if (property.getTransactionType() == TransactionType.TRADE)
+            return SummaryPrice.summaryPrice(property.getTransactionType().name(), property.getTradeFee());
+        else
+            return null;
     }
     public CustomUserDetail getCustomUserDetailBySecurityContextHolder(){
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
