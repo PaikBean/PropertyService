@@ -93,20 +93,14 @@ public class BuildingService {
 
     @Transactional
     public void createBuilding(BuildingOwnerForm buildingOwnerForm) {
-        Owner isOwnerExsit = entityExceptionService.findEntityById(
-                () -> ownerRepository.findByOwnerPhoneNumber(buildingOwnerForm.getOwnerPhoneNumber()),
-                "임대인 정보가 존재하지 않습니다. 관리자에게 문의하세요."
-        );
-
-        Owner owner = isOwnerExsit == null ?
-                ownerRepository.save(Owner.builder()
-                        .ownerName(buildingOwnerForm.getOwnerName())
-                        .ownerRelation(buildingOwnerForm.getOwnerRelation())
-                        .ownerPhoneNumber(buildingOwnerForm.getOwnerPhoneNumber())
-                        .build())
-                : isOwnerExsit;
-
         validBuildingDuplicate(buildingOwnerForm.getBuildingAddressLevel1(), buildingOwnerForm.getBuildingAddressLevel2(), buildingOwnerForm.getBuildingAddressLevel3());
+
+        Owner owner = ownerRepository.save(Owner.builder()
+                .ownerName(buildingOwnerForm.getOwnerName())
+                .ownerRelation(buildingOwnerForm.getOwnerRelation())
+                .ownerPhoneNumber(buildingOwnerForm.getOwnerPhoneNumber())
+                .build());
+
 
         BuildingAddress buildingAddress = buildingAddressRepository.save(BuildingAddress.builder()
                 .addressLevel1Id(validAddressLevel1(buildingOwnerForm.getBuildingAddressLevel1()))
