@@ -1,5 +1,4 @@
-import Gender from '@/components/autocomplete/Gender'
-import ManageSearchIcon from '@mui/icons-material/ManageSearch'
+import { useRouter } from 'next/navigation'
 import InputName2 from '@/components/textfield/InputName2'
 import InputPhoneNumber from '@/components/textfield/InputPhoneNumber'
 import InputSignUpEmail from '@/components/textfield/InputSignUpEmail'
@@ -19,8 +18,13 @@ import {
   Divider,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
+import { fetchSearchMyInfoInit } from './api/fetchSearchMyInfoInit'
+import { fetchUpdateMyInfo } from './api/fetchUpdateMyInfo'
+import { fetchSearchMyInfo } from './api/fetchSearchMyInfo'
+import { fetchDeleteAccount } from './api/fetchDeleteAccount'
 
 const MyPage = () => {
+  const router = useRouter()
   const initialData = {
     managerId: null,
     managerName: '',
@@ -30,10 +34,14 @@ const MyPage = () => {
     managerEmail: '',
     managerCompanyId: null,
     managerDepartmentId: null,
-    managerCompanyName: '',
-    managerDepartmentName: '',
+    companyName: '',
+    departmentName: '',
     managerPosition: '',
     managerRank: '',
+    managerPicClient: null,
+    managerPicProperty: null,
+    managerTotalRevenue: null,
+    managerTotalRevenueMonth: null,
   }
 
   const [mode, setMode] = useState(false)
@@ -42,8 +50,18 @@ const MyPage = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
   useEffect(() => {
-   alert("초기 정보 로딩") 
-  }, [managerInfo.managerId])
+    const fetchData = async () => {
+      try {
+        const response = await fetchSearchMyInfoInit();
+        console.log(response)
+        setManagerInfo(response.data); // 데이터를 상태로 설정
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchData();
+  }, []); 
 
   const handleInputChange = (field, value) => {
     setManagerInfo((prev) => ({
@@ -53,16 +71,40 @@ const MyPage = () => {
   }
 
 
-  const handleSave = () => {}
+  const handleSave = async() => {
+    if(mode) {
+      try{
+        const updateResponse = await fetchUpdateMyInfo(managerInfo)
+        const searchResponse = await fetchSearchMyInfo(updateResponse.data)
+        setManagerInfo(searchResponse.data)
+        setMode(!mode)
+      }
+      catch (error) {
+        alert(error)
+      }
+    } else{
+      alert("수정 모드에서 저장해주세요")
+    }
+  }
 
   const confirmDelete = () => {
     setIsDeleteDialogOpen(true)
   }
 
-  const handleDeleteAccount = () => {
-    // 실제 삭제 작업을 여기서 수행합니다.
-    alert('탈퇴됨')
+  const handleDeleteAccount = async () => {
     setIsDeleteDialogOpen(false)
+    try{
+      const response = await fetchDeleteAccount(managerInfo.managerId)
+      if(response.responseCode === 'SUCCESS') {
+        alert("탈퇴되었습니다.")
+        router.push('/')
+        localStorage.removeItem('token');
+      } else{
+        throw new Error(response.message || 'Error!')
+      }
+    } catch(error) {
+      alert(error)
+    }
   }
 
   return (
@@ -100,19 +142,20 @@ const MyPage = () => {
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <Gender
+                  <InputName2
+                      label="성명"
                       value={managerInfo.managerGender}
-                      onChange={(value) => {
-                        handleInputChange('managerGender', value)
+                      onChange={(e) => {
+                        handleInputChange('managerGender', e.target.value)
                       }}
-                      readOnly={!mode}
+                      name="managerGender"
+                      readOnly={false}
                       sx={{
                         '& .MuiInputBase-root': {
-                          backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
-                          cursor: !mode ? 'not-allowed' : '', // 커서 변경
+                          backgroundColor: '#f5f5f5', // 회색빛 배경 설정
+                          cursor: 'not-allowed', // 커서 변경
                         },
                       }}
-                      label="성별"
                     />
                   </Grid>
                 </Grid>
@@ -174,11 +217,11 @@ const MyPage = () => {
                   <Grid item xs={4}>
                     <InputName2
                       label="회사명"
-                      value={managerInfo.managerCompanyName}
+                      value={managerInfo.companyName}
                       onChange={(e) => {
-                        handleInputChange('managerCompanyName', e.target.value)
+                        handleInputChange('companyName', e.target.value)
                       }}
-                      name="managerCompanyName"
+                      name="companyName"
                       readOnly={false}
                       sx={{
                         '& .MuiInputBase-root': {
@@ -191,14 +234,14 @@ const MyPage = () => {
                   <Grid item xs={5}>
                     <InputName2
                       label="부서명"
-                      value={managerInfo.managerDepartmentName}
+                      value={managerInfo.departmentName}
                       onChange={(e) => {
                         handleInputChange(
-                          'managerDepartmentName',
+                          'departmentName',
                           e.target.value
                         )
                       }}
-                      name="managerDepartmentName"
+                      name="departmentName"
                       readOnly={false}
                       sx={{
                         '& .MuiInputBase-root': {
@@ -251,7 +294,7 @@ const MyPage = () => {
                     <Typography>담당 매물:</Typography>
                   </Grid>
                   <Grid item>
-                    <Typography> 개</Typography>
+                    <Typography>{managerInfo.managerPicProperty} 개</Typography>
                   </Grid>
                   <Grid item>
                     {/* <IconButton onClick={() => {}} size="large">
@@ -264,7 +307,7 @@ const MyPage = () => {
                     <Typography>담당 고객:</Typography>
                   </Grid>
                   <Grid item>
-                    <Typography> 명</Typography>
+                    <Typography>{managerInfo.managerPicClient} 명</Typography>
                   </Grid>
                   <Grid item>
                     {/* <IconButton onClick={() => {}} size="large">
@@ -277,7 +320,7 @@ const MyPage = () => {
                     <Typography>이번 달 누적 매출:</Typography>
                   </Grid>
                   <Grid item>
-                    <Typography> 원</Typography>
+                    <Typography>{managerInfo.managerTotalRevenueMonth} 원</Typography>
                   </Grid>
                 </Grid>
                 <Grid container alignItems="center" gap={2}>
@@ -285,7 +328,7 @@ const MyPage = () => {
                     <Typography>누적 개인 매출:</Typography>
                   </Grid>
                   <Grid item>
-                    <Typography> 원</Typography>
+                    <Typography>{managerInfo.managerTotalRevenue} 원</Typography>
                   </Grid>
                 </Grid>
               </Stack>

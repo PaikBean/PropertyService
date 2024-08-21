@@ -67,6 +67,7 @@ export default function Main() {
 
   const handleLogout = () => {
     router.push('/')
+    localStorage.removeItem('token');
   }
 
   const handleHome = () => {
