@@ -24,7 +24,7 @@ const DepartmentColumn = [
     headerClassName: 'revenu-header-css',
   },
   {
-    field: 'departmentPresident',
+    field: 'departmentPresidentName',
     headerName: '부서장',
     flex: 1,
     headerAlign: 'center',

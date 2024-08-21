@@ -14,7 +14,7 @@ import {
   DialogTitle,
   Divider,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import DepartmentColumn from './columns/DepartmentColumn'
 import InputName2 from '@/components/textfield/InputName2'
 import { LocalizationProvider } from '@mui/x-date-pickers'
@@ -26,6 +26,9 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import AddDepartmentModal from '@/components/modal/AddDepartmentModal'
 import HandleDepartmentMember from '@/components/modal/HandleDepartmentMemeber'
 import DeleteBtn from '@/components/button/DeleteBtn'
+import { fetchSearchDepartmentListInit } from './api/fetchSearchDepartmentListInit'
+import { fetchSearchDepartment } from './api/fetchSearchDepartment'
+import { fetchSearchDepartmentList } from './api/fetchSearchDepartmentList'
 
 const ManageCompanyPage = () => {
   const initDepartmentInfo = {
@@ -42,10 +45,12 @@ const ManageCompanyPage = () => {
 
   const [mode, setMode] = useState(false)
   const [searchDate, setSearchDate] = useState(initSearchDate)
+  const [companyId, setCompanyId] = useState(null)
 
   const [departmentId, setDepartmentId] = useState(null)
 
   const [departmentInfo, setDepartmentInfo] = useState(initDepartmentInfo)
+  const [departmentTotalRevenue, setDepartmentTotalRevenue] = useState(0)
 
   const [departmentRows, setDepartmentRows] = useState([])
   const [managerRows, setManagerRows] = useState([])
@@ -62,11 +67,55 @@ const ManageCompanyPage = () => {
 
   const handleSave = () => {}
 
-  const handleAddDepartment = () => {}
+  const handleAddDepartment = () => {
+  }
 
-  const handleSelectDepartmentRow = () => {}
+  const handleSelectDepartmentRow = async (selectedRowIds) => {
+    const selectedRowId = selectedRowIds[0]
+    
+    const selectedRow = departmentRows.find(row => row.departmentId === selectedRowId)
+    
+    if (selectedRow) {
+      try{
+        const response = await fetchSearchDepartment(selectedRow.departmentId)
+        console.log(response.data)
+        setDepartmentId(response.data.departmentId)
+        setDepartmentInfo(response.data)
+        setDepartmentTotalRevenue(response.data.departmentTotalRevenue)
+        setManagerRows(response.data.departmentManagerList)
+      } catch (error){
+        alert(error)
+      }
+    } else {
+      alert('부서가 선택되지 않았습니다.')
+    }
+  };
 
   const handleSearchInputChange = () => {}
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchSearchDepartmentListInit()
+        setCompanyId(response.data.companyId)
+        setDepartmentRows(response.data.departmentInfoDtoList)
+      } catch (error) {
+        alert(error);
+      }
+    };
+  
+    fetchData();
+  }, []); 
+
+  useEffect(()=>{
+    if(departmentRows.length !== 0){
+      const fetchData = async () => {
+        const response = await fetchSearchDepartmentList(companyId)
+        setDepartmentRows(response.data.departmentInfoDtoList)
+      }
+      fetchData() 
+    }
+  },[isAddDepartmentkModalOpen, companyId, departmentRows.length])
 
   const handleCloseModal = () => {
     isAddDepartmentkModalOpen ? setIsAddDepartmentModalOpen(false) : null
@@ -141,7 +190,7 @@ const ManageCompanyPage = () => {
                     onRowSelectionModelChange={handleSelectDepartmentRow}
                     pageSize={10}
                     rowHeight={48}
-                    getRowId={(row) => row.buildingId} // getRowId 속성 전달
+                    getRowId={(row) => row.departmentId} // getRowId 속성 전달
                   />
                 </Grid>
               </Stack>
@@ -254,7 +303,7 @@ const ManageCompanyPage = () => {
                             </Grid>
                           </LocalizationProvider>
                           <Grid item alignSelf="flex-end">
-                            <Typography fontSize={25}>0</Typography>
+                            <Typography fontSize={25}>{departmentTotalRevenue}</Typography>
                           </Grid>
                           <Grid item alignSelf="flex-end">
                             <Typography> 원</Typography>
@@ -298,7 +347,7 @@ const ManageCompanyPage = () => {
                     showAll={true}
                     pageSize={10}
                     rowHeight={48}
-                    getRowId={(row) => row.buildingId} // getRowId 속성 전달
+                    getRowId={(row) => row.managerId} // getRowId 속성 전달
                   />
                 </Grid>
               </Stack>
@@ -309,7 +358,8 @@ const ManageCompanyPage = () => {
       <AddDepartmentModal
         open={isAddDepartmentkModalOpen}
         handleClose={handleCloseModal}
-        data={{ departmentId: departmentId }}
+        companyId={companyId}
+        setIsAddDepartmentModalOpen={setIsAddDepartmentModalOpen}
       />
       <HandleDepartmentMember
         open={isHandleDepartmentMemberModalOpen}

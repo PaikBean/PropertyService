@@ -8,7 +8,7 @@ const ManagerColumns = [
     headerClassName: 'revenu-header-css',
   },
   {
-    field: 'managerPosistion',
+    field: 'managerPosition',
     headerName: '직무',
     flex: 1,
     headerAlign: 'center',
@@ -40,7 +40,7 @@ const ManagerColumns = [
     headerClassName: 'revenu-header-css',
   },
   {
-    field: 'managerRevenuePrice',
+    field: 'managerTotalRevenueMonth',
     headerName: '매출액',
     flex: 1,
     headerAlign: 'center',

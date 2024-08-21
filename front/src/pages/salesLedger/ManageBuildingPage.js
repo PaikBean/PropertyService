@@ -12,6 +12,7 @@ import InputADdressL3 from '@/components/textfield/InputAddressL3'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import BuildingRemarkColumns from './columns/BuildingRemarkColumns'
+import { fetchSEarchBuildingList } from './api/fetchSearchBuildingList'
 
 const ManageBuildingPage = () => {
   const initialSearchCondition = {
@@ -82,12 +83,15 @@ const ManageBuildingPage = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await fetchSearchBuildng(searchCondition)
-      if (response.responseCode === 'SUCCESS') {
-        setBuildingRows(response.data)
-      } else {
-        console.error('Failed to fetch building list:', response.message)
-      }
+      // const response = await fetchSearchBuildng(searchCondition)
+      // if (response.responseCode === 'SUCCESS') {
+      //   setBuildingRows(response.data)
+      // } else {
+      //   console.error('Failed to fetch building list:', response.message)
+      // }
+      console.log(searchCondition)
+      const response = await fetchSEarchBuildingList(searchCondition)
+      console.log(response)
     } catch (error) {
       console.error('Error fetching building list:', error)
     }
