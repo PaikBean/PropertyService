@@ -34,8 +34,9 @@ public class DepartmentService {
      * 부서 등록.
      */
     public Long createDepartment(DepartmentForm departmentForm){
+        CustomUserDetail customUserDetail = commonService.getCustomUserDetailBySecurityContextHolder();
         return departmentRepository.save(Department.builder()
-                .company(departmentForm.getCompany())
+                .company(customUserDetail.getCompany())
                 .departmentName(departmentForm.getDepartmentName())
                 .departmentCode(departmentForm.getDepartmentCode())
                 .departmentPresidentName(
