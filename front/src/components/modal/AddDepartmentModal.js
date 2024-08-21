@@ -8,13 +8,16 @@ const { Modal, Stack } = require('@mui/material')
 import ManagerAutocomplete from '../autocomplete/ManagerAutocomplete'
 import InputName2 from '../textfield/InputName2'
 import SaveToolbar from '../toolbar/SaveToolbar'
+import { fetchCreateDepartment } from '@/pages/manageCompany/api/fetchCreateDepartment'
 
 // Utils
 
-const AddDepartmentModal = ({ open, handleClose, data, onClick }) => {
+const AddDepartmentModal = ({ open, handleClose, companyId , setIsAddDepartmentModalOpen}) => {
   const initialData = {
+    companyId: companyId,
+    departmentCode: new Date(),
     departmentName: '',
-    departmentPresidentId: null,
+    managerId: null,
   }
 
   const [departmentData, setDepartmentData] = useState(initialData)
@@ -26,9 +29,21 @@ const AddDepartmentModal = ({ open, handleClose, data, onClick }) => {
     }))
   }
 
+  
   const handleSave = async () => {
-    console.log(data.departmentId)
     console.log(departmentData)
+    try{
+      const response = await fetchCreateDepartment(departmentData)
+      console.log(response)
+      if(response.responseCode === "SUCCESS"){
+        setIsAddDepartmentModalOpen(false)
+      } else{
+        throw new Error(response.message || 'Error!')
+      }
+    } catch(error){
+      alert(error)
+    }
+
     return
   }
 
@@ -61,9 +76,9 @@ const AddDepartmentModal = ({ open, handleClose, data, onClick }) => {
           }}
         />
         <ManagerAutocomplete
-          value={departmentData.departmentPresidentId} // Add this line
+          value={departmentData.managerId} // Add this line
           onChange={(value) => {
-            handleInputChange('departmentPresidentId', value)
+            handleInputChange('managerId', value)
           }}
           label="부서장"
         />
