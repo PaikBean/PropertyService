@@ -182,7 +182,7 @@ public class ManagerService  {
         CustomUserDetail customUserDetail = commonService.getCustomUserDetailBySecurityContextHolder();
 
         Manager manager = entityExceptionService.findEntityById(
-                () -> managerRepository.findByManagerEmail(customUserDetail.getManagerName()),
+                () -> managerRepository.findByManagerEmail(customUserDetail.getManager().getManagerEmail()),
                 "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
 
         Department department = entityExceptionService.findEntityById(
