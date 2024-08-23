@@ -12,6 +12,7 @@ import com.propertyservice.propertyservice.repository.common.AddressLevel1Reposi
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
 import com.propertyservice.propertyservice.repository.company.*;
 import io.jsonwebtoken.io.IOException;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +37,7 @@ public class ManagerService  {
 
     private final CommonService commonService;
     private final EntityExceptionService entityExceptionService;
+    private final EmailService emailService;
 
 
     /**
@@ -141,6 +143,24 @@ public class ManagerService  {
 
         return manager.getManagerPassword();
 
+    }
+
+    /**
+     * SMTP로 비밀번호 찾기.
+     */
+    public String resetPasswordBySMTP(String email) throws MessagingException {
+        // email : 로그인 이메일, 수신자
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findByManagerEmail(email),
+                "사용자 이메일이 존재하지 않거나 틀립니다. 다시 시도 해주세요."
+        );
+
+        manager.resetPassword("1234");
+        emailService.test("관리자이메일", manager.getManagerEmail(), "1234");
+
+        managerRepository.save(manager);
+
+        return manager.getManagerPassword();
     }
 
     /**
