@@ -22,17 +22,17 @@ const InflowType = ({ value, onChange, label = 'Inflow Type' }) => {
   }, [dispatch, status])
 
   const handleChange = (event, value) => {
-    onChange(value ? value.inflowTypeId : '')
+    onChange(value ? value.inflowTypeName : '')
   }
   return (
     <Autocomplete
       value={
         options
-          ? options.find((option) => option.inflowTypeId === value) || null
+          ? options.find((option) => option.inflowTypeName === value) || null
           : null
       }
       options={options || []}
-      getOptionLabel={(options) => options.inflowType || ''}
+      getOptionLabel={(options) => options.label || ''}
       onChange={handleChange}
       renderInput={(params) => <TextField {...params} label={label} />}
     />
