@@ -29,6 +29,8 @@ import DeleteBtn from '@/components/button/DeleteBtn'
 import { fetchSearchDepartmentListInit } from './api/fetchSearchDepartmentListInit'
 import { fetchSearchDepartment } from './api/fetchSearchDepartment'
 import { fetchSearchDepartmentList } from './api/fetchSearchDepartmentList'
+import { fetchDeleteDepartment } from './api/fetchDeleteDepartment'
+import { fetchSearchDepartmentTotalPrice } from './api/fetchSearchDepartmentTotalPrice'
 
 const ManageCompanyPage = () => {
   const initDepartmentInfo = {
@@ -71,18 +73,22 @@ const ManageCompanyPage = () => {
   }
 
   const handleSelectDepartmentRow = async (selectedRowIds) => {
+    if(selectedRowIds.length != 1)
+      return
     const selectedRowId = selectedRowIds[0]
     
     const selectedRow = departmentRows.find(row => row.departmentId === selectedRowId)
     
     if (selectedRow) {
       try{
+        setDepartmentInfo(initDepartmentInfo)
         const response = await fetchSearchDepartment(selectedRow.departmentId)
         console.log(response.data)
         setDepartmentId(response.data.departmentId)
         setDepartmentInfo(response.data)
         setDepartmentTotalRevenue(response.data.departmentTotalRevenue)
         setManagerRows(response.data.departmentManagerList)
+        setSearchDate(initSearchDate)
       } catch (error){
         alert(error)
       }
@@ -91,7 +97,12 @@ const ManageCompanyPage = () => {
     }
   };
 
-  const handleSearchInputChange = () => {}
+  const handleSearchInputChange = (field, value) => {
+    setSearchDate(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,7 +118,7 @@ const ManageCompanyPage = () => {
     fetchData();
   }, []); 
 
-  useEffect(()=>{
+  useEffect(() => {
     if(departmentRows.length !== 0){
       const fetchData = async () => {
         const response = await fetchSearchDepartmentList(companyId)
@@ -115,7 +126,26 @@ const ManageCompanyPage = () => {
       }
       fetchData() 
     }
-  },[isAddDepartmentkModalOpen, companyId, departmentRows.length])
+  }, [isAddDepartmentkModalOpen, companyId, departmentRows.length])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let startDate = searchDate.startDate === "Invalid Date" || searchDate.startDate === '' ? '19700101' : searchDate.startDate;
+        let endDate = searchDate.endDate === "Invalid Date" || searchDate.endDate === '' ? new Date().toISOString().slice(0, 10).replace(/-/g, '') : searchDate.endDate;
+        
+        console.log(startDate, endDate);
+        // const response = await fetchSearchDepartmentTotalPrice(departmentId, startDate, endDate);
+        // alert(response.data);
+      } catch (error) {
+        alert(error);
+      }
+    };
+  
+    if (departmentId) {
+      fetchData();
+    }
+  }, [departmentId, searchDate]);
 
   const handleCloseModal = () => {
     isAddDepartmentkModalOpen ? setIsAddDepartmentModalOpen(false) : null
@@ -128,10 +158,20 @@ const ManageCompanyPage = () => {
     setIsDeleteDialogOpen(true)
   }
 
-  const confirmDelete = () => {
-    // 실제 삭제 작업을 여기서 수행합니다.
-    alert('부서 삭제됨')
-    setIsDeleteDialogOpen(false)
+  const confirmDelete = async () => {
+    try{
+      console.log(departmentId)
+      const response = await fetchDeleteDepartment(departmentId)
+      if(response.responseCode === "SUCCESS"){
+        const response = await fetchSearchDepartmentList(companyId)
+        setDepartmentRows(response.data.departmentInfoDtoList)
+        setIsDeleteDialogOpen(false)
+      } else{
+        throw new Error(response.message | "Error!")
+      }
+    } catch(error) {
+      alert(error)
+    }
   }
 
   return (
@@ -282,10 +322,16 @@ const ManageCompanyPage = () => {
                                 label="시작일"
                                 value={dayjs(searchDate.startDate)}
                                 onChange={(value) => {
+                                  if (value === null || value === '') {
+                                    // value가 null이거나 빈 문자열인 경우에 대한 처리
+                                    console.log('Value is null or empty');
+                                    return;
+                                  } 
+                                  console.log(value === "InvalidValue")
                                   handleSearchInputChange(
                                     'startDate',
                                     value.format('YYYYMMDD')
-                                  )
+                                  );
                                 }}
                               />
                             </Grid>
@@ -294,6 +340,7 @@ const ManageCompanyPage = () => {
                                 label="종료일"
                                 value={dayjs(searchDate.endDate)}
                                 onChange={(value) => {
+                                  value === '' || null ? '' : 
                                   handleSearchInputChange(
                                     'endDate',
                                     value.format('YYYYMMDD')

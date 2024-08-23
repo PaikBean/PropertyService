@@ -1,29 +1,28 @@
-export const fetchSearchClients = async (data) => {
+import { fetchGet } from "@/utils/fetch/fetchWrapper"
+
+export const fetchSearchClients = async (clientName, clientPhoneNumber) => {
   try {
-    const url = new URL('/api/client/v1/client-list', window.location.origin)
-    const params = {
-      clientName: data.addressL2,
-      clientPhoneNumber: data.transactionTypeId,
+    // 파라미터 객체를 생성
+    const params = {};
+
+    // 조건에 따라 파라미터를 추가
+    if (clientName && clientName !== "undefined") {
+      params.clientName = clientName;
     }
 
-    Object.keys(params).forEach((key) => {
-      if (params[key] !== null && params[key] !== '') {
-        url.searchParams.append(key, params[key])
-      }
-    })
-
-    console.log(url.toString()) // URL을 로그로 출력하여 확인
-    const response = await fetch(url, {
-      method: 'GET',
-    })
-    if (!response.ok) {
-      // throw new Error('Network response was not ok')
-      throw new Error(response.statusText)
+    if (clientPhoneNumber && clientPhoneNumber !== "undefined") {
+      params.clientPhoneNumber = clientPhoneNumber;
     }
-    const result = await response.json()
-    return result
+
+    // fetchGet 요청을 파라미터와 함께 전송
+    const response = await fetchGet(`/api/client/v1/client-list`, {}, params);
+
+    if (response.responseCode === 'SUCCESS') {
+      return response;
+    } else {
+      throw new Error(response.message || 'Error!');
+    }
   } catch (error) {
-    console.error('Error saving revenue data:', error)
-    throw error
+    return new Error(error.message); // 에러 발생 시 null 반환
   }
 }
