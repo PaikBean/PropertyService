@@ -12,12 +12,16 @@ import com.propertyservice.propertyservice.domain.manager.QManager;
 import com.propertyservice.propertyservice.domain.property.QProperty;
 import com.propertyservice.propertyservice.domain.property.QShowingProperty;
 import com.propertyservice.propertyservice.dto.client.*;
+import com.propertyservice.propertyservice.utils.BooleanExpressionBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+
+import static org.springframework.util.StringUtils.hasText;
 
 @RequiredArgsConstructor
 public class ClientRepositoryImpl implements ClientRepositoryCustom {
@@ -47,7 +51,10 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                     )
                 .from(client).leftJoin(manager).on(client.managerId.eq(manager.managerId))
                 .where(
-                        client.clientName.eq(clientName).and(client.clientPhoneNumber.contains(clientPhoneNumber))
+                        BooleanExpressionBuilder.orBooleanBuilder(
+                                clientPhoneNumberLike(clientPhoneNumber),
+                                clientNameLike(clientName)
+                        )
                 )
                 .fetch();
 
@@ -119,5 +126,12 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                 .leftJoin(company).on(company.eq(manager.company))
                 .where(manager.company.companyId.eq(companyId))
                 .fetch();
+    }
+
+    private BooleanExpression clientPhoneNumberLike(String clientPhoneNumber) {
+        return hasText(clientPhoneNumber) ? client.clientPhoneNumber.like('%' + clientPhoneNumber + '%') : null;
+    }
+    private BooleanExpression clientNameLike(String clientName) {
+        return hasText(clientName) ? client.clientName.like('%' + clientName + '%') : null;
     }
 }
