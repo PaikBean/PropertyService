@@ -92,7 +92,7 @@ public class ClientService {
                     .clientId(
                             entityExceptionService.findEntityById(
                                     () -> clientRepository.findById(clientRemarkForm.getClientId()),
-                                    "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                                    "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getClientId()
                     )
                     .remark(clientRemarkForm.getRemark())
                     .build()).getClientId();
