@@ -10,7 +10,8 @@ import { Autocomplete, TextField } from '@mui/material'
 // Utils
 import { fetchInflowTypeList } from '@/store/slices/inflowTypeSlice'
 
-const InflowType = ({ value, onChange, label = 'Inflow Type' }) => {
+const InflowType = ({ value, onChange, label = 'Inflow Type',   sx,
+  readOnly = false, }) => {
   const dispatch = useDispatch()
   //   const { options, status, error } = useSelector((state) => state.inflowType)
   const { options, status, error } = useSelector((state) => state.inflowType)
@@ -34,7 +35,18 @@ const InflowType = ({ value, onChange, label = 'Inflow Type' }) => {
       options={options || []}
       getOptionLabel={(options) => options.label || ''}
       onChange={handleChange}
-      renderInput={(params) => <TextField {...params} label={label} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          InputProps={{
+            ...params.InputProps,
+            readOnly: readOnly,
+          }}
+        />
+      )}
+      disabled={readOnly}
+      sx={sx}
     />
   )
 }

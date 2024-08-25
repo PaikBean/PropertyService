@@ -16,7 +16,7 @@ const clientColumns = [
     headerClassName: 'revenu-header-css',
   },
   {
-    field: 'client',
+    field: 'clientName',
     headerName: '고객',
     flex: 1,
     headerAlign: 'center',

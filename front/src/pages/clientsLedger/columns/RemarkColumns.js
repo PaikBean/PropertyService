@@ -1,6 +1,6 @@
 const remarkColumns = [
   {
-    field: 'remarkId',
+    field: 'clientRemarkId',
     headerName: '특이사항Id',
     flex: 0,
     headerAlign: 'center',
@@ -18,7 +18,7 @@ const remarkColumns = [
   {
     field: 'remark',
     headerName: '특이사항',
-    flex: 1.5,
+    flex: 3,
     headerAlign: 'center',
     align: 'center',
     headerClassName: 'revenu-header-css',

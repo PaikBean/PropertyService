@@ -118,7 +118,7 @@ const RegistRevenuePage = () => {
           <Divider sx={{ width: '100%', borderColor: 'white' }}></Divider>
           <Grid container gap={5} sx={{ width: '70%' }}>
             <Grid item xs={2.5}>
-              <ManagerAutocomplete
+               <ManagerAutocomplete
                 value={registData.managerId} // Add this line
                 onChange={(value) => {
                   handleInputChange('managerId', value)

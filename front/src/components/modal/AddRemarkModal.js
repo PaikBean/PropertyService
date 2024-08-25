@@ -19,10 +19,10 @@ const AddRemarkModal = ({ open, handleClose, data }) => {
     remark: '',
   }
 
-  const [remarkData, setReamarkData] = useState(initialData)
+  const [remarkData, setRemarkData] = useState(initialData)
 
   const handleInputChange = (field, value) => {
-    setReamarkData((prev) => ({
+    setRemarkData((prev) => ({
       ...prev,
       [field]: value,
     }))
@@ -31,8 +31,13 @@ const AddRemarkModal = ({ open, handleClose, data }) => {
   const handleSave = async () => {
     console.log(remarkData)
     try {
-      const result = await fetchRegistClientRemark(remarkData)
-      setReamarkData(initialData)
+      const requestData = {
+        clientId: data.clientId,
+        remark: remarkData.remark
+      }
+      console.log(requestData)
+      const result = await fetchRegistClientRemark(requestData)
+      setRemarkData(initialData)
       handleClose()
     } catch (error) {
       alert(error.message)
