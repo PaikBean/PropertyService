@@ -132,7 +132,7 @@ public class ClientController {
      * @param clientForm
      * @return
      */
-    @PutMapping("/v1/client/")
+    @PutMapping("/v1/client")
     public Response updateClient(@RequestBody ClientForm clientForm){
         try{
             return new Response(ResponseCode.SUCCESS, clientService.updateClient(clientForm), "200");
