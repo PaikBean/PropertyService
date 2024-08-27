@@ -72,7 +72,7 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                                         addressLevel1.addressLevel1,
                                         addressLevel2.addressLevel2,
                                         buildingAddress.addressLevel3
-                                ).as("address"),
+                                ).coalesce("null").as("address"),
                                 new CaseBuilder()
                                         .when(property.transactionType.eq(TransactionType.MONTHLY).or(property.transactionType.eq(TransactionType.SHORTERM)))
                                         .then(Expressions.stringTemplate("CONCAT({0}, '/', {1})", property.deposit, property.monthlyFee))
