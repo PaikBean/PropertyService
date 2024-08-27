@@ -12,6 +12,7 @@ import com.propertyservice.propertyservice.domain.manager.QManager;
 import com.propertyservice.propertyservice.domain.property.QProperty;
 import com.propertyservice.propertyservice.domain.property.QShowingProperty;
 import com.propertyservice.propertyservice.dto.client.*;
+import com.propertyservice.propertyservice.service.CommonService;
 import com.propertyservice.propertyservice.utils.BooleanExpressionBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
@@ -27,6 +28,7 @@ import static org.springframework.util.StringUtils.hasText;
 public class ClientRepositoryImpl implements ClientRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    private final CommonService commonService;
     private final QClient client = QClient.client;
     private final QManager manager = QManager.manager;
     private final QClientRemark clientRemark = QClientRemark.clientRemark;
@@ -49,7 +51,10 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                                 client.clientName
                         )
                     )
-                .from(client).leftJoin(manager).on(client.managerId.eq(manager.managerId))
+                .from(client)
+                .join(manager).on(client.managerId.eq(manager.managerId))
+                //로그인한 회사 조건 추가.
+                .join(company).on(manager.company.eq(company).and(company.eq(commonService.getCustomUserDetailBySecurityContextHolder().getCompany())))
                 .where(
                         BooleanExpressionBuilder.orBooleanBuilder(
                                 clientPhoneNumberLike(clientPhoneNumber),
@@ -85,6 +90,11 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                 .from(client)
                 .join(showingProperty).on(client.clientId.eq(showingProperty.clientId).and(client.clientId.eq(clientId)))
                 .join(property).on(property.propertyId.eq(showingProperty.propertyId))
+
+                //로그인한 회사 조건 추가.
+                .join(manager).on(manager.managerId.eq(property.picManagerId))
+                .join(company).on(manager.company.eq(company).and(company.eq(commonService.getCustomUserDetailBySecurityContextHolder().getCompany())))
+
                 .join(building).on(property.building.eq(building))
                 .join(buildingAddress).on(buildingAddress.eq(buildingAddress))
                 .join(addressLevel1).on(buildingAddress.addressLevel1Id.eq(addressLevel1.addressLevel1Id))
@@ -106,6 +116,8 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                 .from(client)
                 .innerJoin(clientRemark).on(client.clientId.eq(clientRemark.clientId))
                 .innerJoin(manager).on(client.managerId.eq(manager.managerId))
+                //로그인한 회사 조건 추가.
+                .join(company).on(manager.company.eq(company).and(company.eq(commonService.getCustomUserDetailBySecurityContextHolder().getCompany())))
                 .where(client.clientId.eq(clientId))
                 .fetch();
 //        return null;
