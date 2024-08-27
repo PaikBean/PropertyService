@@ -101,7 +101,7 @@ public class DepartmentController {
      * @param departmentTotalRevenueCondition
      * @return
      */
-    @GetMapping
+    @GetMapping("/v1/total-revenue/")
     public Response searchDepartmentTotalRevenue(DepartmentTotalRevenueCondition departmentTotalRevenueCondition){
         try {
             return new Response(ResponseCode.SUCCESS, departmentService.searchDepartmentTotalRevenue(departmentTotalRevenueCondition), "200");
