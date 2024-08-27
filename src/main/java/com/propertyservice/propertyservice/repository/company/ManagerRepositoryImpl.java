@@ -6,8 +6,10 @@ import com.propertyservice.propertyservice.domain.company.QDepartment;
 import com.propertyservice.propertyservice.domain.manager.QManager;
 import com.propertyservice.propertyservice.domain.property.QProperty;
 import com.propertyservice.propertyservice.domain.revenue.QRevenueLedger;
+import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
 import com.propertyservice.propertyservice.dto.manager.QManagerInfoDto;
+import com.propertyservice.propertyservice.service.CommonService;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.Expressions;
@@ -23,6 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
     private final JPAQueryFactory queryFactory;
+
+    private final CommonService commonService;
     private final QManager manager = QManager.manager;
     private final QCompany company = QCompany.company;
     private final QDepartment department = QDepartment.department;
@@ -42,8 +46,8 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                     )
                 )
                 .from(manager)
-                .leftJoin(company).on(manager.company.eq(company))
-                .leftJoin(department).on(manager.department.eq(department))
+                .innerJoin(company).on(manager.company.eq(company))
+                .innerJoin(department).on(manager.department.eq(department))
                 .where( manager.company.companyId.eq(companyId))
                 .fetch();
 
@@ -65,11 +69,13 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                                 manager.managerName,
                                 manager.managerRank,
                                 manager.managerPosition,
-                                revenueLedger.commission.sum()
+                                revenueLedger.commission.sum().coalesce(BigDecimal.ZERO)
                         )
                 )
                 .from(manager)
-                .leftJoin(revenueLedger).on(manager.eq(revenueLedger.manager))
+                //로그인한 회사 조건 추가.
+                .innerJoin(company).on(manager.company.eq(company).and(company.eq(commonService.getCustomUserDetailBySecurityContextHolder().getCompany())))
+                .innerJoin(revenueLedger).on(manager.eq(revenueLedger.manager))
                 .where(manager.department.departmentId.eq(departmentId)
                         .and(formattedDate.eq(currentDate))
                 )
@@ -84,11 +90,13 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
      */
     @Override
     public BigDecimal managerTotalRevenue(Long managerId) {
-         return  queryFactory
+        return  queryFactory
                 .select(
-                        revenueLedger.commission.sum()
+                        revenueLedger.commission.sum().coalesce(BigDecimal.ZERO)
                 )
                 .from(manager)
+                //로그인한 회사 조건 추가.
+                .innerJoin(company).on(company.eq(manager.company).and(company.eq(commonService.getCustomUserDetailBySecurityContextHolder().getCompany())))
                 .innerJoin(revenueLedger).on(manager.eq(revenueLedger.manager))
                 .groupBy(manager.managerId)
                 .having(manager.managerId.eq(managerId))
@@ -104,9 +112,11 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
         StringTemplate formattedDate = formattedDate(revenueLedger.createdDate, "%Y-%m");
         return  queryFactory
                 .select(
-                        revenueLedger.commission.sum()
+                        revenueLedger.commission.sum().coalesce(BigDecimal.ZERO)
                 )
                 .from(manager)
+                //로그인한 회사 조건 추가.
+                .innerJoin(company).on(manager.company.eq(company).and(company.eq(commonService.getCustomUserDetailBySecurityContextHolder().getCompany())))
                 .innerJoin(revenueLedger).on(manager.eq(revenueLedger.manager))
                 .where(formattedDate.eq(currentDate))
                 .groupBy(manager.managerId, formattedDate)
@@ -122,8 +132,9 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                         property
                 )
                 .from(manager)
-                .innerJoin(property)
-                .on(manager.managerId.eq(property.picManagerId))
+                //로그인한 회사 조건 추가.
+                .innerJoin(company).on(manager.company.eq(company).and(company.eq(commonService.getCustomUserDetailBySecurityContextHolder().getCompany())))
+                .innerJoin(property).on(manager.managerId.eq(property.picManagerId))
                 .where(manager.managerId.eq(managerId))
                 .fetch().size());
     }
@@ -136,8 +147,9 @@ public class ManagerRepositoryImpl implements ManagerRepositoryCustom{
                         client
                 )
                 .from(manager)
-                .innerJoin(client)
-                .on(manager.managerId.eq(client.managerId))
+                //로그인한 회사 조건 추가.
+                .innerJoin(company).on(manager.company.eq(company).and(company.eq(commonService.getCustomUserDetailBySecurityContextHolder().getCompany())))
+                .innerJoin(client).on(manager.managerId.eq(client.managerId))
                 .where(manager.managerId.eq(managerId))
                 .fetch().size());
     }
