@@ -36,14 +36,14 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
                         new QBuildingDto(
                                 building.buildingId,
                                 owner.ownerName,
+                                owner.ownerPhoneNumber,
+                                owner.ownerRelation,
                                 Expressions.stringTemplate(
                                         "concat_ws(' ', {0}, {1}, {2})",
                                         addressLevel1.addressLevel1,
                                         addressLevel2.addressLevel2,
                                         buildingAddress.addressLevel3
-                                ),
-                                owner.ownerRelation,
-                                owner.ownerPhoneNumber
+                                        )
 
                         )
                 )
