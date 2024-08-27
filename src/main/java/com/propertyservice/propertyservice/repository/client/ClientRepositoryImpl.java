@@ -104,8 +104,8 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                         )
                 )
                 .from(client)
-                .leftJoin(clientRemark).on(client.clientId.eq(clientRemark.clientId))
-                .leftJoin(manager).on(client.managerId.eq(manager.managerId))
+                .innerJoin(clientRemark).on(client.clientId.eq(clientRemark.clientId))
+                .innerJoin(manager).on(client.managerId.eq(manager.managerId))
                 .where(client.clientId.eq(clientId))
                 .fetch();
 //        return null;
@@ -121,8 +121,8 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                         )
                 )
                 .from(client)
-                .leftJoin(manager).on(client.managerId.eq(manager.managerId))
-                .leftJoin(company).on(company.eq(manager.company))
+                .innerJoin(manager).on(client.managerId.eq(manager.managerId))
+                .innerJoin(company).on(company.eq(manager.company))
                 .where(manager.company.companyId.eq(companyId))
                 .fetch();
     }
