@@ -66,6 +66,7 @@ public class BuildingService {
                 "주소 입력이 잘못되었습니다."
         ).getAddressLevel1Id();
     }
+
     /**
      * 주소2 validation
      */
@@ -80,14 +81,16 @@ public class BuildingService {
      * 건물 목록 조회.
      */
     public List<BuildingDto> searchBuildingList(BuildingCondition buildingCondition) {
-        entityExceptionService.validateEntityExists(
-                () -> addressLevel1Repository.findById(buildingCondition.getAddressLevel1Id()),
-                "주소 입력이 잘못되었습니다."
-        );
-        entityExceptionService.validateEntityExists(
-                () -> addressLevel2Respository.findById(buildingCondition.getAddressLevel2Id()),
-                "주소 입력이 잘못되었습니다."
-        );
+        if (buildingCondition.getAddressLevel1Id() != null)
+            entityExceptionService.validateEntityExists(
+                    () -> addressLevel1Repository.findById(buildingCondition.getAddressLevel1Id()),
+                    "주소 입력이 잘못되었습니다."
+            );
+        if (buildingCondition.getAddressLevel2Id() != null)
+            entityExceptionService.validateEntityExists(
+                    () -> addressLevel2Respository.findById(buildingCondition.getAddressLevel2Id()),
+                    "주소 입력이 잘못되었습니다."
+            );
         return buildingRepository.searchBuildingList(buildingCondition);
     }
 
@@ -121,7 +124,7 @@ public class BuildingService {
 
 
     //건물 상세 단건 조회 - 건물 관리
-    public BuildingInfoDto searchBuildingInfo(Long buildingId){
+    public BuildingInfoDto searchBuildingInfo(Long buildingId) {
         Building building = entityExceptionService.findEntityById(
                 () -> buildingRepository.findById(buildingId),
                 "빌딩 정보가 존재하지 않습니다. 관리자에게 문의하세요"
@@ -167,6 +170,7 @@ public class BuildingService {
 
     /**
      * 건물 특이사항 제거.
+     *
      * @param buildingRemarkId
      */
     @Transactional
@@ -220,7 +224,6 @@ public class BuildingService {
     }
 
 
-
     /**
      * 건물 상세 정보 수정.
      */
@@ -259,6 +262,7 @@ public class BuildingService {
 
     /**
      * 건물 특이사항 목록 조회.
+     *
      * @param buildingId
      * @return
      */
@@ -266,10 +270,10 @@ public class BuildingService {
         List<BuildingRemarkDto> buildingRemarkDtoList = new ArrayList<>();
         for (BuildingRemark buildingRemark : buildingRemarkRepository.findAllByBuildingBuildingId(buildingId)) {
             buildingRemarkDtoList.add(BuildingRemarkDto.builder()
-                            .buildingRemarkId(buildingRemark.getRemarkId())
-                            .remark(buildingRemark.getRemark())
-                            .createdDate(buildingRemark.getCreatedDate())
-                            .updatedDate(buildingRemark.getUpdatedDate())
+                    .buildingRemarkId(buildingRemark.getRemarkId())
+                    .remark(buildingRemark.getRemark())
+                    .createdDate(buildingRemark.getCreatedDate())
+                    .updatedDate(buildingRemark.getUpdatedDate())
                     .build());
         }
         return buildingRemarkDtoList;
