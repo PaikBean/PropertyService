@@ -83,13 +83,12 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                         )
                 )
                 .from(client)
-                .leftJoin(showingProperty).on(client.clientId.eq(showingProperty.clientId))
-                .leftJoin(property).on(property.propertyId.eq(showingProperty.propertyId))
-                .leftJoin(building).on(property.building.eq(building))
-                .leftJoin(buildingAddress).on(buildingAddress.eq(buildingAddress))
-                .leftJoin(addressLevel1).on(buildingAddress.addressLevel1Id.eq(addressLevel1.addressLevel1Id))
-                .leftJoin(addressLevel2).on(buildingAddress.addressLevel2Id.eq(addressLevel2.addressLevel2Id))
-                .where(client.clientId.eq(clientId))
+                .join(showingProperty).on(client.clientId.eq(showingProperty.clientId).and(client.clientId.eq(clientId)))
+                .join(property).on(property.propertyId.eq(showingProperty.propertyId))
+                .join(building).on(property.building.eq(building))
+                .join(buildingAddress).on(buildingAddress.eq(buildingAddress))
+                .join(addressLevel1).on(buildingAddress.addressLevel1Id.eq(addressLevel1.addressLevel1Id))
+                .join(addressLevel2).on(buildingAddress.addressLevel2Id.eq(addressLevel2.addressLevel2Id))
                 .fetch();
     }
 
@@ -134,4 +133,8 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
     private BooleanExpression clientNameEq(String clientName) {
         return clientName != null ? client.clientName.eq(clientName) : null;
     }
+
+//    private BooleanExpression clientIdEq(Long clientId) {
+//        return clientId != null ? client.clientName.eq(clientName) : null;
+//    }
 }
