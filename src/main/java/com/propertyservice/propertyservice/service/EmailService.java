@@ -6,11 +6,10 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.security.SecureRandom;
 
 @Service
 @Slf4j
@@ -25,7 +24,7 @@ public class EmailService {
         // MimeMessage : 이미지와 같이 메일에 첨부할 수 있음.
         MimeMessage mimeMessage = mailSender.createMimeMessage();
 
-        // MimeMessage mimeMessage, boolean multipart, @Nullable String encoding
+        // MimeMessage mimeMessage, boolean multipart, @Nullable String encoding  : UTF-8로 설정함.
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         mimeMessageHelper.setFrom(sender); // 발신인 ( 관리자 이메일로 설정 )
         mimeMessageHelper.setTo(receiver);   // 수신인.
@@ -36,6 +35,17 @@ public class EmailService {
 
         //메일 보내기
         mailSender.send(mimeMessage);
+    }
+
+    public String generateRandomStr(){
+        final String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        StringBuilder builder = new StringBuilder(10);
+        SecureRandom secureRandom = new SecureRandom();
+        // 랜덤 비밀번호는 10자리.
+        for(int i = 0; i < 10; i++){
+            builder.append(secureRandom.nextInt(alphabet.length()));
+        }
+        return builder.toString();
     }
 
     public String getContent(String randomPassword){

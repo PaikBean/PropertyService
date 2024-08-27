@@ -154,10 +154,16 @@ public class ManagerService  {
                 () -> managerRepository.findByManagerEmail(email),
                 "사용자 이메일이 존재하지 않거나 틀립니다. 다시 시도 해주세요."
         );
+        // 랜덤 문자열 생성.
+        String rdStr = emailService.generateRandomStr();
 
-        manager.resetPassword("1234");
-        emailService.test("관리자이메일", manager.getManagerEmail(), "1234");
+        //사용자 비밀번호 재설정.
+        manager.resetPassword(passwordEncoder.encode(rdStr));
 
+        // 이메일 발신.
+        emailService.test("관리자이메일", manager.getManagerEmail(), rdStr);
+
+        //사용자 비밀번호 저장.
         managerRepository.save(manager);
 
         return manager.getManagerPassword();
