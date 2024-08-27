@@ -1,26 +1,18 @@
+import { fetchGet } from '@/utils/fetch/fetchWrapper'
+
 const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit')
 
 export const fetchPropertyTypeList = createAsyncThunk(
   'common/fetchPropertyTypeList',
   async () => {
-    try {
-      const response = await fetchGet(
-        '/api/property/v1/property-type-list'
-      )
-      console.log(response)
-      if (response.responseCode === 'SUCCESS') {
-        return response.data
-      } else {
-        throw new Error(response.message || 'Error!')
-      }
-    } catch (error) {
-      return new Error(error.message) // 에러 발생 시 null 반환
-    }
+    const response = await fetch('/api/property/v1/property-type-list')
+    const data = await response.json()
+    return data
   }
 )
 
 const propertyTypeSlice = createSlice({
-  name: 'scheduleType',
+  name: 'propertyType',
   initialState: {
     options: null,
     status: 'idle',

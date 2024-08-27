@@ -20,7 +20,7 @@ const rootReducer = combineReducers({
   departmentList: departmentReducer2,
   genderList: genderReducer,
   clientList: clientReducer,
-  PropertyType: propertyTypeReducer,
+  propertyType: propertyTypeReducer,
   scheduleType: scheduleTypeReducer,
   inflowType: inflowTypeReducer,
   transactionType: transactionTypeReducer,

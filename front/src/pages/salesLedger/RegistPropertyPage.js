@@ -14,6 +14,8 @@ import TrasactionTypePriceForm from '@/components/form/TransactionTypePriceForm'
 import RemarkTextField from '@/components/textfield/RemarkTextField'
 import ManagerAutocomplete from '@/components/autocomplete/ManagerAutocomplete'
 import PropertyType from '@/components/autocomplete/PropertyType'
+import { fetchSEarchBuildingList } from './api/fetchSearchBuildingList'
+import { fetchRegistProperty } from './api/fetchRegistProperty'
 
 const RegistPropertyPage = () => {
   const initialSearchCondition = {
@@ -54,6 +56,7 @@ const RegistPropertyPage = () => {
 
   const handleSelectBuildingRow = async (params) => {
     setBuildingId(params[0])
+    setRegistData(initialData)
   }
 
   const handleSearchInputChange = (field, value) => {
@@ -111,18 +114,25 @@ const RegistPropertyPage = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await fetchSearchBuildngs(searchCondition)
-      if (response.responseCode === 'SUCCESS') {
-        setBuildingRows(response.data)
-      } else {
-        console.error('Failed to fetch building list:', response.message)
-      }
+      const response = await fetchSEarchBuildingList(searchCondition)
+      console.log(response)
+      setBuildingRows(response.data)
     } catch (error) {
       console.error('Error fetching building list:', error)
     }
   }
 
-  const handleSave = () => {}
+  const handleSave = async () => {
+    console.log(registData)
+    try {
+      const response = await fetchRegistProperty(registData)
+      setRegistData(initialData)
+      setBuildingId(null)
+      setBuildingInfo(initialBuildingData)
+    } catch (error) {
+      console.error('Error fetching building list:', error)
+    }
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
