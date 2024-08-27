@@ -38,7 +38,6 @@ const RegistClientPage = () => {
     addressL1: null,
     addressL2: null,
     transactionTypeId: null,
-    propertyTypeId: null,
   }
 
   const [registData, setRegistData] = useState(initialData)

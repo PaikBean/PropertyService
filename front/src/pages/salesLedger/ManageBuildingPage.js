@@ -13,6 +13,9 @@ import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import BuildingRemarkColumns from './columns/BuildingRemarkColumns'
 import { fetchSEarchBuildingList } from './api/fetchSearchBuildingList'
+import { fetchSearchBuilding } from './api/fetchSearchBuilding'
+import { fetchDeleteBuildingRemark } from './api/fetchDeleteBuildingRemark'
+import { fetchUpdateBuilding } from './api/fetchUpdateBuilding'
 
 const ManageBuildingPage = () => {
   const initialSearchCondition = {
@@ -47,25 +50,39 @@ const ManageBuildingPage = () => {
     useState(false)
 
   useEffect(() => {
-    // if (buildingId) {
-    //   const selectedBuilding = buildingRows.find(
-    //     (building) => building.buildingId === buildingId
-    //   )
-    //   if (selectedBuilding) {
-    //     setBuildingInfo(selectedBuilding)
-    //     setRegistData((prev) => ({
-    //       ...prev,
-    //       buildingId: selectedBuilding.buildingId,
-    //     }))
-    //     console.log(selectedBuilding)
-    //   }
-    // }
-    // alert('빌딩 선택 : ', buildingRows)
-  }, [buildingId, buildingRows])
+    console.log(buildingId)
+    const fetchData = async () => {
+      try {
+        const response = await fetchSearchBuilding(buildingId);
+        console.log(response.data)
+        setBuildingData(response.data); // 데이터를 상태로 설정
+        setBuildingRemarkRows(response.data.buildingRemarkList)
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    if(buildingId != null)
+      fetchData();
+  }, [buildingId])
 
-  const handleRemarkRows = () => {}
+  const handleRemarkRows = async (params) => {
+    setSelectedBuildingRemarkRowIds(params[0])
+  }
 
-  const handleDeleteRemarkRows = () => {}
+  const handleDeleteRemarkRows = async () => {
+    console.log(selectedBuildingRemarkRowIds)
+    try{
+      const response = await fetchDeleteBuildingRemark(buildingId)
+      if(response.responseCode === 'SUCCESS') {
+        console.log(response)
+        // 특이사항 목록 재검색
+      } else{
+        throw new Error(response.message || 'Error!')
+      }
+    } catch(error) {
+      alert(error)
+    }
+  }
 
   const handleSearchInputChange = (field, value) => {
     setSearchCondition((prev) => ({
@@ -83,15 +100,9 @@ const ManageBuildingPage = () => {
 
   const handleSearch = async () => {
     try {
-      // const response = await fetchSearchBuildng(searchCondition)
-      // if (response.responseCode === 'SUCCESS') {
-      //   setBuildingRows(response.data)
-      // } else {
-      //   console.error('Failed to fetch building list:', response.message)
-      // }
-      console.log(searchCondition)
       const response = await fetchSEarchBuildingList(searchCondition)
       console.log(response)
+      setBuildingRows(response.data)
     } catch (error) {
       console.error('Error fetching building list:', error)
     }
@@ -101,7 +112,22 @@ const ManageBuildingPage = () => {
     setBuildingId(params[0])
   }
 
-  const handleSave = () => {}
+  const handleSave = async () => {
+    console.log("왜안대")
+    try {
+      const response = await fetchUpdateBuilding(buildingData)
+      if(response.responseCode == "SUCCESS"){
+        const response2 = await fetchSearchBuilding(buildingId);
+        console.log(response2.data)
+        setBuildingData(response2.data); // 데이터를 상태로 설정
+        setBuildingRemarkRows(response2.data.buildingRemarkList)
+      } else{
+        throw new Error(response.message)
+      }
+    } catch (error) {
+      console.error('Error fetching building list:', error)
+    }
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -326,6 +352,7 @@ const ManageBuildingPage = () => {
                         showAll={true}
                         pageSize={10}
                         rowHeight={48}
+                        getRowId={(row) => row.buildingRemarkId}
                       />
                     </Grid>
                     <Grid
@@ -339,7 +366,7 @@ const ManageBuildingPage = () => {
                         <Stack direction="column" spacing={2}>
                           <IconButton
                             onClick={() => {
-                              setIsRemarkModalOpen(!isRemarkModalOpen)
+                              setIsBuildingRemarkModalOpen(!isBuildingRemarkModalOpen)
                             }}
                             size="large"
                           >

@@ -149,7 +149,6 @@ const ManageClientPage = () => {
         if (response.responseCode === 'SUCCESS') {
           setSearchData(response.data)
           setRemarkRows(response.data.clientRemarkList)
-          setMode(false)
         } else {
           throw new Error('Failed to fetch client list:', response.message)
         }
@@ -202,7 +201,7 @@ const ManageClientPage = () => {
                         name="clientName"
                       />
                        <InputName2
-                        label="고객전화번호"
+                        label="고객 전화번호"
                         value={searchCondition.clientPhoneNumber}
                         onChange={(e) => {
                           handleSearchInputChange('clientPhoneNumber', e.target.value)
