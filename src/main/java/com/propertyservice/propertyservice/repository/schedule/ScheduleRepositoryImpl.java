@@ -3,12 +3,13 @@ package com.propertyservice.propertyservice.repository.schedule;
 import com.propertyservice.propertyservice.domain.client.QClient;
 import com.propertyservice.propertyservice.domain.company.QCompany;
 import com.propertyservice.propertyservice.domain.manager.QManager;
-import com.propertyservice.propertyservice.domain.property.QProperty;
 import com.propertyservice.propertyservice.domain.schedule.QSchedule;
 import com.propertyservice.propertyservice.domain.schedule.ScheduleType;
+import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
 import com.propertyservice.propertyservice.dto.schedule.QScheduleSummaryDto;
 import com.propertyservice.propertyservice.dto.schedule.ScheduleCondition;
 import com.propertyservice.propertyservice.dto.schedule.ScheduleSummaryDto;
+import com.propertyservice.propertyservice.service.CommonService;
 import com.propertyservice.propertyservice.utils.BooleanExpressionBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,11 +20,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.propertyservice.propertyservice.domain.company.QCompany.company;
 
 @RequiredArgsConstructor
 public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     private final JPAQueryFactory queryFactory;
+    private final CommonService commonService;
     //private final QProperty property = QProperty.property;
     private final QSchedule schedule = QSchedule.schedule;
     private final QClient client = QClient.client;
@@ -61,6 +62,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     // ClientId로 일정 가져옴.
     @Override
     public List<ScheduleSummaryDto> searchScheduleList(Long clientId) {
+        CustomUserDetail customUserDetail = commonService.getCustomUserDetailBySecurityContextHolder();
         return queryFactory
                 .select(
                         new QScheduleSummaryDto(
@@ -75,14 +77,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         )
                 )
                 .from(client)
-                .leftJoin(schedule).on(client.clientId.eq(schedule.clientId))
-                .leftJoin(manager).on(manager.managerId.eq(schedule.managerId))
+                .join(schedule).on(client.clientId.eq(schedule.clientId))
+                .join(manager).on(manager.managerId.eq(schedule.managerId))
+                .join(company).on(manager.company.eq(company).and(company.eq(customUserDetail.getCompany())))
                 .where(client.clientId.eq(clientId))
                 .fetch();
     }
 
     @Override
     public List<ScheduleSummaryDto> searchScheduleListByClientId(Long clientId) {
+        CustomUserDetail customUserDetail = commonService.getCustomUserDetailBySecurityContextHolder();
         return queryFactory
                 .select(
                         new QScheduleSummaryDto(
@@ -95,6 +99,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 )
                 .from(schedule)
                 .join(manager).on(schedule.managerId.eq(manager.managerId))
+                .join(company).on(manager.company.eq(company).and(company.eq(customUserDetail.getCompany())))
                 .join(client).on(schedule.clientId.eq(client.clientId))
                 .where(schedule.clientId.eq(clientId))
                 .fetch();
