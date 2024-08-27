@@ -79,6 +79,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .from(client)
                 .join(schedule).on(client.clientId.eq(schedule.clientId))
                 .join(manager).on(manager.managerId.eq(schedule.managerId))
+                //로그인한 회사 조건 추가.
                 .join(company).on(manager.company.eq(company).and(company.eq(customUserDetail.getCompany())))
                 .where(client.clientId.eq(clientId))
                 .fetch();
@@ -99,6 +100,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 )
                 .from(schedule)
                 .join(manager).on(schedule.managerId.eq(manager.managerId))
+                //로그인한 회사 조건 추가.
                 .join(company).on(manager.company.eq(company).and(company.eq(customUserDetail.getCompany())))
                 .join(client).on(schedule.clientId.eq(client.clientId))
                 .where(schedule.clientId.eq(clientId))
