@@ -7,6 +7,7 @@ import com.propertyservice.propertyservice.domain.company.QDepartment;
 import com.propertyservice.propertyservice.domain.manager.QManager;
 import com.propertyservice.propertyservice.domain.revenue.QRevenueLedger;
 import com.propertyservice.propertyservice.dto.company.*;
+import com.propertyservice.propertyservice.service.CommonService;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.Expressions;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DepartmentRepositoryImpl implements DepartmentRepositoryCustom {
     private final JPAQueryFactory queryFactory;
+    private final CommonService commonService;
 
     private final QManager manager = QManager.manager;
     private final QCompany company = QCompany.company;
@@ -55,7 +57,7 @@ public class DepartmentRepositoryImpl implements DepartmentRepositoryCustom {
                             department.departmentPresidentName.managerName
                     )
                 ).from(department)
-                .leftJoin(company).on(department.company.eq(company))
+                .join(company).on(department.company.eq(company))
                 .where(
                         company.companyId.eq(companyId)
                 )
@@ -72,11 +74,13 @@ public class DepartmentRepositoryImpl implements DepartmentRepositoryCustom {
                                 department.departmentName,
                                 department.departmentCode,
                                 department.departmentPresidentName.managerId,
-                                revenueLedger.commission.sum()
+                                revenueLedger.commission.sum().coalesce(BigDecimal.ZERO)
                         )
                 )
                 .from(department)
-                .innerJoin(revenueLedger)
+                //로그인한 회사 조건 추가.
+                .join(company).on(department.company.eq(company).and(company.eq(commonService.getCustomUserDetailBySecurityContextHolder().getCompany())))
+                .join(revenueLedger)
                 .on(department.departmentCode.eq(revenueLedger.departmentCode))
                 .where(department.departmentId.eq(departmentId))
                 .fetch();
@@ -89,10 +93,12 @@ public class DepartmentRepositoryImpl implements DepartmentRepositoryCustom {
 
         return  queryFactory
                 .select(
-                        revenueLedger.commission.sum()
+                        revenueLedger.commission.sum().coalesce(BigDecimal.ZERO)
                 )
                 .from(manager)
-                .innerJoin(revenueLedger).on(manager.eq(revenueLedger.manager))
+                //로그인한 회사 조건 추가.
+                .join(company).on(manager.company.eq(company).and(company.eq(commonService.getCustomUserDetailBySecurityContextHolder().getCompany())))
+                .join(revenueLedger).on(manager.eq(revenueLedger.manager))
                 .where(manager.department.departmentId.eq(departmentTotalRevenueCondition.getDepartmentId())
                         .and(
                                 formattedDate.between(departmentTotalRevenueCondition.getStartDate(), departmentTotalRevenueCondition.getEndDate())
