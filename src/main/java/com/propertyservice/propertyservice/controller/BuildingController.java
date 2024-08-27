@@ -118,7 +118,7 @@ public class BuildingController {
      * @param bindingResult
      * @return
      */
-    @PutMapping("/v1/building-info/")
+    @PutMapping("/v1/building-info")
     public Response updateBuildingDetail(@RequestBody @Valid BuildingPropertyForm buildingPropertyForm, BindingResult bindingResult){
         try {
             return new Response(ResponseCode.SUCCESS, buildingService.updateBuildingDetail(buildingPropertyForm), "200");
