@@ -28,16 +28,11 @@ public class PropertyForm {
     private BigDecimal tradeFee;
     private BigDecimal shortTermDeposit;
     private BigDecimal shortTermMonthlyFee;
-    @NotNull
     private boolean maintenanceItemWater; // 관리비 수도
-    @NotNull
     private boolean maintenanceItemElectricity; // 관리비 전기
-    @NotNull
     private boolean maintenanceItemInternet; // 관리비 인터넷
-    @NotNull
     private boolean maintenanceItemGas; // 관리비 난방
     private String maintenanceItemOthers;// 관리비 기타
-    @NotNull
     private BigDecimal maintenanceFee; // 관리비
     private TransactionState transactionState;
     private BigDecimal commision; // 중개수수료
