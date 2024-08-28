@@ -210,14 +210,13 @@ public class BuildingService {
         // BuildingRemarkList
         List<BuildingRemarkDto> buildingRemarkList = searchBuildingRemarkList(building.getBuildingId());
 
+        BuildingDto buildingDto = buildingRepository.searchBuildingList(building.getBuildingId());
         return BuildingPropertyDto.builder()
-                .buildingId(building.getBuildingId())
-                .ownerName(building.getOwner().getOwnerName())
-                .ownerPhoneNumber(building.getOwner().getOwnerPhoneNumber())
-                .ownerRelation(building.getOwner().getOwnerRelation())
-                .addressLevel1(building.getBuildingAddress().getAddressLevel1Id())
-                .addressLevel2(building.getBuildingAddress().getAddressLevel2Id())
-                .addressLevel3(building.getBuildingAddress().getAddressLevel3())
+                .buildingId(buildingDto.getBuildingId())
+                .ownerName(buildingDto.getOwnerName())
+                .ownerPhoneNumber(buildingDto.getOwnerPhoneNumber())
+                .ownerRelation(buildingDto.getOwnerRelation())
+                .buildingAddress(buildingDto.getBuildingAddress())
                 .buildingRemarkList(buildingRemarkList)
                 .buildingPropertyList(buildingPropertyList)
                 .build();

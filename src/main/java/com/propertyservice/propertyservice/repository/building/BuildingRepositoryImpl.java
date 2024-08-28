@@ -43,7 +43,7 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
                                         addressLevel1.addressLevel1,
                                         addressLevel2.addressLevel2,
                                         buildingAddress.addressLevel3
-                                        )
+                                        ).coalesce("null")
 
                         )
                 )
@@ -60,6 +60,32 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
                         )
                 )
                 .fetch();
+    }
+
+    @Override
+    public BuildingDto searchBuildingList(Long buildingId) {
+        return queryFactory
+                .select(
+                        new QBuildingDto(
+                                building.buildingId,
+                                owner.ownerName,
+                                owner.ownerPhoneNumber,
+                                owner.ownerRelation,
+                                Expressions.stringTemplate(
+                                        "concat_ws(' ', {0}, {1}, {2})",
+                                        addressLevel1.addressLevel1,
+                                        addressLevel2.addressLevel2,
+                                        buildingAddress.addressLevel3
+                                ).coalesce("null")
+
+                        )
+                )
+                .from(owner)
+                .leftJoin(building).on(owner.eq(building.owner).and(building.buildingId.eq(buildingId)))
+                .leftJoin(buildingAddress).on(buildingAddress.eq(building.buildingAddress))
+                .leftJoin(addressLevel1).on(buildingAddress.addressLevel1Id.eq(addressLevel1.addressLevel1Id))
+                .leftJoin(addressLevel2).on(buildingAddress.addressLevel2Id.eq(addressLevel2.addressLevel2Id))
+                .fetchOne();
     }
 
     private BooleanExpression ownerPhoneNumberLike(String phoneNumber) {
