@@ -63,22 +63,18 @@ public class PropertyRepositoryImpl implements PropertyRepositoryCustom {
                 )
                 .from(property)
                 .join(building).on(property.building.eq(building))
-                //.join(owner).on(building.owner.eq(owner))
-                .join(buildingAddress).on(buildingAddress.eq(buildingAddress))
+                .join(buildingAddress).on(buildingAddress.eq(building.buildingAddress))
                 .join(addressLevel1).on(buildingAddress.addressLevel1Id.eq(addressLevel1.addressLevel1Id))
                 .join(addressLevel2).on(buildingAddress.addressLevel2Id.eq(addressLevel2.addressLevel2Id))
-                // 로그인한 회사 정보만 가져오기.
+                // 로그인한 회사 정보만 가져오기.ß
                 .join(manager).on(property.picManagerId.eq(manager.managerId))
                 .join(company).on(manager.company.eq(company).and(company.eq(customUserDetail.getCompany())))
                 .where(
-                        property.transactionType.eq(TransactionType.MONTHLY).and(
-                                BooleanExpressionBuilder.orBooleanBuilder(
-                                        buildingAddress1Eq(showingPropertyCandidateCondition.getAddressLevel1Id()),
-                                        buildingAddress2Eq(showingPropertyCandidateCondition.getAddressLevel2Id()),
-                                        //ownerNameLike(showingPropertyCandidateCondition.getOwnerName()),
-                                        propertyTransactionTypeEq(showingPropertyCandidateCondition.getPropertyTransactionType()),
-                                        propertyTypeEq(showingPropertyCandidateCondition.getPropertyType())
-                                )
+                        BooleanExpressionBuilder.orBooleanBuilder(
+                                buildingAddress1Eq(showingPropertyCandidateCondition.getAddressLevel1Id()),
+                                buildingAddress2Eq(showingPropertyCandidateCondition.getAddressLevel2Id()),
+                                propertyTransactionTypeEq(showingPropertyCandidateCondition.getPropertyTransactionType()),
+                                propertyTypeEq(showingPropertyCandidateCondition.getPropertyType())
                         )
                 )
                 .fetch();
