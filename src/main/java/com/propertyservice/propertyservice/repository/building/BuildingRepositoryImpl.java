@@ -80,11 +80,14 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
 
                         )
                 )
-                .from(owner)
-                .leftJoin(building).on(owner.eq(building.owner).and(building.buildingId.eq(buildingId)))
+//                .from(owner)
+//                .leftJoin(building).on(owner.eq(building.owner).and(building.buildingId.eq(buildingId)))
+                .from(building)
+                .leftJoin(owner).on(owner.ownerId.eq(building.buildingId))
                 .leftJoin(buildingAddress).on(buildingAddress.eq(building.buildingAddress))
                 .leftJoin(addressLevel1).on(buildingAddress.addressLevel1Id.eq(addressLevel1.addressLevel1Id))
                 .leftJoin(addressLevel2).on(buildingAddress.addressLevel2Id.eq(addressLevel2.addressLevel2Id))
+                .where(building.buildingId.eq(buildingId))
                 .fetchOne();
     }
 
