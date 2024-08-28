@@ -21,17 +21,17 @@ const ScheduleType = ({ value, onChange, sx, readOnly = false }) => {
   }, [dispatch, status])
 
   const handleChange = (event, value) => {
-    onChange(value ? value.scheduleId : '')
+    onChange(value ? value.scheduleTypeName : '')
   }
   return (
     <Autocomplete
       value={
         options
-          ? options.find((option) => option.scheduleId === value) || null
+          ? options.find((option) => option.scheduleTypeName === value) || null
           : null
       }
       options={options || []}
-      getOptionLabel={(options) => options.scheduleType || ''}
+      getOptionLabel={(options) => options.label || ''}
       onChange={handleChange}
       renderInput={(params) => (
         <TextField
