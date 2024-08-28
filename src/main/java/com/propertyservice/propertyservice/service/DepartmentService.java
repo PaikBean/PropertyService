@@ -173,4 +173,20 @@ public class DepartmentService {
         )
         );
     }
+
+    /**
+     * 부서원 목록 수정
+     * @param departmentMemberUpdateForm
+     */
+    @Transactional
+    public void updateDepartmentMember(DepartmentMemberUpdateForm departmentMemberUpdateForm) {
+        Department targetDept = entityExceptionService.findEntityById(
+                () -> departmentRepository.findByDepartmentId(departmentMemberUpdateForm.getDepartmentId()), "타겟 부서가 존재하지 않습니다.");
+
+        for (Long managerId : departmentMemberUpdateForm.getManagerIdList()) {
+            Manager manager = entityExceptionService.findEntityById(
+                    () -> managerRepository.findByManagerId(managerId), managerId + " 매니저가 존재하지 않습니다.");
+            manager.updateManagerDepartment(targetDept);
+        }
+    }
 }

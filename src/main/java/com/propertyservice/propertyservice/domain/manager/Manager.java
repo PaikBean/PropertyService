@@ -77,4 +77,8 @@ public class Manager extends BaseTimeEntity{
         this.managerPosition = managerInfoForm.getManagerPosition();
         this.managerRank = managerInfoForm.getManagerRank();
     }
+
+    public void updateManagerDepartment(Department department){
+        this.department = department;
+    }
 }
