@@ -16,6 +16,8 @@ import { fetchSEarchBuildingList } from './api/fetchSearchBuildingList'
 import { fetchSearchBuilding } from './api/fetchSearchBuilding'
 import { fetchDeleteBuildingRemark } from './api/fetchDeleteBuildingRemark'
 import { fetchUpdateBuilding } from './api/fetchUpdateBuilding'
+import AddRemarkModal from '@/components/modal/AddRemarkModal'
+import AddBuildingRemarkModal from '@/components/modal/AddBuildingRemarkModal'
 
 const ManageBuildingPage = () => {
   const initialSearchCondition = {
@@ -76,6 +78,14 @@ const ManageBuildingPage = () => {
       if(response.responseCode === 'SUCCESS') {
         console.log(response)
         // 특이사항 목록 재검색
+        try {
+          const response = await fetchSearchBuilding(buildingId);
+          console.log(response.data)
+          setBuildingData(response.data); // 데이터를 상태로 설정
+          setBuildingRemarkRows(response.data.buildingRemarkList)
+        } catch (error) {
+          console.error(error);
+        }
       } else{
         throw new Error(response.message || 'Error!')
       }
@@ -127,6 +137,18 @@ const ManageBuildingPage = () => {
     } catch (error) {
       console.error('Error fetching building list:', error)
     }
+  }
+
+  const handleCloseModal = async () => {
+    try {
+      const response = await fetchSearchBuilding(buildingId);
+      console.log(response.data)
+      setBuildingData(response.data); // 데이터를 상태로 설정
+      setBuildingRemarkRows(response.data.buildingRemarkList)
+    } catch (error) {
+      console.error(error);
+    }
+    isBuildingRemarkModalOpen ? setIsBuildingRemarkModalOpen(false) : null
   }
 
   return (
@@ -388,6 +410,11 @@ const ManageBuildingPage = () => {
           </Grid>
         </Stack>
       </Stack>
+      <AddBuildingRemarkModal
+        open={isBuildingRemarkModalOpen}
+        handleClose={handleCloseModal}
+        data={{buildingId: buildingId}}
+      />
     </Box>
   )
 }
