@@ -15,7 +15,7 @@ const DepartmentMemberColumns = [
     headerClassName: 'revenu-header-css',
   },
   {
-    field: 'manaberRank',
+    field: 'managerRank',
     headerName: '직급',
     flex: 1,
     headerAlign: 'center',

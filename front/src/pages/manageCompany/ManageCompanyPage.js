@@ -411,7 +411,7 @@ const ManageCompanyPage = () => {
       <HandleDepartmentMember
         open={isHandleDepartmentMemberModalOpen}
         handleClose={handleCloseModal}
-        data={{ departmentId: departmentId }}
+        data={{ companyId: companyId, departmentId: departmentId }}
       />
       <Dialog
         open={isDeleteDialogOpen}
