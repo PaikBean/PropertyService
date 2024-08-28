@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface BuildingRepositoryCustom {
     List<BuildingDto> searchBuildingList(BuildingCondition buildingCondition);
+
+    BuildingDto searchBuildingList(Long buildingId);
 }
