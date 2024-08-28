@@ -48,11 +48,12 @@ public class ScheduleService {
                                 () -> managerRepository.findByManagerId(scheduleForm.getManagerId()),
                                 "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
                 )
-                .clientId(
-                        entityExceptionService.findEntityById(
-                                () -> clientRepository.findById(scheduleForm.getClientId()),
-                                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getClientId()
-                )
+//                .clientId(
+//                        entityExceptionService.findEntityById(
+//                                () -> clientRepository.findById(scheduleForm.getClientId()),
+//                                "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getClientId()
+//                )
+                        .clientId(scheduleForm.getClientId())
                 .scheduleDate(
                         LocalDate.parse(scheduleForm.getScheduleDate(),
                                 DateTimeFormatter.ofPattern("yyyyMMdd")
@@ -94,7 +95,10 @@ public class ScheduleService {
                     () -> scheduleRepository.findById(scheduleId),
                 "일정 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
 
-        Optional<Client> client = clientRepository.findById(schedule.getClientId());
+        Optional<Client> client = Optional.empty();
+        if(schedule.getClientId() != null) {
+           client  = clientRepository.findById(schedule.getClientId());
+        }
 
         return ScheduleDto.builder()
                 .scheduleId(scheduleId)
