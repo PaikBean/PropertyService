@@ -1,5 +1,4 @@
-// React, Next
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // Materials
 import {
@@ -22,6 +21,9 @@ import TrasactionTypePriceForm from '@/components/form/TransactionTypePriceForm'
 import CommisionFeeForm from '../form/CommisionFeeForm'
 import RemarkTextField from '../textfield/RemarkTextField'
 import SaveDeleteTogleToolbar from '../toolbar/SaveDeleteTogleToolbar'
+import { fetchSearchProperty } from '@/pages/salesLedger/api/fetchSearchProperty'
+import { fetchUpdateProperty } from '@/pages/salesLedger/api/fetchUpdateProperty'
+import { fetchDeleteProperty } from '@/pages/salesLedger/api/fetchDeleteProperty'
 
 // Utils
 
@@ -37,10 +39,11 @@ const DetailPropertyModal = ({ open, handleClose, data, onClick }) => {
       monthlyFee: null,
       jeonseFee: null,
       tradeFee: null,
-      shortemDeposit: null,
-      shortemMonthlyFee: null,
+      shortTermDeposit: null,
+      shortTermMonthlyFee: null,
     },
     commision: '',
+    remark: '',
   }
 
   const [mode, setMode] = useState(false)
@@ -58,8 +61,8 @@ const DetailPropertyModal = ({ open, handleClose, data, onClick }) => {
           monthlyFee: null,
           jeonseFee: null,
           tradeFee: null,
-          shortemDeposit: null,
-          shortemMonthlyFee: null,
+          shortTermDeposit: null,
+          shortTermMonthlyFee: null,
         },
       }))
     } else if (field in propertyData.transaction) {
@@ -78,16 +81,76 @@ const DetailPropertyModal = ({ open, handleClose, data, onClick }) => {
     }
   }
 
-  const handleSave = () => {}
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchSearchProperty(data.propertyId);
+        if (response.responseCode === "SUCCESS") {
+          const property = response.data;
+          setPropertyData({
+            buildingId: property.buildingId,
+            unitNumber: property.unitNumber,
+            picManagerId: property.picManagerId,
+            propertyTypeId: property.propertyType?.propertyTypeId || null,
+            transaction: {
+              transactionType: property.transactionType,
+              deposit: property.deposit,
+              monthlyFee: property.monthlyFee,
+              jeonseFee: property.jeonseFee,
+              tradeFee: property.tradeFee,
+              shortTermDeposit: property.shortTermDeposit,
+              shortTermMonthlyFee: property.shortTermMonthlyFee,
+            },
+            commision: property.commision,
+            remark: property.remark,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        alert(error);
+      }
+    };
+    fetchData();
+  }, [data.propertyId]);
+
+  const handleSave = async () => {
+    console.log({...propertyData, propertyId: data.propertyId})
+    try {
+      const response = await fetchUpdateProperty({...propertyData, propertyId: data.propertyId});
+      console.log(response.data)
+      if(response.responseCode == "SUCCESS"){
+        setPropertyData(initPropertyData)
+      } else{
+        throw new Error(response.message)
+      }
+      handleClose()
+    } catch (error) {
+      console.error(error);
+      alert(error)
+    }
+  }
 
   const handleDelete = () => {
     setIsDeleteDialogOpen(true)
   }
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     // 실제 삭제 작업을 여기서 수행합니다.
-    setIsDeleteDialogOpen(false)
-    handleClose()
+    try {
+      const response = await fetchDeleteProperty(data.propertyId);
+      console.log(response.data)
+      if(response.responseCode == "SUCCESS"){
+        setPropertyData(initPropertyData)
+        setIsDeleteDialogOpen(false)
+        handleClose()
+      } else{
+        throw new Error(response.message)
+      }
+      handleClose()
+    } catch (error) {
+      console.error(error);
+      alert(error)
+    }
   }
 
   return (
@@ -139,7 +202,7 @@ const DetailPropertyModal = ({ open, handleClose, data, onClick }) => {
               </Grid>
               <Grid item xs={2}>
                 <PropertyType
-                  value={propertyData.propertyTypeId} // Add this line
+                  value={propertyData.propertyTypeId} 
                   onChange={(value) => {
                     handleInputChange('propertyTypeId', value)
                   }}
@@ -155,9 +218,9 @@ const DetailPropertyModal = ({ open, handleClose, data, onClick }) => {
               </Grid>
               <Grid item xs={2}>
                 <TransactionType
-                  value={propertyData.transactionTypeId} // Add this line
+                  value={propertyData.transaction.transactionType} 
                   onChange={(value) => {
-                    handleInputChange('transactionTypeId', value)
+                    handleInputChange('transactionType', value)
                   }}
                   label="거래상태"
                   readOnly={!mode}
@@ -167,7 +230,7 @@ const DetailPropertyModal = ({ open, handleClose, data, onClick }) => {
                       cursor: !mode ? 'not-allowed' : '', // 커서 변경
                     },
                   }}
-                ></TransactionType>
+                />
               </Grid>
             </Grid>
             <Grid container>
@@ -186,7 +249,7 @@ const DetailPropertyModal = ({ open, handleClose, data, onClick }) => {
                       handleInputChange('commision', e.target.value)
                     }}
                     readOnly={!mode}
-                  ></CommisionFeeForm>
+                  />
                 </Grid>
               </Grid>
             </Grid>

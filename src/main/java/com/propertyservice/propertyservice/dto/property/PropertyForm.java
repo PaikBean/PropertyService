@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @Setter
 public class PropertyForm {
     private Long propertyId;
-    @NotNull
     private Long buildingId;
     private Long picManagerId;
     private PropertyType propertyType;

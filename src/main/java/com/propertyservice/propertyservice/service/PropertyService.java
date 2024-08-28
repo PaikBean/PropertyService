@@ -164,12 +164,12 @@ public class PropertyService {
                 .tradeFee(property.getTradeFee())
                 .shortTermDeposit(property.getShortTermDeposit())
                 .shortTermMonthlyFee(property.getShortTermMonthlyFee())
-                .maintenanceFee(property.getMaintenanceFee())
-                .maintenanceItemWater(property.getMaintenanceItem().isWater())
-                .maintenanceItemElectricity(property.getMaintenanceItem().isElectricity())
-                .maintenanceItemInternet(property.getMaintenanceItem().isInternet())
-                .maintenanceItemGas(property.getMaintenanceItem().isGas())
-                .maintenanceItemOthers(property.getMaintenanceItem().getOthers())
+//                .maintenanceFee(property.getMaintenanceFee())
+//                .maintenanceItemWater(property.getMaintenanceItem().isWater())
+//                .maintenanceItemElectricity(property.getMaintenanceItem().isElectricity())
+//                .maintenanceItemInternet(property.getMaintenanceItem().isInternet())
+//                .maintenanceItemGas(property.getMaintenanceItem().isGas())
+//                .maintenanceItemOthers(property.getMaintenanceItem().getOthers())
                 .transactionState(property.getTransactionState())
                 //.propertyRemarkDtoList(propertyRemarkDtoList)
                 .commision(property.getCommision())
@@ -184,15 +184,15 @@ public class PropertyService {
                 "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
         );
 
-        //관리비 업데이트.
-        MaintenanceItem maintenanceItem = property.getMaintenanceItem();
-        maintenanceItem.updateMaintenanceItem(
-                propertyForm.isMaintenanceItemWater(),
-                propertyForm.isMaintenanceItemElectricity(),
-                propertyForm.isMaintenanceItemInternet(),
-                propertyForm.isMaintenanceItemGas(),
-                propertyForm.getMaintenanceItemOthers()
-        );
+//        //관리비 업데이트.
+//        MaintenanceItem maintenanceItem = property.getMaintenanceItem();
+//        maintenanceItem.updateMaintenanceItem(
+//                propertyForm.isMaintenanceItemWater(),
+//                propertyForm.isMaintenanceItemElectricity(),
+//                propertyForm.isMaintenanceItemInternet(),
+//                propertyForm.isMaintenanceItemGas(),
+//                propertyForm.getMaintenanceItemOthers()
+//        );
 
         property.updateProperty(
                 entityExceptionService.findEntityById(
@@ -210,7 +210,8 @@ public class PropertyService {
                 propertyForm.getShortTermDeposit(),
                 propertyForm.getShortTermMonthlyFee(),
                 propertyForm.getMaintenanceFee(),
-                maintenanceItem,
+//                maintenanceItem,
+                null,
                 propertyForm.getTransactionState(),
                 propertyForm.getCommision(),
                 propertyForm.getRemark()
@@ -224,7 +225,7 @@ public class PropertyService {
                 "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요."
         );
 
-        maintenanceItemRepository.delete(property.getMaintenanceItem());
+//        maintenanceItemRepository.delete(property.getMaintenanceItem());
 
         //propertyRemarkRepository.deleteAllByProperty(property);
         propertyImageRepository.deleteAllByProperty(property);

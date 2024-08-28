@@ -1,8 +1,8 @@
 import { fetchDelete } from '@/utils/fetch/fetchWrapper'
-export const fetchDeleteBuildingRemark = async (buildingId) => {
+export const fetchDeleteProperty = async (propertyId) => {
     try {
       const response = await fetchDelete(
-        `/api/building/v1/building-remark/${buildingId}`, {}
+        `/api/property/v1/property/${propertyId}`, {}
       )
       console.log(response)
       if (response.responseCode === 'SUCCESS') {

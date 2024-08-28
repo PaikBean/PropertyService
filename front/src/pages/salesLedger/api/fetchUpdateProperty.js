@@ -1,8 +1,8 @@
-import { fetchDelete } from '@/utils/fetch/fetchWrapper'
-export const fetchDeleteBuildingRemark = async (buildingId) => {
+import { fetchPut } from '@/utils/fetch/fetchWrapper'
+export const fetchUpdateProperty = async (data) => {
     try {
-      const response = await fetchDelete(
-        `/api/building/v1/building-remark/${buildingId}`, {}
+      const response = await fetchPut(
+        '/api/property/v1/property', data
       )
       console.log(response)
       if (response.responseCode === 'SUCCESS') {
@@ -12,5 +12,6 @@ export const fetchDeleteBuildingRemark = async (buildingId) => {
       }
     } catch (error) {
       return new Error(error.message) // 에러 발생 시 null 반환
+    
   }
 }
