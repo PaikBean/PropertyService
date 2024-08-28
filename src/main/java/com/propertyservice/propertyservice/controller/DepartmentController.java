@@ -139,7 +139,7 @@ public class DepartmentController {
      * @param departmentMemberUpdateForm
      * @return
      */
-    @PutMapping("/v1/department-member/")
+    @PutMapping("/v1/department-member")
     public Response updateDepartmentMember(@RequestBody DepartmentMemberUpdateForm departmentMemberUpdateForm) {
         try {
             departmentService.updateDepartmentMember(departmentMemberUpdateForm);
