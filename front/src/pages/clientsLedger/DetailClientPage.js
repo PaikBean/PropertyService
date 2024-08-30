@@ -216,10 +216,24 @@ const DetailClientPage = () => {
     setSelectedRemarkRowIds(newSelection)
   }
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
     isScheduleModalOpen ? setIsScheduleModalOpen(false) : null
     isPropertyModalOpen ? setIsPropertyModalOpen(false) : null
     isRemarkModalOpen ? setIsRemarkModalOpen(false) : null
+
+    try{
+      const response = await fetchSearchClient(clientId)
+        if (response.responseCode === 'SUCCESS') {
+          setSearchData(response.data)
+          setRemarkRows(response.data.clientRemarkList)
+          setScheduleRows(response.data.showingPropertyList)
+          setScheduleRows(response.data.scheduleList)
+        } else {
+          throw new Error('Failed to fetch client list:', response.message)
+        }
+    } catch(error) {
+      alert(error)
+    }
   }
 
   return (
