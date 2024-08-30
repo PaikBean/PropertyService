@@ -137,4 +137,21 @@ public class PropertyController {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
+    /**
+     * 보여줄 매물 목록 등록
+     * @param showingPropertyForm
+     * @return
+     */
+    @PostMapping("/v1/showing-property-list")
+    public Response searchShowingPropertyList(@RequestBody ShowingPropertyForm showingPropertyForm){
+        try {
+            propertyService.createShowingProrperties(showingPropertyForm);
+            return new Response(ResponseCode.SUCCESS, null, "201");
+        } catch (Exception e) {
+            log.info("Error! : {}", e.getMessage());
+            log.info("Error! : {}", e.getClass());
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
 }

@@ -36,6 +36,7 @@ public class PropertyService {
 
     private final CommonService commonService;
     private final EntityExceptionService entityExceptionService;
+    private final CustomUserDetailService customUserDetailService;
 
     /**
      * 보여줄 매물 추가.
@@ -236,5 +237,34 @@ public class PropertyService {
         return Arrays.stream(PropertyType.values())
                 .map(propertyType -> new PropertyTypeDto(propertyType.name(), propertyType.getLabel()))
                 .collect(Collectors.toList());
+    }
+
+    public void createShowingProrperties(ShowingPropertyForm showingPropertyForm) {
+        Manager manager = commonService.getCustomUserDetailBySecurityContextHolder().getManager();
+
+        log.info("사이즈! : {}",showingPropertyForm.getShowingPropertyList().size());
+        for (Long propertyId : showingPropertyForm.getShowingPropertyList()) {
+            log.info("타겟! : {}",propertyId);
+            showingPropertyRepository.save(ShowingProperty.builder()
+                    .propertyId(entityExceptionService.findEntityById(
+                            () -> propertyRepository.findById(propertyId),
+                            "매물 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getPropertyId()
+                    )
+                    .clientId(
+                            entityExceptionService.findEntityById(
+                                    () -> clientRepository.findById(showingPropertyForm.getClientId()),
+                                    "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getClientId()
+                    )
+                    .registrationManagerId(entityExceptionService.findEntityById(
+                            () -> managerRepository.findById(manager.getManagerId()),
+                            "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                    )
+                    .modifiedManagerId(entityExceptionService.findEntityById(
+                            () -> managerRepository.findById(manager.getManagerId()),
+                            "고객 정보가 존재하지 않습니다. 관리자에게 문의하세요.").getManagerId()
+                    )
+                    .build());
+        }
+
     }
 }
