@@ -73,7 +73,7 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
                                 showingProperty.propertyId,
                                 property.transactionType,
                                 Expressions.stringTemplate(
-                                        "concat_ws(' ', {0}, {1}, {2}, {3})",
+                                        "concat_ws(' ', {0}, {1}, {2})",
                                         addressLevel1.addressLevel1,
                                         addressLevel2.addressLevel2,
                                         buildingAddress.addressLevel3
