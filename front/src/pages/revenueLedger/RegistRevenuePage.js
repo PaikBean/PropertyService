@@ -1,21 +1,28 @@
+// React, Next
+import { useState } from 'react'
+
+// Materials
+import { Alert, Box, Divider, Grid, Snackbar, Stack } from '@mui/material'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
+// Custom Components
+import RemarkTextField from '@/components/textfield/RemarkTextField'
+import CommisionFeeForm from '@/components/form/CommisionFeeForm'
+import TrasactionTypePriceForm from '@/components/form/TransactionTypePriceForm'
+import BasicDatePicker from '@/components/datepicker/BasicDatePicker'
 import AddressL1 from '@/components/autocomplete/AddressL1'
 import AddressL2 from '@/components/autocomplete/AddressL2'
 import ManagerAutocomplete from '@/components/autocomplete/ManagerAutocomplete'
 import InputADdressL3 from '@/components/textfield/InputAddressL3'
 import InputName2 from '@/components/textfield/InputName2'
 import SaveToolbar from '@/components/toolbar/SaveToolbar'
-import { Alert, Box, Divider, Grid, Snackbar, Stack } from '@mui/material'
-import { useState } from 'react'
-import { LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import BasicDatePicker from '@/components/datepicker/BasicDatePicker'
+
+// Utils
 import dayjs from 'dayjs'
-import RemarkTextField from '@/components/textfield/RemarkTextField'
-import CommisionFeeForm from '@/components/form/CommisionFeeForm'
-import TrasactionTypePriceForm from '@/components/form/TransactionTypePriceForm'
 import { fetchRegistRevenue } from './api/fetchRegistRevenue'
 
-const RegistRevenuePage = ({ initMainPage }) => {
+const RegistRevenuePage = () => {
   const initialData = {
     managerId: null,
     ownerName: '',
@@ -111,7 +118,7 @@ const RegistRevenuePage = ({ initMainPage }) => {
           <Divider sx={{ width: '100%', borderColor: 'white' }}></Divider>
           <Grid container gap={5} sx={{ width: '70%' }}>
             <Grid item xs={2.5}>
-              <ManagerAutocomplete
+               <ManagerAutocomplete
                 value={registData.managerId} // Add this line
                 onChange={(value) => {
                   handleInputChange('managerId', value)

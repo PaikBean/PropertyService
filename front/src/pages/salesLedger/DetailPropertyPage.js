@@ -13,6 +13,10 @@ import RemoveIcon from '@mui/icons-material/Remove'
 import BuildingRemarkColumns from './columns/BuildingRemarkColumns'
 import PropertyListColumns from './columns/PropertyListColumns'
 import DetailPropertyModal from '@/components/modal/DetailPropertyModal'
+import { fetchSEarchBuildingList } from './api/fetchSearchBuildingList'
+import { fetchSearchBuildingDetail } from './api/fetchSearchBuildingDetail'
+import AddBuildingRemarkModal from '@/components/modal/AddBuildingRemarkModal'
+import { fetchDeleteBuildingRemark } from './api/fetchDeleteBuildingRemark'
 
 const DetailPropertyPage = () => {
   const initialSearchCondition = {
@@ -23,9 +27,9 @@ const DetailPropertyPage = () => {
   const initialBuildingData = {
     ownerName: '',
     ownerRelation: '',
-    ownerPhonNumber: '',
+    ownerPhoneNumber: '',
     buildingAddress: '',
-  }
+  };
 
   const [buildingId, setBuildingId] = useState(null)
 
@@ -46,25 +50,67 @@ const DetailPropertyPage = () => {
   const [isPropertyModalOpen, setIsPropertyModalOpen] = useState(false)
 
   useEffect(() => {
-    // if (buildingId) {
-    //   const selectedBuilding = buildingRows.find(
-    //     (building) => building.buildingId === buildingId
-    //   )
-    //   if (selectedBuilding) {
-    //     setBuildingInfo(selectedBuilding)
-    //     setRegistData((prev) => ({
-    //       ...prev,
-    //       buildingId: selectedBuilding.buildingId,
-    //     }))
-    //     console.log(selectedBuilding)
-    //   }
-    // }
-    // alert('빌딩 선택 : ', buildingRows)
+    const fetchData = async () => {
+      try {
+        const response = await fetchSearchBuildingDetail(buildingId);
+        console.log(response.data)
+        setBuildingData(response.data); // 데이터를 상태로 설정
+        setBuildingRemarkRows(response.data.buildingRemarkList)
+        setPropertyRows(response.data.buildingPropertyList)
+      } catch (error) {
+        console.error(error);
+        alert(error)
+      }
+    };
+    if(buildingId != null)
+      fetchData();
   }, [buildingId, buildingRows])
 
-  const handleBuildingRemarkRows = () => {}
+  const handleBuildingRemarkRows = (params) => {
+    setSelectedBuildingRemarkRowIds(params[0])
+  }
 
-  const handleDeleteBuildingRemarkRows = () => {}
+  const handleDeleteBuildingRemarkRows = async () => {
+    console.log(selectedBuildingRemarkRowIds)
+    try{
+      const response = await fetchDeleteBuildingRemark(selectedBuildingRemarkRowIds)
+      if(response.responseCode === 'SUCCESS') {
+        console.log(response)
+        // 특이사항 목록 재검색
+        try {
+          const response = await fetchSearchBuildingDetail(buildingId);
+          console.log(response.data)
+          setBuildingData(response.data); // 데이터를 상태로 설정
+          setBuildingRemarkRows(response.data.buildingRemarkList)
+          setPropertyRows(response.data.buildingPropertyList)
+        } catch (error) {
+          console.error(error);
+        }
+      } else{
+        throw new Error(response.message || 'Error!')
+      }
+    } catch(error) {
+      alert(error)
+    }
+  }
+
+  const handleCloseBuildingRemarkModal = async () => {
+    try {
+      const response = await fetchSearchBuildingDetail(buildingId);
+      console.log(response.data)
+      setBuildingData(response.data); // 데이터를 상태로 설정
+      setBuildingRemarkRows(response.data.buildingRemarkList)
+      setPropertyRows(response.data.buildingPropertyList)
+    } catch (error) {
+      console.error(error);
+    }
+    isBuildingRemarkModalOpen ? setIsBuildingRemarkModalOpen(false) : null
+  }
+
+  const handlePropertyRows = (params) => {
+    setSelectedPropertyRowIds(params[0])
+    setIsPropertyModalOpen(true)
+  }
 
   const handleCloseModal = () => {
     isPropertyModalOpen ? setIsPropertyModalOpen(false) : null
@@ -83,12 +129,8 @@ const DetailPropertyPage = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await fetchSearchBuildngs(searchCondition)
-      if (response.responseCode === 'SUCCESS') {
-        setBuildingRows(response.data)
-      } else {
-        console.error('Failed to fetch building list:', response.message)
-      }
+      const response = await fetchSEarchBuildingList(searchCondition)
+      setBuildingRows(response.data)
     } catch (error) {
       console.error('Error fetching building list:', error)
     }
@@ -193,7 +235,7 @@ const DetailPropertyPage = () => {
                   <Grid item xs={1.5}>
                     <InputName2
                       label="임대인"
-                      value={initialBuildingData.ownerName}
+                      value={buildingData.ownerName}
                       onChange={(e) => {
                         handleInputChange('ownerName', e.target.value)
                       }}
@@ -209,7 +251,7 @@ const DetailPropertyPage = () => {
                   </Grid>
                   <Grid item xs={3}>
                     <InputPhoneNumber
-                      value={initialBuildingData.ownerPhonNumber}
+                      value={buildingData.ownerPhoneNumber}
                       onChange={(formattedPhoneNumber) =>
                         handleInputChange(
                           'ownerPhonNumber',
@@ -230,7 +272,7 @@ const DetailPropertyPage = () => {
                   <Grid item xs={6.5}>
                     <InputName2
                       label="주소"
-                      value={initialBuildingData.buildingAddress}
+                      value={buildingData.buildingAddress}
                       onChange={(e) => {
                         handleInputChange('buildingAddress', e.target.value)
                       }}
@@ -252,13 +294,14 @@ const DetailPropertyPage = () => {
                       columns={BuildingRemarkColumns}
                       height={'22.5vh'}
                       columnVisibilityModel={{
-                        remarkId: false,
+                        buildingRemarkId: false,
                       }}
                       checkboxSelection={true}
                       onRowSelectionModelChange={handleBuildingRemarkRows}
                       showAll={true}
                       pageSize={10}
                       rowHeight={48}
+                      getRowId={(row) => row.buildingRemarkId} // getRowId 속성 전달
                     />
                   </Grid>
                   <Grid
@@ -296,10 +339,11 @@ const DetailPropertyPage = () => {
                     columnVisibilityModel={{
                       propertyId: false,
                     }}
-                    onRowSelectionModelChange={handleBuildingRemarkRows}
+                    onRowSelectionModelChange={handlePropertyRows}
                     showAll={true}
                     pageSize={10}
                     rowHeight={48}
+                    getRowId={(row) => row.propertyId} // getRowId 속성 전달
                   />
                 </Grid>
               </Stack>
@@ -310,7 +354,13 @@ const DetailPropertyPage = () => {
       <DetailPropertyModal
         open={isPropertyModalOpen}
         handleClose={handleCloseModal}
+        data={{propertyId: selectedPropertyRowIds}}
       ></DetailPropertyModal>
+      <AddBuildingRemarkModal
+        open={isBuildingRemarkModalOpen}
+        handleClose={handleCloseBuildingRemarkModal}
+        data={{buildingId: buildingId}}
+      />
     </Box>
   )
 }

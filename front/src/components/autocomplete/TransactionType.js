@@ -1,7 +1,13 @@
-import { fetchManagerStateList } from '@/store/slices/managerStateSlice'
-import { fetchTransactionTypeList } from '@/store/slices/transactionTypeSlice'
+// React, Next
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+// Materials
+
+// Custom Components
+
+// Utils
+import { fetchTransactionTypeList } from '@/store/slices/transactionTypeSlice'
 
 const { Autocomplete, TextField } = require('@mui/material')
 
@@ -18,18 +24,18 @@ const TransactionType = ({ value, onChange, sx, readOnly = false }) => {
   })
 
   const handleChange = (event, value) => {
-    onChange(value ? value.transactionTypeId : '')
+    onChange(value ? value.transactionTypeName : '')
   }
 
   return (
     <Autocomplete
       value={
         options
-          ? options.find((option) => option.transactionTypeId === value) || null
+          ? options.find((option) => option.transactionTypeName === value) || null
           : null
       }
       options={options || []}
-      getOptionLabel={(options) => options.transactionTypeName || ''}
+      getOptionLabel={(options) => options.label || ''}
       onChange={handleChange}
       renderInput={(params) => (
         <TextField

@@ -1,7 +1,14 @@
-import { fetchScheduleTypeList } from '@/store/slices/scheduleTypeSlice'
-import { Autocomplete, TextField } from '@mui/material'
+// React, Next
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+// Materials
+import { Autocomplete, TextField } from '@mui/material'
+
+// Custom Components
+
+// Utils
+import { fetchScheduleTypeList } from '@/store/slices/scheduleTypeSlice'
 
 const ScheduleType = ({ value, onChange, sx, readOnly = false }) => {
   const dispatch = useDispatch()
@@ -14,17 +21,17 @@ const ScheduleType = ({ value, onChange, sx, readOnly = false }) => {
   }, [dispatch, status])
 
   const handleChange = (event, value) => {
-    onChange(value ? value.scheduleId : '')
+    onChange(value ? value.scheduleTypeName : '')
   }
   return (
     <Autocomplete
       value={
         options
-          ? options.find((option) => option.scheduleId === value) || null
+          ? options.find((option) => option.scheduleTypeName === value) || null
           : null
       }
       options={options || []}
-      getOptionLabel={(options) => options.scheduleType || ''}
+      getOptionLabel={(options) => options.label || ''}
       onChange={handleChange}
       renderInput={(params) => (
         <TextField

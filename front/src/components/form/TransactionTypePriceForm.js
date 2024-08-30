@@ -1,6 +1,13 @@
+// React, Next
+
+// Materials
 import { Button, Grid, Stack, Typography } from '@mui/material'
+
+// Custom Components
 import CashTextField from '../textfield/CashTextField'
 import CashTransWonTextField from '../textfield/CashTransWonTextField'
+
+// Utils
 
 const TrasactionTypePriceForm = ({ value, onChange, readOnly }) => {
   const renderInputs = () => {
@@ -33,21 +40,21 @@ const TrasactionTypePriceForm = ({ value, onChange, readOnly }) => {
             <CashTextField
               label="단기 보증금"
               value={value.shortemDeposit}
-              onChange={(e) => onChange('shortemDeposit', e.target.value)}
+              onChange={(e) => onChange('deposit', e.target.value)}
               readOnly={readOnly}
             />
             <CashTransWonTextField
-              value={value.shortemDeposit}
+              value={value.deposit}
               readOnly={readOnly}
             />
             <CashTextField
               label="단기 월세"
               value={value.shortemMonthlyFee}
-              onChange={(e) => onChange('shortemMonthlyFee', e.target.value)}
+              onChange={(e) => onChange('monthlyFee', e.target.value)}
               readOnly={readOnly}
             />
             <CashTransWonTextField
-              value={value.shortemMonthlyFee}
+              value={value.monthlyFee}
               readOnly={readOnly}
             />
           </Grid>

@@ -12,16 +12,22 @@ import java.util.List;
 @Setter
 public class ClientDetailDto {
     private Long clientId;
-    private Long propertyId;
+    private String clientName;
+    private String inflowType;
+    private String clientPhoneNumber;
+    private Long managerId;
 
     List<ScheduleSummaryDto> scheduleList;
     List<ShowingPropertySummaryDto> showingPropertyList;
     List<ClientRemarkDto> clientRemarkList;
 
     @Builder
-    public ClientDetailDto(Long clientId, Long propertyId, List<ScheduleSummaryDto> scheduleList, List<ShowingPropertySummaryDto> showingPropertyList, List<ClientRemarkDto> clientRemarkList){
+    public ClientDetailDto(Long clientId,String clientName, String inflowType, String clientPhoneNumber, Long managerId, List<ScheduleSummaryDto> scheduleList, List<ShowingPropertySummaryDto> showingPropertyList, List<ClientRemarkDto> clientRemarkList){
         this.clientId = clientId;
-        this.propertyId = propertyId;
+        this.clientName = clientName;
+        this.inflowType = inflowType;
+        this.clientPhoneNumber = clientPhoneNumber;
+        this.managerId = managerId;
         this.scheduleList =scheduleList;
         this.showingPropertyList = showingPropertyList;
         this.clientRemarkList = clientRemarkList;

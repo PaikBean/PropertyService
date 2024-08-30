@@ -22,8 +22,9 @@ public class Schedule extends BaseTimeEntity {
     private Long scheduleId;
     private Long managerId;
     private Long clientId;
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "schedule_type_id")
+
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
     private ScheduleType scheduleType;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

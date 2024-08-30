@@ -1,28 +1,15 @@
-export const fetchSearchBuilding = async (clientId) => {
+import { fetchGet } from "@/utils/fetch/fetchWrapper";
+
+export const fetchSearchBuilding = async (buildingId) => {
   try {
-    const url = new URL('/api/client/v1/client-detail', window.location.origin)
-    const params = {
-      clientId: clientId,
-    }
+    const response = await fetchGet(`/api/building/v1/building-info/${buildingId}`, {}, {});
 
-    Object.keys(params).forEach((key) => {
-      if (params[key] !== null && params[key] !== '') {
-        url.searchParams.append(key, params[key])
-      }
-    })
-
-    console.log(url.toString()) // URL을 로그로 출력하여 확인
-    const response = await fetch(url, {
-      method: 'GET',
-    })
-    if (!response.ok) {
-      // throw new Error('Network response was not ok')
-      throw new Error(response.statusText)
+    if (response.responseCode === 'SUCCESS') {
+      return response;
+    } else {
+      throw new Error(response.message || 'Error!');
     }
-    const result = await response.json()
-    return result
   } catch (error) {
-    console.error('Error saving revenue data:', error)
-    throw error
+    return new Error(error.message); // 에러 발생 시 null 반환
   }
 }

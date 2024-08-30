@@ -1,15 +1,14 @@
 import { TextField } from '@mui/material'
 
-const InputEmail = ({ value, onChange, sx }) => {
+const InputEmail = ({ value, onChange, sx, label = 'Email Address' }) => {
   return (
     <TextField
       value={value}
       onChange={onChange}
       sx={sx}
       id="email"
-      label="Email Address"
+      label={label}
       name="email"
-      required
       fullWidth
       variant="outlined"
       type="email"

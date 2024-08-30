@@ -1,20 +1,28 @@
-import { Modal, Stack } from '@mui/material'
+// React, Next
 import { useState } from 'react'
+
+// Materials
+
+import { Modal, Stack } from '@mui/material'
+
+// Custom Components
 import SaveToolbar from '../toolbar/SaveToolbar'
 import RemarkTextField from '../textfield/RemarkTextField'
+
+// Utils
 import { fetchRegistClientRemark } from '@/pages/clientsLedger/api/fetchRegistClientRemark'
 
-const AddRemarkModal = ({ open, handleClose, data, onClick }) => {
+const AddRemarkModal = ({ open, handleClose, data }) => {
   const initialData = {
     managerId: data.managerId,
     clientId: data.clientId,
     remark: '',
   }
 
-  const [remarkData, setReamarkData] = useState(initialData)
+  const [remarkData, setRemarkData] = useState(initialData)
 
   const handleInputChange = (field, value) => {
-    setReamarkData((prev) => ({
+    setRemarkData((prev) => ({
       ...prev,
       [field]: value,
     }))
@@ -23,8 +31,13 @@ const AddRemarkModal = ({ open, handleClose, data, onClick }) => {
   const handleSave = async () => {
     console.log(remarkData)
     try {
-      const result = await fetchRegistClientRemark(remarkData)
-      setReamarkData(initialData)
+      const requestData = {
+        clientId: data.clientId,
+        remark: remarkData.remark
+      }
+      console.log(requestData)
+      const result = await fetchRegistClientRemark(requestData)
+      setRemarkData(initialData)
       handleClose()
     } catch (error) {
       alert(error.message)

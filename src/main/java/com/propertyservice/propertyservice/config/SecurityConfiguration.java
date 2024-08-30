@@ -3,9 +3,10 @@ package com.propertyservice.propertyservice.config;
 import com.propertyservice.propertyservice.jwt.JWTFilter;
 import com.propertyservice.propertyservice.jwt.LoginFilter;
 import com.propertyservice.propertyservice.jwt.TokenProvider;
+import com.propertyservice.propertyservice.service.CommonService;
+import com.propertyservice.propertyservice.service.CustomUserDetailService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -33,15 +33,19 @@ public class SecurityConfiguration {
     //private final CustomAuthSueccessHandler customAuthSueccessHandler; //성공 핸들러.
     private final AuthenticationConfiguration authenticationConfiguration;
     private final TokenProvider tokenProvider;
+    private final CustomUserDetailService customUserDetailService;
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
 
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
 
 
     @Bean
@@ -65,7 +69,7 @@ public class SecurityConfiguration {
         http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         //jwtfilter 추가.
-        http.addFilterBefore(new JWTFilter(tokenProvider), LoginFilter.class);
+        http.addFilterBefore(new JWTFilter(tokenProvider,customUserDetailService), LoginFilter.class);
 
         // 세션 설정.
         // stateless : http와 같은 client의 이전 상태를 관리하지 않음.

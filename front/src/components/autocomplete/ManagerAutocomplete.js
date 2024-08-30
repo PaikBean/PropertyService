@@ -1,8 +1,14 @@
-import { fetchManagerList } from '@/store/slices/managerSlice'
+// React, Next
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+// Materials
 const { Autocomplete, TextField } = require('@mui/material')
+
+// Custom Components
+
+// Utils
+import { fetchManagerList } from '@/store/slices/managerSlice'
 
 const ManagerAutocomplete = ({
   label = 'Manager',

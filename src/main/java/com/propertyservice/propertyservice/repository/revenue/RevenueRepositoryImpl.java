@@ -2,25 +2,28 @@ package com.propertyservice.propertyservice.repository.revenue;
 
 import com.propertyservice.propertyservice.domain.common.QAddressLevel1;
 import com.propertyservice.propertyservice.domain.common.QAddressLevel2;
-import com.propertyservice.propertyservice.domain.common.QTransactionType;
-import com.propertyservice.propertyservice.domain.company.QManager;
+import com.propertyservice.propertyservice.domain.common.TransactionType;
+import com.propertyservice.propertyservice.domain.manager.QManager;
 import com.propertyservice.propertyservice.domain.revenue.QRevenueLedger;
 import com.propertyservice.propertyservice.dto.revenue.QRevenueDto;
 import com.propertyservice.propertyservice.dto.revenue.RevenueCondition;
 import com.propertyservice.propertyservice.dto.revenue.RevenueDto;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 import static org.springframework.util.StringUtils.hasText;
 
+@Slf4j
 @RequiredArgsConstructor
 public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
     private final JPAQueryFactory queryFactory;
@@ -28,7 +31,7 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
     private final QManager manager = QManager.manager;
     private final QAddressLevel1 addressLevel1 = QAddressLevel1.addressLevel11;
     private final QAddressLevel2 addressLevel2 = QAddressLevel2.addressLevel21;
-    private final QTransactionType transactionType = QTransactionType.transactionType;
+
 
     @Override
     public List<RevenueDto> searchRevenueList(RevenueCondition revenueCondition) {
@@ -36,7 +39,7 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 .select(
                         new QRevenueDto(
                                 revenueLedger.id,
-                                revenueLedger.managerId.managerName,
+                                revenueLedger.manager.managerName,
                                 revenueLedger.ownerName,
                                 revenueLedger.clientName,
                                 Expressions.stringTemplate(
@@ -53,21 +56,34 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                                         "DATE_FORMAT({0}, '%Y-%m-%d')",
                                         revenueLedger.contractEndDate
                                 ),
-                                transactionType.transactionTypeName,
                                 new CaseBuilder()
-                                        .when(revenueLedger.transactionTypeId.eq(1L).or(revenueLedger.transactionTypeId.eq(4L)))
+                                        .when(revenueLedger.transactionType.eq(TransactionType.MONTHLY))
+                                        .then(TransactionType.MONTHLY.getLabel())
+                                        .when(revenueLedger.transactionType.eq(TransactionType.JEONSE))
+                                        .then(TransactionType.JEONSE.getLabel())
+                                        .when(revenueLedger.transactionType.eq(TransactionType.TRADE))
+                                        .then(TransactionType.TRADE.getLabel())
+                                        .when(revenueLedger.transactionType.eq(TransactionType.SHORTERM))
+                                        .then(TransactionType.SHORTERM.getLabel())
+                                        .otherwise("")
+                                        .as("transactionTypeLabel"),
+                                new CaseBuilder()
+                                        .when(revenueLedger.transactionType.eq(TransactionType.MONTHLY).or(revenueLedger.transactionType.eq(TransactionType.SHORTERM)))
                                         .then(Expressions.stringTemplate("CONCAT({0}, '/', {1})", revenueLedger.deposit, revenueLedger.monthlyFee))
-                                        .when(revenueLedger.transactionTypeId.eq(2L).or(revenueLedger.transactionTypeId.eq(3L)))
+                                        .when(revenueLedger.transactionType.eq(TransactionType.JEONSE))
                                         .then(revenueLedger.jeonseFee.stringValue())
+                                        .when(revenueLedger.transactionType.eq(TransactionType.TRADE))
+                                        .then(revenueLedger.tradeFee.stringValue())
+//                                        .then(convertKoreanCurrency(revenueLedger.tradeFee))
                                         .otherwise("")
                                         .as("price"),
-                                revenueLedger.commission,
+                                revenueLedger.commission.stringValue(),
                                 revenueLedger.remark
                         )
                 )
                 .from(revenueLedger)
                 .join(manager).on(
-                        revenueLedger.managerId.eq(manager)
+                        revenueLedger.manager.eq(manager)
                 )
                 .join(addressLevel1).on(
                         revenueLedger.addressLevel1Id.eq(addressLevel1.addressLevel1Id)
@@ -75,10 +91,8 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 .join(addressLevel2).on(
                         revenueLedger.addressLevel2Id.eq(addressLevel2.addressLevel2Id)
                 )
-                .join(transactionType).on(
-                        revenueLedger.transactionTypeId.eq(transactionType.transactionTypeId)
-                )
                 .where(
+                        revenueLedger.company.companyId.eq(revenueCondition.getCompanyId()),
                         managerIdEq(revenueCondition.getManagerId()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),
@@ -97,7 +111,7 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 )
                 .from(revenueLedger)
                 .join(manager).on(
-                        revenueLedger.managerId.eq(manager)
+                        revenueLedger.manager.eq(manager)
                 )
                 .join(addressLevel1).on(
                         revenueLedger.addressLevel1Id.eq(addressLevel1.addressLevel1Id)
@@ -105,10 +119,8 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 .join(addressLevel2).on(
                         revenueLedger.addressLevel2Id.eq(addressLevel2.addressLevel2Id)
                 )
-                .join(transactionType).on(
-                        revenueLedger.transactionTypeId.eq(transactionType.transactionTypeId)
-                )
                 .where(
+                        revenueLedger.company.companyId.eq(revenueCondition.getCompanyId()),
                         managerIdEq(revenueCondition.getManagerId()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),
@@ -125,7 +137,7 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 .select(revenueLedger.count())
                 .from(revenueLedger)
                 .join(manager).on(
-                        revenueLedger.managerId.eq(manager)
+                        revenueLedger.manager.eq(manager)
                 )
                 .join(addressLevel1).on(
                         revenueLedger.addressLevel1Id.eq(addressLevel1.addressLevel1Id)
@@ -133,10 +145,8 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 .join(addressLevel2).on(
                         revenueLedger.addressLevel2Id.eq(addressLevel2.addressLevel2Id)
                 )
-                .join(transactionType).on(
-                        revenueLedger.transactionTypeId.eq(transactionType.transactionTypeId)
-                )
                 .where(
+                        revenueLedger.company.companyId.eq(revenueCondition.getCompanyId()),
                         managerIdEq(revenueCondition.getManagerId()),
                         addressLevel1Eq(revenueCondition.getAddressL1Id()),
                         addressLevel2Eq(revenueCondition.getAddressL2Id()),
@@ -175,7 +185,8 @@ public class RevenueRepositoryImpl implements RevenueRepositoryCustom {
                 : null;
     }
 
-    private BooleanExpression transactionTypeEq(Long transactionTypeId) {
-        return transactionTypeId != null ? revenueLedger.transactionTypeId.eq(transactionTypeId) : null;
+    private BooleanExpression transactionTypeEq(TransactionType transactionType) {
+        return transactionType != null ? revenueLedger.transactionType.eq(transactionType) : null;
     }
+
 }

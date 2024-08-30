@@ -61,11 +61,39 @@ public class CommonController {
     @GetMapping("/v1/transaction-type-list")
     public Response searchInflowTypeList() {
         try {
-            return new Response(ResponseCode.SUCCESS, commonService.searchInflowTypeList(), "200");
+            return new Response(ResponseCode.SUCCESS, commonService.searchTransactionTypeList(), "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }
+
+    /**
+     * 근무 상태 목록 조회
+     * @return
+     */
+    @GetMapping("/v1/manager-state-list")
+    public Response searchManagerStateList() {
+        try {
+            return new Response(ResponseCode.SUCCESS, commonService.searchManagerStateList(), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 성별 목록 조회
+     *
+     * @return
+     */
+        @GetMapping("/v1/gender-list")
+    public Response searchGenderList() {
+        try {
+            return new Response(ResponseCode.SUCCESS, commonService.searchGenderList(), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+    
 
 //    @GetMapping("/v1/gender-list")
 //    public Response searchGenderList() {

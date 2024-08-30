@@ -1,28 +1,30 @@
+import { fetchGet } from "@/utils/fetch/fetchWrapper";
+
+// InflowType 매핑 객체 정의
+const inflowTypeMapping = {
+  "직방": "ZIGBANG",
+  "다방": "DABANG",
+  "피터팬": "PETERPANZ",
+  "집토스": "ZIPTOSS",
+  "기타": "OTHERS"
+};
+
 export const fetchSearchClient = async (clientId) => {
   try {
-    const url = new URL('/api/client/v1/client-detail', window.location.origin)
-    const params = {
-      clientId: clientId,
-    }
+    const response = await fetchGet(`/api/client/v1/client/${clientId}`, {}, {});
 
-    Object.keys(params).forEach((key) => {
-      if (params[key] !== null && params[key] !== '') {
-        url.searchParams.append(key, params[key])
+    if (response.responseCode === 'SUCCESS') {
+      // inflowType 값 변환
+      const inflowType = response.data.inflowType;
+      if (inflowTypeMapping[inflowType]) {
+        response.data.inflowType = inflowTypeMapping[inflowType];
       }
-    })
-
-    console.log(url.toString()) // URL을 로그로 출력하여 확인
-    const response = await fetch(url, {
-      method: 'GET',
-    })
-    if (!response.ok) {
-      // throw new Error('Network response was not ok')
-      throw new Error(response.statusText)
+      
+      return response;
+    } else {
+      throw new Error(response.message || 'Error!');
     }
-    const result = await response.json()
-    return result
   } catch (error) {
-    console.error('Error saving revenue data:', error)
-    throw error
+    return new Error(error.message); // 에러 발생 시 null 반환
   }
 }

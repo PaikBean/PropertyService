@@ -1,5 +1,8 @@
 package com.propertyservice.propertyservice.dto.property;
 
+import com.propertyservice.propertyservice.domain.common.TransactionState;
+import com.propertyservice.propertyservice.domain.common.TransactionType;
+import com.propertyservice.propertyservice.domain.property.PropertyType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,18 +10,18 @@ import lombok.Getter;
 public class PropertySummaryDto {
     private Long propertyId;
     private String unitNumber;
-    private Long propertyTypeId;
-    private Long transactionTypeId;
+    private PropertyType propertyType;
+    private TransactionType transactionType;
     private String price;
-    private Long transactionStateId;
+    private TransactionState transactionState;
 
     @Builder
-    public PropertySummaryDto(Long propertyId, String unitNumber, Long propertyTypeId, Long transactionTypeId, String price, Long transactionStateId) {
+    public PropertySummaryDto(Long propertyId, String unitNumber, PropertyType propertyType, TransactionType transactionType, String price, TransactionState transactionState) {
         this.propertyId = propertyId;
         this.unitNumber = unitNumber;
-        this.propertyTypeId = propertyTypeId;
-        this.transactionTypeId = transactionTypeId;
+        this.propertyType = propertyType;
+        this.transactionType = transactionType;
         this.price = price;
-        this.transactionStateId = transactionStateId;
+        this.transactionState = transactionState;
     }
 }

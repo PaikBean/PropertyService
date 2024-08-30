@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class RevenueController {
 
     private final RevenueService revenueService;
-    private final RevenueRepository revenueRepository;
 
     /**
      * 매출 장부 등록

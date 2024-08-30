@@ -1,6 +1,12 @@
 import { TextField } from '@mui/material'
 
-const CheckSignUpPassword = ({ value, onChange, sx, error }) => {
+const CheckSignUpPassword = ({
+  value,
+  onChange,
+  sx,
+  error,
+  label = '비밀번호 확인',
+}) => {
   return (
     <TextField
       sx={sx}
@@ -9,7 +15,7 @@ const CheckSignUpPassword = ({ value, onChange, sx, error }) => {
       error={error}
       helperText={error ? 'Passwords do not match' : ''}
       id="check-password"
-      label="Check Password"
+      label={label}
       name="checkPassword"
       required
       fullWidth

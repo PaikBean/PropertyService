@@ -1,26 +1,32 @@
-import { Box, Button, Modal, Stack, Typography } from '@mui/material'
-import SaveToolbar from '../toolbar/SaveToolbar'
-import InputName from '../textfield/InputName'
-import InputName2 from '../textfield/InputName2'
-import ManagerAutocomplete from '../autocomplete/ManagerAutocomplete'
+// React, Next
 import { useState } from 'react'
+
+// Materials
+import { Modal, Stack } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import BasicDatePicker from '@/components/datepicker/BasicDatePicker'
-import dayjs from 'dayjs'
+
+// Custom Components
+import Clients from '../autocomplete/Clients'
 import RemarkTextField from '../textfield/RemarkTextField'
 import ScheduleType from '../autocomplete/scheduleType'
 import Priority from '../autocomplete/Priority'
-import { fetchRegistSchedule } from '@/pages/clientsLedger/api/fetchRegistSchedule'
-import Clients from '../autocomplete/Clients'
+import SaveToolbar from '../toolbar/SaveToolbar'
+import ManagerAutocomplete from '../autocomplete/ManagerAutocomplete'
+import BasicDatePicker from '@/components/datepicker/BasicDatePicker'
 
-const AddScheduleModal2 = ({ open, handleClose, data, onClick }) => {
+// Utils
+import dayjs from 'dayjs'
+import { fetchRegistSchedule } from '@/pages/schedule/api/fetchRegistSchedule'
+
+
+const AddScheduleModal2 = ({ open, handleClose, data }) => {
   const initialData = {
     managerId: null,
-    clientId: data,
+    clientId: null,
     clientName: '',
-    scheduleTypeId: null,
-    sheduleDate: '',
+    scheduleType: null,
+    scheduleDate: '',
     priority: '',
     remark: '',
   }
@@ -73,24 +79,24 @@ const AddScheduleModal2 = ({ open, handleClose, data, onClick }) => {
           }}
         />
         <Clients
-          value={scheduleData.clientName}
+          value={scheduleData.clientId}
           onChange={(value) => {
-            handleInputChange('clientName', value)
+            handleInputChange('clientId', value)
           }}
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <BasicDatePicker
             label="일자"
-            value={dayjs(scheduleData.sheduleDate)}
+            value={dayjs(scheduleData.scheduleDate)}
             onChange={(value) => {
-              handleInputChange('sheduleDate', value.format('YYYYMMDD'))
+              handleInputChange('scheduleDate', value.format('YYYYMMDD'))
             }}
           />
         </LocalizationProvider>
         <ScheduleType
-          value={scheduleData.scheduleTypeId}
+          value={scheduleData.scheduleType}
           onChange={(value) => {
-            handleInputChange('scheduleTypeId', value)
+            handleInputChange('scheduleType', value)
           }}
         />
         <Priority

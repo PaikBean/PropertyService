@@ -5,14 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class TransactionTypeDto {
-    private Long transactionTypeId;
     private String transactionTypeName;
-    private String transactionTypeCode;
+    private String label;
 
     @Builder
-    public TransactionTypeDto(Long transactionTypeId, String transactionTypeName, String transactionTypeCode) {
-        this.transactionTypeId = transactionTypeId;
+    public TransactionTypeDto(String transactionTypeName, String label) {
         this.transactionTypeName = transactionTypeName;
-        this.transactionTypeCode = transactionTypeCode;
+        this.label = label;
     }
 }

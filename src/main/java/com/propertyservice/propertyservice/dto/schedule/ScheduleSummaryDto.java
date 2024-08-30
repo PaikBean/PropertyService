@@ -1,10 +1,12 @@
 package com.propertyservice.propertyservice.dto.schedule;
 
+import com.propertyservice.propertyservice.domain.schedule.ScheduleType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 public class ScheduleSummaryDto {
@@ -13,22 +15,41 @@ public class ScheduleSummaryDto {
     private String managerName;
     private Long clientId;
     private String clientName;
-    private Long scheduleTypeId;
-    private String scheduleType;
+    private ScheduleType scheduleType;
     private String priority;
     private LocalDateTime scheduleDate;
+    private String scheduleDateTxt;
+    private String remark;
 
     @QueryProjection
-
-    public ScheduleSummaryDto(Long scheduleId, Long managerId, String managerName, Long clientId, String clientName, Long scheduleTypeId, String scheduleType, String priority, LocalDateTime scheduleDate) {
+    public ScheduleSummaryDto(Long scheduleId, Long managerId, String managerName, Long clientId, String clientName, ScheduleType scheduleType, String priority, LocalDateTime scheduleDate) {
         this.scheduleId = scheduleId;
         this.managerId = managerId;
         this.managerName = managerName;
         this.clientId = clientId;
         this.clientName = clientName;
-        this.scheduleTypeId = scheduleTypeId;
         this.scheduleType = scheduleType;
         this.priority = priority;
         this.scheduleDate = scheduleDate;
+    }
+
+    /**
+     * 고객 정보 단건 조회.
+     */
+    @QueryProjection
+    public ScheduleSummaryDto(Long scheduleId, String managerName, ScheduleType scheduleType, String priority, LocalDateTime scheduleDate) {
+        this.scheduleId = scheduleId;
+        this.managerName = managerName;
+        this.scheduleType = scheduleType;
+        this.priority = priority;
+        this.scheduleDateTxt = scheduleDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));;
+    }
+    @QueryProjection
+    public ScheduleSummaryDto(Long scheduleId, String managerName, ScheduleType scheduleType, LocalDateTime scheduleDate, String remark) {
+        this.scheduleId = scheduleId;
+        this.managerName = managerName;
+        this.scheduleType = scheduleType;
+        this.remark = remark;
+        this.scheduleDateTxt = scheduleDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));;
     }
 }

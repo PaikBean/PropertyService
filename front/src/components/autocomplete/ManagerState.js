@@ -1,10 +1,16 @@
-import { fetchManagerStateList } from '@/store/slices/managerStateSlice'
+// React, Next
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const { Autocomplete, TextField } = require('@mui/material')
+// Materials
+import { Autocomplete, TextField } from '@mui/material'
 
-const ManagerState = ({ onChange }) => {
+// Custom Components
+
+// Utils
+import { fetchManagerStateList } from '@/store/slices/managerStateSlice'
+
+const ManagerState = ({ value, onChange, label = '근무 상태' }) => {
   const dispatch = useDispatch()
   const { options, status, error } = useSelector((state) => state.managerState)
 
@@ -12,18 +18,23 @@ const ManagerState = ({ onChange }) => {
     if (status === 'idle') {
       dispatch(fetchManagerStateList())
     }
-  })
+  }, [dispatch, status])
 
   const handleChange = (event, value) => {
-    onChange(value ? value.mangerStateId : '')
+    onChange(value ? value.name : '')
   }
 
   return (
     <Autocomplete
+      value={
+        options
+          ? options.find((option) => option.name === value) || null
+          : null
+      }
       options={options || []}
-      getOptionLabel={(options) => options.managerState || ''}
+      getOptionLabel={(option) => option.label || ''}
       onChange={handleChange}
-      renderInput={(params) => <TextField {...params} label="Manager Steate" />}
+      renderInput={(params) => <TextField {...params} label={label} />}
     />
   )
 }

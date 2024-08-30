@@ -2,7 +2,7 @@ export const fetchRegistClient = async (data) => {
   try {
     const requestData = {
       clientName: data.clientName,
-      inflowTypeId: data.inflowTypeId,
+      inflowType: data.inflowTypeId,
       clientPhoneNumber: data.clientPhoneNumber,
       managerId: data.managerId,
       remark: data.remark,

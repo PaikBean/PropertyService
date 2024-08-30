@@ -28,10 +28,7 @@ public class ScheduleController {
     @GetMapping("/v1/schedule-type-list")
     public Response searchScheduleTypeList() {
         try {
-            List<ScheduleTypeDto> scheduleTypeDtoList = scheduleService.searchScheduleTypeList();
-            return scheduleTypeDtoList.isEmpty()
-                    ? new Response(ResponseCode.SUCCESS, scheduleTypeDtoList, "200")
-                    : new Response(ResponseCode.SUCCESS, scheduleTypeDtoList, "204");
+            return new Response(ResponseCode.SUCCESS, scheduleService.searchScheduleTypeList(), "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
@@ -39,13 +36,11 @@ public class ScheduleController {
 
     /**
      * 일정 등록
-     *
      * @param scheduleForm
-     * @param bindingResult
      * @return
      */
     @PostMapping("/v1/schedule")
-    public Response createSchedule(@RequestBody @Valid ScheduleForm scheduleForm, BindingResult bindingResult) {
+    public Response createSchedule(@RequestBody @Valid ScheduleForm scheduleForm) {
         try {
             scheduleService.createSchedule(scheduleForm);
             return new Response(ResponseCode.SUCCESS, null, "200");
@@ -75,20 +70,17 @@ public class ScheduleController {
         }
     }
 
+
     /**
      * 일정 삭제
-     *
-     * @param scheduleIdForm
-     * @param bindingResult
+     * @param scheduleId
      * @return
      */
-    @DeleteMapping("/v1/schedule")
-    public Response deleteSchedule(@RequestBody @Valid ScheduleIdForm scheduleIdForm, BindingResult bindingResult) {
+    @DeleteMapping("/v1/schedule/{scheduleId}")
+    public Response deleteSchedule(@PathVariable(name = "scheduleId") Long scheduleId) {
         try {
-            scheduleService.deleteSchedule(scheduleIdForm);
+            scheduleService.deleteSchedule(scheduleId);
             return new Response(ResponseCode.SUCCESS, null, "200");
-        } catch (EntityNotFoundException e) {
-            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }

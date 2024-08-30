@@ -1,7 +1,14 @@
+// React, Next
 import { Stack } from '@mui/material'
+
+// Materials
+
+// Custom Components
 import InputEmail from '../textfield/InputEmail'
 import InputCompanyCode from '../textfield/InputCompanyCode'
 import SearchBtn from '../button/SearchBtn'
+
+// Utils
 
 const InitialPasswordFirstStep = ({
   inputFirst,

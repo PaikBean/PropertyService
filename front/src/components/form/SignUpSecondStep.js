@@ -1,58 +1,91 @@
-import { Stack } from '@mui/material'
-import InputName from '../textfield/InputName'
+// React, Next
+
+// Materials
+import { Grid, Stack } from '@mui/material'
+
+// Custom Components
 import InputPhoneNumber from '../textfield/InputPhoneNumber'
-import AddressL1 from '../autocomplete/AddressL1'
-import AddressL2 from '../autocomplete/AddressL2'
-
-import InputAddressL3 from '../textfield/InputAddressL3'
 import Gender from '../autocomplete/Gender'
+import InputName2 from '../textfield/InputName2'
+import ManagerState from '../autocomplete/ManagerState'
+import Department2 from '../autocomplete/Department2'
 
-const SignUpSecondStep = ({ inputSecond, setInputSecond }) => {
+// Utils
+
+const SignUpSecondStep = ({ managerInfo, setManagerInfo, companyCode }) => {
   const handleInputChange = (field, value) => {
-    setInputSecond((prev) => ({
+    setManagerInfo((prev) => ({
       ...prev,
       [field]: value,
     }))
   }
 
   return (
-    <Stack gap={4} width="50%">
-      <InputName
-        value={inputSecond.managerName}
-        onChange={(e) => {
-          handleInputChange('managerName', e.target.value)
+    <Stack spacing={3} width="70%">
+      <Department2
+        value={managerInfo.departmentId}
+        onChange={(value) => {
+          handleInputChange('departmentId', value)
         }}
+        companyCode={companyCode}
+        label="부서"
       />
+      <Grid container gap={1} justifyContent={'space-between'}>
+        <Grid item xs={4}>
+          <InputName2
+            label="이름"
+            value={managerInfo.managerName}
+            onChange={(e) => {
+              handleInputChange('managerName', e.target.value)
+            }}
+          />
+        </Grid>
+        <Grid item xs={3.5}>
+          <Gender
+            value={managerInfo.managerGender}
+            onChange={(value) => {
+              handleInputChange('managerGender', value)
+            }}
+            label="성별"
+          />
+        </Grid>
+        <Grid item xs={3.5}>
+          <ManagerState
+            value={managerInfo.managerStateId} // Add this line
+            onChange={(value) => {
+              handleInputChange('managerStateId', value)
+            }}
+            label="근무 상태"
+          />
+        </Grid>
+      </Grid>
+      <Grid container gap={1} justifyContent={'space-between'}>
+        <Grid item xs={5.8}>
+          <InputName2
+            label="직급"
+            value={managerInfo.managerRank}
+            onChange={(e) => {
+              handleInputChange('managerRank', e.target.value)
+            }}
+          />
+        </Grid>
+        <Grid item xs={5.8}>
+          <InputName2
+            label="직무"
+            value={managerInfo.managerPosition}
+            onChange={(e) => {
+              handleInputChange('managerPosition', e.target.value)
+            }}
+          />
+        </Grid>
+      </Grid>
       <InputPhoneNumber
-        value={inputSecond.managerPhoneNumber}
+        value={managerInfo.managerPhoneNumber}
         onChange={(formattedPhoneNumber) =>
           handleInputChange('managerPhoneNumber', formattedPhoneNumber)
         }
-      />
-      <AddressL1
-        value={inputSecond.managerAddressLevel1} // Add this line
-        onChange={(value) => {
-          handleInputChange('managerAddressLevel1', value)
-        }}
-      />
-      <AddressL2
-        value={inputSecond.managerAddressLevel2} // Add this line
-        addressLevel1={inputSecond.managerAddressLevel1}
-        onChange={(value) => {
-          handleInputChange('managerAddressLevel2', value)
-        }}
-      />
-      <InputAddressL3
-        value={inputSecond.managerAddressLevel3}
-        onChange={(e) => {
-          handleInputChange('managerAddressLevel3', e.target.value)
-        }}
-      />
-      <Gender
-        value={inputSecond.gender}
-        onChange={(value) => {
-          handleInputChange('gender', value)
-        }}
+        name="managerPhoneNumber"
+        label="전화번호"
       />
     </Stack>
   )

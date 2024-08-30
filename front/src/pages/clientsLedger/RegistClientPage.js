@@ -24,6 +24,7 @@ import { useEffect, useState } from 'react'
 import { fetchSearchProperties } from './api/fetchSearchProperties'
 import { fetchRegistClient } from './api/fetchRegistClient'
 import propertyColumns from './columns/PropertyColumns'
+import CustomDataGrid2 from '@/components/datagrid/CustomDataGrid2'
 
 const RegistClientPage = () => {
   const initialData = {
@@ -38,7 +39,6 @@ const RegistClientPage = () => {
     addressL1: null,
     addressL2: null,
     transactionTypeId: null,
-    propertyTypeId: null,
   }
 
   const [registData, setRegistData] = useState(initialData)
@@ -86,19 +86,34 @@ const RegistClientPage = () => {
   }
 
   const handleInsertShowingRows = () => {
-    const selectedRows = searchRows.filter((row) => {
-      return selectedSearchRowIds.includes(row.id)
-    })
-    setShowingRows(selectedRows)
-    setSelectedSearchRowIds([])
-  }
+    // 선택된 searchRows에서 showingRows에 추가되지 않은 항목들만 추가
+    const selectedRowsToAdd = searchRows.filter((row) =>
+      selectedSearchRowIds.includes(row.propertyId) &&
+      !showingRows.some((showingRow) => showingRow.propertyId === row.propertyId)
+    );
+  
+    // 새로운 showingRows 리스트를 만듭니다.
+    const updatedShowingRows = [...showingRows, ...selectedRowsToAdd];
+  
+    // 상태 업데이트
+    setShowingRows(updatedShowingRows);
+  
+    // 선택된 검색 행 초기화 (선택 해제)
+    setSelectedSearchRowIds([]);
+  };
+  
   const handleDeleteShowingRows = () => {
-    const newShowingRows = showingRows.filter(
-      (row) => !selectedShowingRowIds.includes(row.id)
-    )
-    setShowingRows(newShowingRows)
-    setSelectedShowingRowIds([])
-  }
+    // showingRows에서 선택된 항목을 제거
+    const updatedShowingRows = showingRows.filter(
+      (row) => !selectedShowingRowIds.includes(row.propertyId)
+    );
+  
+    // 상태 업데이트
+    setShowingRows(updatedShowingRows);
+  
+    // 선택된 showingRows 초기화 (선택 해제)
+    setSelectedShowingRowIds([]);
+  };
 
   const handleSelectSearchRows = (newSelection) => {
     setSelectedSearchRowIds(newSelection)
@@ -247,7 +262,7 @@ const RegistClientPage = () => {
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <CustomDataGrid
+                  <CustomDataGrid2
                     rows={searchRows}
                     columns={propertyColumns}
                     height={'43vh'}
@@ -259,6 +274,7 @@ const RegistClientPage = () => {
                     showAll={true}
                     pageSize={10}
                     rowHeight={48}
+                    getRowId={(row) => row.propertyId}
                   />
                 </Grid>
               </Stack>
@@ -279,7 +295,7 @@ const RegistClientPage = () => {
               </Stack>
             </Grid>
             <Grid item xs={5.5}>
-              <CustomDataGrid
+              <CustomDataGrid2
                 rows={showingRows}
                 columns={propertyColumns}
                 height={'50.8vh'}
@@ -291,6 +307,7 @@ const RegistClientPage = () => {
                 showAll={true}
                 pageSize={10}
                 rowHeight={48}
+                getRowId={(row) => row.propertyId}
               />
             </Grid>
           </Grid>

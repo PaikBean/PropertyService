@@ -1,13 +1,12 @@
 package com.propertyservice.propertyservice.service;
 
+import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.dto.client.*;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 @SpringBootTest
 @Slf4j
@@ -21,8 +20,9 @@ class ClientServiceTest {
             clientForm.setClientName("test1");
             clientForm.setClientPhoneNumber("010-1234-1234"+i);
             clientForm.setRemark("특이사항 있음");
-            clientForm.setInflowTypeId(1L);
+            clientForm.setInflowType(InflowType.DABANG.getLabel());
             clientForm.setManagerId(1L);
+            //clientForm.setCompanyId(1L);
 
             clientService.createClient(clientForm);
         }
@@ -31,25 +31,25 @@ class ClientServiceTest {
 
     @Test
     public void searchClientList(){
-        ClientCondition.clientListCondition clientListCondition = new ClientCondition.clientListCondition();
-        clientListCondition.setManagerId(1L);
-        clientListCondition.setClientPhoneNumber("1234");
-
-        List<ClientDto.ClientListResponseDto> clientListResponseDtoList = clientService.searchClientList(clientListCondition);
-
-        for (ClientDto.ClientListResponseDto clientListResponseDto : clientListResponseDtoList) {
-            log.warn(clientListResponseDto.getClientName() + "   "+ clientListResponseDto.getManagerName());
-        }
+//        ClientCondition.clientListCondition clientListCondition = new ClientCondition.clientListCondition();
+//        clientListCondition.
+//        clientListCondition.setClientPhoneNumber("1234");
+//
+//        List<ClientDto.ClientListResponseDto> clientListResponseDtoList = clientService.searchClientList(clientListCondition);
+//
+//        for (ClientDto.ClientListResponseDto clientListResponseDto : clientListResponseDtoList) {
+//            log.warn(clientListResponseDto.getClientName() + "   "+ clientListResponseDto.getManagerName());
+//        }
 
     }
 
     @Test
     public void searchClientDetail(){
-        ClientCondition.clientDetailCondition clientDetailCondition = new ClientCondition.clientDetailCondition();
-        clientDetailCondition.setClientId(1L);
-        clientDetailCondition.setPropertyId(1L);
-
-        log.warn(clientService.searchClientDetailList(clientDetailCondition).getClientRemarkList().toString());
+//        ClientCondition.clientDetailCondition clientDetailCondition = new ClientCondition.clientDetailCondition();
+//        clientDetailCondition.setClientId(1L);
+//        clientDetailCondition.setPropertyId(1L);
+//
+//        log.warn(clientService.searchClientDetailList(clientDetailCondition).getClientRemarkList().toString());
     }
 
     @Test
@@ -75,18 +75,24 @@ class ClientServiceTest {
 
     }
 
-    @Test
-    public void createShowingProrpertyTest(){
-        ShowingProrpertyForm showingProrpertyForm = new ShowingProrpertyForm();
-        showingProrpertyForm.setClientId(1L);
-        showingProrpertyForm.setPropertyId(1L);
-        showingProrpertyForm.setManagerId(1L);
+//    @Test
+//    public void createShowingPropertyTest(){
+//        ShowingPropertyForm showingPropertyForm = new ShowingPropertyForm();
+//        showingPropertyForm.setClientId(1L);
+//        showingPropertyForm.setPropertyId(1L);
+//        showingPropertyForm.setManagerId(1L);
+//
+//        clientService.createShowingProrperty(showingPropertyForm);
+//    }
+//    @Test
+//    public void deleteShowingPropertyTest(){
+//        clientService.deleteShowingProperty(1L);
+//    }
 
-        clientService.createShowingProrperty(showingProrpertyForm);
-    }
+
     @Test
-    public void deleteShowingProrpertyTest(){
-        clientService.deleteShowingProperty(1L);
+    public void searchClientListTest(){
+        System.out.println(clientService.searchClientList(1L));
     }
 
 

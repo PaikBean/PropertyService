@@ -1,5 +1,6 @@
 package com.propertyservice.propertyservice.controller;
 
+import com.propertyservice.propertyservice.domain.client.InflowType;
 import com.propertyservice.propertyservice.dto.client.ClientForm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ class ClientControllerTest {
         clientForm.setClientName("test1");
         clientForm.setClientPhoneNumber("010-1234-1234");
         clientForm.setRemark("특이사항 있음");
-        clientForm.setInflowTypeId(1L);
+        clientForm.setInflowType(InflowType.OTHERS);
         clientForm.setManagerId(1L);
 
        return clientForm;

@@ -6,12 +6,13 @@ import lombok.Getter;
 
 @Getter
 public class InflowTypeDto {
-    private Long inflowTypeId;
-    private String inflowType;
+
+    private String inflowTypeName;
+    private String label;
 
     @Builder
-    public InflowTypeDto(InflowType inflowType) {
-        this.inflowTypeId = inflowType.getId();
-        this.inflowType = inflowType.getInflowType();
+    public InflowTypeDto(String inflowTypeName, String label) {
+        this.inflowTypeName = inflowTypeName;
+        this.label = label;
     }
 }

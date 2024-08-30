@@ -3,7 +3,7 @@ import CustomDataGrid from '@/components/datagrid/CustomDataGrid'
 import InputName2 from '@/components/textfield/InputName2'
 import InputPhoneNumber from '@/components/textfield/InputPhoneNumber'
 import SaveTogleToolbar from '@/components/toolbar/SaveTogleToolbar'
-import { Box, Divider, Grid, IconButton, Stack } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, IconButton, Stack } from '@mui/material'
 import { useEffect, useState } from 'react'
 import clientColumns from './columns/ClientColumns'
 import { fetchSearchClients } from './api/fetchSearchClients'
@@ -12,6 +12,11 @@ import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import AddRemarkModal from '@/components/modal/AddRemarkModal'
 import remarkColumns from './columns/RemarkColumns'
+import CustomDataGrid2 from '@/components/datagrid/CustomDataGrid2'
+import ManagerAutocomplete from '@/components/autocomplete/ManagerAutocomplete'
+import { fetchDeleteClientRemark } from './api/fetchDeleteClientRemark'
+import { fetchUpdateClient } from './api/fetchUpdateClient'
+import InflowType from '@/components/autocomplete/InflowType'
 
 const ManageClientPage = () => {
   const initialSearchCondition = {
@@ -20,6 +25,7 @@ const ManageClientPage = () => {
   }
 
   const initialSearchData = {
+    clientId: null,
     clientName: '',
     inflowType: '',
     clientPhoneNumber: '',
@@ -41,10 +47,27 @@ const ManageClientPage = () => {
 
   const [isRemarkModalOpen, setIsRemarkModalOpen] = useState(false)
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
+    try {
+      const response = await fetchSearchClient(clientId)
+      if (response.responseCode === 'SUCCESS') {
+        setSearchData(response.data)
+        setRemarkRows(response.data.clientRemarkList)
+      } else {
+        throw new Error('Failed to fetch client list:', response.message)
+      }
+    } catch (error) {
+      alert('Error fetching client list:', error)
+    }
     isRemarkModalOpen ? setIsRemarkModalOpen(false) : null
   }
 
+  const handleInputChange = (field, value) => {
+    setSearchData((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
+  }
   const handleSearchInputChange = (field, value) => {
     setSearchCondition((prev) => ({
       ...prev,
@@ -52,12 +75,29 @@ const ManageClientPage = () => {
     }))
   }
 
-  const handleDeleteRemarkRows = () => {
-    const newShowingRows = remarkRows.filter(
-      (row) => !selectedRemarkRowIds.includes(row.id)
-    )
-    setRemarkRows(newShowingRows)
-    setSelectedRemarkRowIds([])
+  const handleDeleteRemarkRows = async () => {
+    console.log(selectedRemarkRowIds)
+    try{
+      const response = await fetchDeleteClientRemark(selectedRemarkRowIds[0])
+      if(response.responseCode === "SUCCESS"){
+        const response = await fetchSearchClient(clientId)
+        if (response.responseCode === 'SUCCESS') {
+          setSearchData(response.data)
+          setRemarkRows(response.data.clientRemarkList)
+        } else {
+          throw new Error('Failed to fetch client list:', response.message)
+        }
+      } else{
+        throw new Error('Failed to fetch:', response.message)
+      }
+    } catch(error){
+      alert(error)
+    }
+    // const newShowingRows = remarkRows.filter(
+    //   (row) => !selectedRemarkRowIds.includes(row.id)
+    // )
+    // setRemarkRows(newShowingRows)
+    // setSelectedRemarkRowIds([])
   }
 
   const handleRemarkRows = (newSelection) => {
@@ -71,6 +111,7 @@ const ManageClientPage = () => {
           const response = await fetchSearchClient(clientId)
           if (response.responseCode === 'SUCCESS') {
             setSearchData(response.data)
+            setRemarkRows(response.data.clientRemarkList)
           } else {
             console.error('Failed to fetch client list:', response.message)
           }
@@ -84,8 +125,7 @@ const ManageClientPage = () => {
 
   const handleSearch = async () => {
     try {
-      console.log(searchCondition)
-      const response = await fetchSearchClients(searchCondition)
+      const response = await fetchSearchClients(searchCondition.clientName, searchCondition.clientPhoneNumber)
       if (response.responseCode === 'SUCCESS') {
         setClientRows(response.data)
       } else {
@@ -97,10 +137,28 @@ const ManageClientPage = () => {
   }
 
   const handleSelectClientRow = async (params) => {
-    setClientId(params.id)
+    setClientId(params[0])
   }
 
-  const handleSave = () => {}
+  const handleSave = async () => {
+    console.log(searchData)
+    try {
+      const response = await fetchUpdateClient(searchData)
+      if(response.responseCode === "SUCCESS"){
+        const response = await fetchSearchClient(clientId)
+        if (response.responseCode === 'SUCCESS') {
+          setSearchData(response.data)
+          setRemarkRows(response.data.clientRemarkList)
+        } else {
+          throw new Error('Failed to fetch client list:', response.message)
+        }
+      } else{
+        throw new Error('Failed to fetch:', response.message)
+      }
+    } catch (error) {
+      console.error('Error fetching client list:', error)
+    }
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -142,14 +200,12 @@ const ManageClientPage = () => {
                         }}
                         name="clientName"
                       />
-                      <InputPhoneNumber
+                       <InputName2
+                        label="고객 전화번호"
                         value={searchCondition.clientPhoneNumber}
-                        onChange={(formattedPhoneNumber) =>
-                          handleSearchInputChange(
-                            'clientPhoneNumber',
-                            formattedPhoneNumber
-                          )
-                        }
+                        onChange={(e) => {
+                          handleSearchInputChange('clientPhoneNumber', e.target.value)
+                        }}
                         sx={{
                           '.MuiInputBase-input': { height: '10px' },
                           '.MuiInputLabel-root': {
@@ -157,7 +213,6 @@ const ManageClientPage = () => {
                           },
                         }}
                         name="clientPhoneNumber"
-                        label="고객 전화번호"
                       />
                     </Stack>
                   </Grid>
@@ -166,7 +221,7 @@ const ManageClientPage = () => {
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <CustomDataGrid
+                  <CustomDataGrid2
                     rows={clientRows}
                     columns={clientColumns}
                     height={'63vh'}
@@ -177,6 +232,7 @@ const ManageClientPage = () => {
                     onRowSelectionModelChange={handleSelectClientRow}
                     pageSize={10}
                     rowHeight={48}
+                    getRowId={(row) => row.clientId}
                   />
                 </Grid>
               </Stack>
@@ -202,13 +258,27 @@ const ManageClientPage = () => {
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <InputName2
+                    {/* <InputName2
                       label="유입경로"
                       value={searchData.inflowType}
                       onChange={(e) => {
                         handleInputChange('inflowType', e.target.value)
                       }}
                       name="clientName"
+                      readOnly={!mode}
+                      sx={{
+                        '& .MuiInputBase-root': {
+                          backgroundColor: !mode ? '#f5f5f5' : 'inherit', // 회색빛 배경 설정
+                          cursor: !mode ? 'not-allowed' : '', // 커서 변경
+                        },
+                      }}
+                    /> */}
+                    <InflowType
+                      value={searchData.inflowType} // Add this line
+                      onChange={(value) => {
+                        handleInputChange('inflowType', value)
+                      }}
+                      label="유입 경로"
                       readOnly={!mode}
                       sx={{
                         '& .MuiInputBase-root': {
@@ -239,13 +309,12 @@ const ManageClientPage = () => {
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <InputName2
-                      label="담당 매니저"
-                      value={searchData.picManger}
-                      onChange={(e) => {
-                        handleInputChange('picManger', e.target.value)
+                  <ManagerAutocomplete
+                      value={searchData.managerId} // Add this line
+                      onChange={(value) => {
+                        handleInputChange('managerId', value)
                       }}
-                      name="clientName"
+                      label="담당 매니저"
                       readOnly={!mode}
                       sx={{
                         '& .MuiInputBase-root': {
@@ -259,19 +328,20 @@ const ManageClientPage = () => {
                 <Grid sx={{ borderTop: '1.5px solid Black' }} />
                 <Grid container>
                   <Grid item xs={11}>
-                    <CustomDataGrid
-                      rows={remarkRows}
-                      columns={remarkColumns}
-                      height={'65vh'}
-                      columnVisibilityModel={{
-                        remarkId: false,
-                      }}
-                      checkboxSelection={true}
-                      onRowSelectionModelChange={handleRemarkRows}
-                      showAll={true}
-                      pageSize={10}
-                      rowHeight={48}
-                    />
+  
+                    <CustomDataGrid2
+                    rows={remarkRows}
+                    columns={remarkColumns}
+                    height={'65vh'}
+                    columnVisibilityModel={{
+                      clientRemarkId: false,
+                    }}
+                    showAll={true}
+                    onRowSelectionModelChange={handleRemarkRows}
+                    pageSize={10}
+                    rowHeight={48}
+                    getRowId={(row) => row.clientRemarkId} // getRowId 속성 전달
+                  />
                   </Grid>
                   <Grid
                     xs={1}

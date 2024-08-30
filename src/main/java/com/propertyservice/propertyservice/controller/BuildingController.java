@@ -72,14 +72,12 @@ public class BuildingController {
 
     /**
      * 건물 특이사항 제거
-     * @param buildingRemarkIdForm
-     * @param bindingResult
      * @return
      */
-    @DeleteMapping("/v1/building-remark")
-    public Response deleteBuildingRemark(@RequestBody @Valid BuildingRemarkIdForm buildingRemarkIdForm, BindingResult bindingResult) {
+    @DeleteMapping("/v1/building-remark/{buildingRemarkId}")
+    public Response deleteBuildingRemark(@PathVariable("buildingRemarkId") Long buildingRemarkId) {
         try {
-            buildingService.deleteBuildingRemark(buildingRemarkIdForm);
+            buildingService.deleteBuildingRemark(buildingRemarkId);
             return new Response(ResponseCode.SUCCESS, null, "200");
         } catch (Exception e) {
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
@@ -88,7 +86,6 @@ public class BuildingController {
 
     /**
      * 건물 상세 및 매물 목록 조회
-     *
      * @param buildingId
      * @return
      */
@@ -102,12 +99,26 @@ public class BuildingController {
     }
 
     /**
+     * 건물 상세 단건 조회 - 건물 관리
+     * @param buildingId0
+     * @return
+     */
+    @GetMapping("/v1/building-info/{buildingId}")
+    public Response searchBuildingInfo(@PathVariable("buildingId")Long buildingId0){
+        try {
+            return new Response(ResponseCode.SUCCESS, buildingService.searchBuildingInfo(buildingId0), "200");
+        } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
      * 건물 상세 수정
      * @param buildingPropertyForm
      * @param bindingResult
      * @return
      */
-    @PutMapping("/v1/building-detail/")
+    @PutMapping("/v1/building-info")
     public Response updateBuildingDetail(@RequestBody @Valid BuildingPropertyForm buildingPropertyForm, BindingResult bindingResult){
         try {
             return new Response(ResponseCode.SUCCESS, buildingService.updateBuildingDetail(buildingPropertyForm), "200");
@@ -130,6 +141,20 @@ public class BuildingController {
                     ? new Response(ResponseCode.SUCCESS, buildingRemarkDtoList, "204")
                     : new Response(ResponseCode.SUCCESS, buildingRemarkDtoList, "200");
         } catch (Exception e) {
+            return new Response(ResponseCode.FAIL, e.getMessage(), "400");
+        }
+    }
+
+    /**
+     * 건물 상세 단건 조회 - 매물 상세
+     * @param buildingId
+     * @return
+     */
+    @GetMapping("/v1/building-detail/{buildingId}")
+    public Response searchBuildingDetail(@PathVariable("buildingId") Long buildingId){
+        try {
+            return new Response(ResponseCode.SUCCESS, buildingService.searchBuildingPropertyList(buildingId), "200");
+        } catch (Exception e){
             return new Response(ResponseCode.FAIL, e.getMessage(), "400");
         }
     }

@@ -1,5 +1,12 @@
-import { TextField } from '@mui/material'
+// React, Next
 import { useEffect, useState } from 'react'
+
+// Materials
+import { TextField } from '@mui/material'
+
+// Custom Components
+
+// Utils
 
 const CashTextField = ({ label, value, onChange, readOnly = false }) => {
   const [formattedValue, setFormattedValue] = useState('')

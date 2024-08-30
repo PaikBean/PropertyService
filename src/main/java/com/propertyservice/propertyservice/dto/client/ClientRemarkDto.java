@@ -1,14 +1,15 @@
 package com.propertyservice.propertyservice.dto.client;
 
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
 public class ClientRemarkDto {
-    private Long managerId;
     private String managerName;
+    private Long clientRemarkId;
     private Long clientId;
     private String remark;
     private LocalDateTime createdDate; //등록일.
@@ -17,13 +18,14 @@ public class ClientRemarkDto {
         this.clientId =clientId;
         this.remark = remark;
     }
-    // 고객 상세 조회시 조회 되는 dto
+     //고객 상세 조회시 조회 되는 dto
     @QueryProjection
-    public ClientRemarkDto(Long managerId, String managerName, Long clientId, String remark, LocalDateTime createdDate){
-        this.managerId = managerId;
+    public ClientRemarkDto(Long clientRemarkId, String managerName, String remark, LocalDateTime createdDate){
         this.managerName= managerName;
-        this.clientId =clientId;
+        this.clientRemarkId =clientRemarkId;
         this.remark = remark;
         this.createdDate =createdDate;
     }
+
+
 }

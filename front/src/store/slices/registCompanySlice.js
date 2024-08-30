@@ -1,5 +1,4 @@
-import { validateDate } from '@mui/x-date-pickers/internals'
-import companySlice from './companySlice'
+import { fetchGet } from '@/utils/fetch/fetchWrapper'
 
 const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit')
 
@@ -7,27 +6,18 @@ export const fetchValidBizNumber = createAsyncThunk(
   'signup/fetchValidBizNumber',
   async (validData, { rejectWithValue }) => {
     try {
-      // console.log(validData)
-      // const response = await fetch(
-      //   `/api/company/v1/validate/biz-number?
-      //     bNo=${validData.bizNumber}&startDate=${validData.bizStartDate}
-      //     &pName=${validData.presidentName}`,
-      //   {
-      //     method: 'GET',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //   }
-      // )
-      // const data = await response.json()
-      const data = {
-        responseCode: 'SUCCESS',
-        data: null,
-        message: null,
-        code: '200',
+      const queryParams = {
+        bNo: validData.bizNumber,
+        startDate: validData.bizStartDate,
+        pName: validData.presidentName,
       }
+      const data = await fetchGet(
+        '/api/company/v1/validate/biz-number',
+        {},
+        queryParams
+      )
+
       if (data.responseCode === 'SUCCESS') {
-        console.log(data)
         return data
       } else {
         throw new Error(data.message || 'Error!')

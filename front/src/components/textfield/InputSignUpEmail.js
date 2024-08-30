@@ -1,5 +1,12 @@
-import { TextField } from '@mui/material'
+// React, Next
 import { useEffect, useState } from 'react'
+
+// Materials
+import { TextField } from '@mui/material'
+
+// Custom Components
+
+// Utils
 
 const isValidEmail = (email) => {
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i

@@ -1,13 +1,22 @@
-import { Grid, Modal, Stack } from '@mui/material'
-import SaveToolbar from '../toolbar/SaveToolbar'
+// React, Next
 import { useState } from 'react'
+
+// Materials
+import { Grid, Modal, Stack } from '@mui/material'
+
+// Custom Components
 import AddressL1 from '../autocomplete/AddressL1'
 import AddressL2 from '../autocomplete/AddressL2'
 import TransactionType from '../autocomplete/TransactionType'
 import SearchBtn from '../button/SearchBtn'
 import CustomDataGrid from '../datagrid/CustomDataGrid'
+import SaveToolbar from '../toolbar/SaveToolbar'
+
+// Utils
 import propertyColumns from '@/pages/clientsLedger/columns/PropertyColumns'
 import { fetchSearchProperties } from '@/pages/clientsLedger/api/fetchSearchProperties'
+import CustomDataGrid2 from '../datagrid/CustomDataGrid2'
+import { fetchRegistShowingProperties } from '@/pages/clientsLedger/api/fetchRegistShowingProperties'
 
 const AddPropertyModal = ({ open, handleClose, data, onClick }) => {
   const initialSearchData = {
@@ -47,10 +56,18 @@ const AddPropertyModal = ({ open, handleClose, data, onClick }) => {
     setSelectedRowIds(selectionModel)
   }
 
-  const handleSave = () => {
-    console.log(searchCondition)
-    // 보여줄 목록 저장해야댐. api 수정 해야됨
-    handleClose()
+  const handleSave = async () => {
+    try {
+      console.log(searchCondition)
+      const response = await fetchRegistShowingProperties(data, selectedRowIds)
+      if (response.responseCode === 'SUCCESS') {
+        handleClose()
+      } else {
+        throw new Error(response.message)
+      }
+    } catch (error) {
+      alert('Error fetching revenue list:', error)
+    }
   }
 
   return (
@@ -120,7 +137,7 @@ const AddPropertyModal = ({ open, handleClose, data, onClick }) => {
               },
             }}
           >
-            <CustomDataGrid
+            <CustomDataGrid2
               rows={searchRows}
               columns={propertyColumns}
               height={'45vh'}
@@ -132,6 +149,7 @@ const AddPropertyModal = ({ open, handleClose, data, onClick }) => {
               showAll={true}
               pageSize={10}
               rowHeight={48}
+              getRowId={(row) => row.propertyId}
             />
           </Grid>
         </Stack>

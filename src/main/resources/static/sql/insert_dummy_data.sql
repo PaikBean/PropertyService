@@ -1,11 +1,7 @@
 -- company 테이블 더미 데이터
-INSERT INTO company_address (address_level1id, address_level2id, address_level3) VALUES (1, 1, '123 Main St, Suite 100');
-INSERT INTO company_address (address_level1id, address_level2id, address_level3) VALUES (2, 2, '456 Elm St, Suite 200');
-INSERT INTO company_address (address_level1id, address_level2id, address_level3) VALUES (3, 3, '789 Oak St, Suite 300');
-
-INSERT INTO company (company_address_id, company_code, company_name, president_name, business_registration_number, service_start_date, service_end_date, created_date, updated_date, company_email) VALUES (1, 'COMP001', 'Company 1', 'President 1', '123-45-67890', NOW(), '2025-01-01 00:00:00', NOW(), NOW(), 'contact@company1.com');
-INSERT INTO company (company_address_id, company_code, company_name, president_name, business_registration_number, service_start_date, service_end_date, created_date, updated_date, company_email) VALUES (2, 'COMP002', 'Company 2', 'President 2', '223-45-67890', NOW(), '2025-02-01 00:00:00', NOW(), NOW(), 'contact@company2.com');
-INSERT INTO company (company_address_id, company_code, company_name, president_name, business_registration_number, service_start_date, service_end_date, created_date, updated_date, company_email) VALUES (3, 'COMP003', 'Company 3', 'President 3', '323-45-67890', NOW(), '2025-03-01 00:00:00', NOW(), NOW(), 'contact@company3.com');
+INSERT INTO company (company_code, company_name, biz_number, president_name, company_email, company_number, service_start_date, service_end_date, created_date, updated_date) VALUES ('COMP001', 'Company 1', '123-45-67890', 'President 1', 'contact@company1.com', '123-456-7890', NOW(), '2025-01-01 00:00:00', NOW(), NOW());
+INSERT INTO company (company_code, company_name, biz_number, president_name, company_email, company_number, service_start_date, service_end_date, created_date, updated_date) VALUES ('COMP002', 'Company 2', '223-45-67890', 'President 2', 'contact@company2.com', '223-456-7890', NOW(), '2025-02-01 00:00:00', NOW(), NOW());
+INSERT INTO company (company_code, company_name, biz_number, president_name, company_email, company_number, service_start_date, service_end_date, created_date, updated_date) VALUES ('COMP003', 'Company 3', '323-45-67890', 'President 3', 'contact@company3.com', '323-456-7890', NOW(), '2025-03-01 00:00:00', NOW(), NOW());
 
 -- department 테이블 더미 데이터
 INSERT INTO department (company_id, department_name, department_code) VALUES (1, 'Sales', 'SALES001');

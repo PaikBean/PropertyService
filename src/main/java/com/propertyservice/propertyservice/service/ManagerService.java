@@ -1,22 +1,20 @@
 package com.propertyservice.propertyservice.service;
 
 import com.propertyservice.propertyservice.domain.common.Role;
-import com.propertyservice.propertyservice.domain.company.Manager;
-import com.propertyservice.propertyservice.domain.company.ManagerAddress;
-import com.propertyservice.propertyservice.domain.company.ManagerState;
-import com.propertyservice.propertyservice.dto.company.ManagerSignUpForm;
+import com.propertyservice.propertyservice.domain.company.Company;
+import com.propertyservice.propertyservice.domain.company.Department;
+import com.propertyservice.propertyservice.domain.manager.Manager;
+import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
+import com.propertyservice.propertyservice.dto.manager.ManagerInfoDto;
+import com.propertyservice.propertyservice.dto.manager.ManagerInfoForm;
+import com.propertyservice.propertyservice.dto.manager.ManagerSignUpForm;
 import com.propertyservice.propertyservice.repository.common.AddressLevel1Repository;
 import com.propertyservice.propertyservice.repository.common.AddressLevel2Respository;
-import com.propertyservice.propertyservice.repository.common.ManagerStateRepository;
 import com.propertyservice.propertyservice.repository.company.*;
-import jakarta.persistence.EntityNotFoundException;
+import io.jsonwebtoken.io.IOException;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,39 +26,19 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ManagerService implements UserDetailsService {
+public class ManagerService  {
 
     private final PasswordEncoder passwordEncoder;
     private final ManagerRepository managerRepository;
-    private final ManagerAddressRepository managerAddressRepository;
-    private final ManagerStateRepository managerStateRepository;
-    private final CompanyService companyService;
-    private final DepartmentService departmentService;
-    private final AddressLevel1Repository addressLevel1Repository;
-    private final AddressLevel2Respository addressLevel2Respository;
+    private final DepartmentRepository departmentRepository;
+    private final CompanyRepository companyRepository;
 
-    /**
-     * 사용자 id를 통해 정보 가져오기
-     * @param managerId : 사용자 ID
-     * @return manager
-     */
-    public Long searchManagerById(Long managerId){
-        return managerRepository.findByManagerId(managerId).orElseThrow(
-                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요.")).getManagerId();
+    private final CommonService commonService;
+    private final EntityExceptionService entityExceptionService;
+    private final EmailService emailService;
 
-    }
-
-    /**
-     * 사용자 email를 통해 정보 가져오기
-     * @param managerEmail : 사용자 email
-     * @return manager
-     */
-    public Long searchManagerByEmail(String managerEmail){
-        return managerRepository.findByManagerEmail(managerEmail).orElseThrow(
-                ()-> new UsernameNotFoundException("사용자 정보가 존재하지 않습니다.\n관리자에게 문의하세요.")).getManagerId();
-    }
 
     /**
      *  이메일 중복확인.
@@ -69,41 +47,39 @@ public class ManagerService implements UserDetailsService {
      */
     public boolean checkDuplicate(String email){
         try{
-            Long manager = searchManagerByEmail(email);
+            entityExceptionService.validateEntityExists(
+                    () -> managerRepository.findByManagerEmail(email),
+                    "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
             return false;
         }catch (Exception e){
             return true;
         }
     }
 
-    public ManagerState searchStateById(Long managerStateId){
-        return managerStateRepository.findByManagerStateId(managerStateId).orElseThrow(
-                () -> new EntityNotFoundException("State Id 값 오류.")
-        );
-    }
-
     /**
      * 사용자 회원가입.
-     * @param managerSignUpForm
-     * @return
      */
     @Transactional
     public Long createManager(ManagerSignUpForm managerSignUpForm) {
+        log.info("departmentId : {}",managerSignUpForm.getDepartmentId());
+
         return managerRepository.save(Manager.builder()
-                .company_id(companyService.searchCompany(managerSignUpForm.getCompanyCode()))
-                .department_id(departmentService.searchDepartment(managerSignUpForm.getDepartmentName()))
+                .company(
+                        entityExceptionService.findEntityById(
+                                () -> companyRepository.findByCompanyCode(managerSignUpForm.getCompanyCode()),
+                                "회사 정보가 존재하지 않습니다. 관리자에게 문의하세요.")
+                )
+                .department(
+                        entityExceptionService.findEntityByIdNotExistsThenNull(
+                                () -> departmentRepository.findByDepartmentId(managerSignUpForm.getDepartmentId())) // 없으면 null
+                )
                 .managerName(managerSignUpForm.getManagerName())
                 .managerRank(managerSignUpForm.getManagerRank())
                 .managerPosition(managerSignUpForm.getManagerPosition())
                 .managerCode(managerSignUpForm.getManagerCode())
-                .managerStateId(searchStateById(managerSignUpForm.getManagerStateId()))
+                .managerState(managerSignUpForm.getManagerState())
                 .gender(managerSignUpForm.getGender())
                 .managerPhoneNumber(managerSignUpForm.getManagerPhoneNumber())
-                .managerAddressId(managerAddressRepository.save(ManagerAddress.builder()
-                        .addressLevel1Id(validAddressLevel1(managerSignUpForm.getManagerAddressLevel1()))
-                        .addressLevel2Id(validAddressLevel2(managerSignUpForm.getManagerAddressLevel2()))
-                        .addressLevel3(managerSignUpForm.getManagerAddressLevel3())
-                        .build()))
                 .managerEntranceDate(LocalDateTime.now())
                 .managerResignDate(LocalDateTime.now())
                 .managerEmail(managerSignUpForm.getManagerEmail())
@@ -113,35 +89,231 @@ public class ManagerService implements UserDetailsService {
                 .build()).getManagerId();
     }
 
+    @Transactional
+    public String searchPassword(String managerEmail, String companyCode) {
+        // 1. 회원 가져오기.
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findByManagerEmail(managerEmail),
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
 
-    private Long validAddressLevel1(Long addressLevel1Id) {
+        // 2. 회사코드로 회사 가져오기.
+        if (companyCode.equals(""))
+            throw new IOException("회사코드가 입력되지 않았습니다.");
 
-        return addressLevel1Repository.findById(addressLevel1Id).orElseThrow(
-                () -> new IllegalStateException("주소의 입력이 잘못되었습니다.")
-        ).getAddressLevel1Id();
+        // 3. 회사 validation.
+       entityExceptionService.validateEntityExists(
+                () -> companyRepository.findByCompanyCode(companyCode),
+                "회사 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+
+        // 2. 회원의 회사코드가 일치하는지 확인.
+//        if (!(manager.getCompany_id() == company))
+//            throw new IllegalStateException("회사코드가 일치하지 않습니다.");
+
+        // 3.비밀번호 재설정.
+        System.out.println("current Password : " + manager.getManagerPassword());
+        String password = manager.getManagerPassword().substring(5, 13);
+        manager.resetPassword(passwordEncoder.encode(password));
+
+        //4. 저장
+        managerRepository.save(manager);
+
+        return password;
+
     }
 
-    private Long validAddressLevel2(Long addressLevel2Id) {
-        return addressLevel2Respository.findById(addressLevel2Id).orElseThrow(
-                () -> new IllegalStateException("주소의 입력이 잘못되었습니다.")
-        ).getAddressLevel2Id();
+    /**
+     * 비밀번호 재설정.
+     */
+    @Transactional
+    public String resetPassword(String prePassword, String curPassword){
+        //1. 현재 로그인한 사용자 정보 가져옴.
+        CustomUserDetail userDetails = commonService.getCustomUserDetailBySecurityContextHolder();
+
+        // 2. 비밀번호 일치 여부 확인.
+        if(!userDetails.getPassword().equals(prePassword)){
+            throw new IllegalStateException("비밀번호가 일치하지 않거나 입력되지 않았습니다.");
+        }
+
+        // 3. 비밀번호 재설정.
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findByManagerEmail(userDetails.getManagerName()),
+                "비밀번호가 일치하지 않거나 존재하지 않은 회원입니다.");
+        manager.resetPassword( passwordEncoder.encode(curPassword) );
+        managerRepository.save(manager);
+
+        return manager.getManagerPassword();
+
     }
 
-
-    // 로그인.
-    // security Login
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        System.out.println("managerEmail  " + username);
-        Manager manager = managerRepository.findByManagerEmail(username).orElseThrow(
-                () -> new EntityNotFoundException("사용자 정보가 존재하지 않습니다. /n 회원가입 후 이용해주세요.")
+    /**
+     * SMTP로 비밀번호 찾기.
+     */
+    public String resetPasswordBySMTP(String email) throws MessagingException {
+        // email : 로그인 이메일, 수신자
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findByManagerEmail(email),
+                "사용자 이메일이 존재하지 않거나 틀립니다. 다시 시도 해주세요."
         );
-        //사용자 권한 USER로 설정.
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("COM_USER"));
+        // 랜덤 문자열 생성.
+        String rdStr = emailService.generateRandomStr();
 
-        return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
+        //사용자 비밀번호 재설정.
+        manager.resetPassword(passwordEncoder.encode(rdStr));
+
+        // 이메일 발신.
+        emailService.test("관리자이메일", manager.getManagerEmail(), rdStr);
+
+        //사용자 비밀번호 저장.
+        managerRepository.save(manager);
+
+        return manager.getManagerPassword();
     }
+
+    /**
+     * 회사에 속한 매니저 리스트 조회.
+     */
+    public List<Manager> searchManagerList(Long companyId){
+        // 예외처리.
+        Company company = entityExceptionService.findEntityById(
+                () -> companyRepository.findById(companyId),
+                "회사 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+
+        List<Manager> managerList = new ArrayList<>();
+        for(Manager manager : managerRepository.findAllByCompany(company)){
+            managerList.add(Manager.builder()
+                    .managerId(manager.getManagerId())
+                    .managerName(manager.getManagerName())
+                    .build());
+        }
+        return managerList;
+        //return managerRepository.findAllByCompanyId(companyId);
+    }
+
+    /**
+     * 부서별 매니저 리스트 조회.
+     */
+    public List<ManagerInfoDto> searchManagerInfoListByDepartmentId(Long departmentId){
+        return managerRepository.searchManagerInfoListByDepartmentId(
+                entityExceptionService.findEntityById(
+                        () -> departmentRepository.findById(departmentId),
+                        "부서가 존재하지 않습니다. 관리자에게 문의하세요."
+                ).getDepartmentId()
+        );
+    }
+
+    /**
+     * jwt 마이페이지 정보 조회.
+     */
+    public ManagerInfoDto searchManagerInfo(){
+        CustomUserDetail customUserDetail = commonService.getCustomUserDetailBySecurityContextHolder();
+
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findByManagerEmail(customUserDetail.getManager().getManagerEmail()),
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+
+        Department department = entityExceptionService.findEntityById(
+                () -> departmentRepository.findById(manager.getDepartment().getDepartmentId()),
+                "부서 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+
+
+        Company company = entityExceptionService.findEntityById(
+                () -> companyRepository.findById(manager.getCompany().getCompanyId()),
+                "회사 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+        return createManagerInfo(manager, department, company);
+    }
+
+    /**
+     * 매니저 id를 통한 마이페이지 정보 조회.
+     */
+    public ManagerInfoDto searchManagerInfo(Long managerId){
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findById(managerId),
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+        
+        Department department = entityExceptionService.findEntityById(
+                () -> departmentRepository.findById(manager.getDepartment().getDepartmentId()),
+                "부서 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+        
+        Company company = entityExceptionService.findEntityById(
+                () -> companyRepository.findById(manager.getCompany().getCompanyId()),
+                "회사 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+        return createManagerInfo(manager, department, company);
+    }
+
+    /**
+     * 마이페이지 dto 생성.
+     */
+    public ManagerInfoDto createManagerInfo(Manager manager, Department department, Company company){
+        return ManagerInfoDto.builder()
+                .managerId(manager.getManagerId())
+                .managerName(manager.getManagerName())
+                .managerGender(manager.getGender().getLabel())
+                .managerPhoneNumber(manager.getManagerPhoneNumber())
+                .managerEmail(manager.getManagerEmail())
+                .companyName(company.getCompanyName())
+                .departmentName(department.getDepartmentName())
+                .managerPosition(manager.getManagerPosition())
+                .managerRank(manager.getManagerRank())
+                .managerPicProperty(managerRepository.managerPicProperty(manager.getManagerId()))
+                .managerPicClient(managerRepository.managerPicClient(manager.getManagerId()))
+                .managerTotalRevenueMonth(managerRepository.managerTotalRevenueMonth(manager.getManagerId()))
+                .managerTotalRevenue(managerRepository.managerTotalRevenue(manager.getManagerId()))
+                .build();
+    }
+
+    /**
+     * 마이페이지 update.
+     */
+    @Transactional
+    public Long updateManagerInfo(ManagerInfoForm managerInfoForm){
+        Manager manager = entityExceptionService.findEntityById(
+                () -> managerRepository.findById(managerInfoForm.getManagerId()),
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.");
+
+        manager.updateManagerInfo(managerInfoForm);
+
+        return managerRepository.save(manager).getManagerId();
+    }
+
+    /**
+     * 매니저 탈퇴.
+     */
+    @Transactional
+    public void deleteManager(Long managerId){
+        managerRepository.delete(entityExceptionService.findEntityById(
+                () -> managerRepository.findById(managerId),
+                "매니저 정보가 존재하지 않습니다. 관리자에게 문의하세요.")
+        );
+    }
+
+
+//    // 로그인.
+//    // security Login
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        log.warn("loadUserByUsername call");
+//        //System.out.println("managerEmail  " + username);
+//        Manager manager = searchManagerByEmail(username);
+//
+//        //사용자 권한 USER로 설정.
+//        List<GrantedAuthority> authorities = new ArrayList<>();
+//        authorities.add(new SimpleGrantedAuthority("COM_USER"));
+//
+//
+//        //return new User(manager.getManagerEmail(), manager.getManagerPassword(), authorities);
+//        return new CustomUserDetail(manager);
+//    }
+//private Long validAddressLevel1(Long addressLevel1Id) {
+//        return entityExceptionService.findEntityById(
+//                () -> addressLevel1Repository.findById(addressLevel1Id),
+//                "주소가 정확하지 않습니다.").getAddressLevel1Id();
+//    }
+//
+//    private Long validAddressLevel2(Long addressLevel2Id) {
+//        return entityExceptionService.findEntityById(
+//                () -> addressLevel2Respository.findById(addressLevel2Id),
+//                "주소가 정확하지 않습니다.").getAddressLevel2Id();
+//    }
+
 
 }

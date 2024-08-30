@@ -18,6 +18,11 @@ import scheduleColumns from './columns/ScheduleColumns'
 import AddScheduleModal from '@/components/modal/AddScheduleModal'
 import AddRemarkModal from '@/components/modal/AddRemarkModal'
 import AddPropertyModal from '@/components/modal/AddPropertyModal'
+import CustomDataGrid2 from '@/components/datagrid/CustomDataGrid2'
+import ManagerAutocomplete from '@/components/autocomplete/ManagerAutocomplete'
+import InflowType from '@/components/autocomplete/InflowType'
+import { fetchSearchClientDetail } from './api/fetchSearchClientDetail'
+import { fetchDeleteClientRemark } from './api/fetchDeleteClientRemark'
 
 const DetailClientPage = () => {
   const initialSearchCondition = {
@@ -56,9 +61,12 @@ const DetailClientPage = () => {
     const fetchClientData = async () => {
       if (clientId) {
         try {
-          const response = await fetchSearchClient(clientId)
+          const response = await fetchSearchClientDetail(clientId)
           if (response.responseCode === 'SUCCESS') {
             setSearchData(response.data)
+            setRemarkRows(response.data.clientRemarkList)
+            setScheduleRows(response.data.showingPropertyList)
+            setScheduleRows(response.data.scheduleList)
           } else {
             console.error('Failed to fetch client list:', response.message)
           }
@@ -72,15 +80,67 @@ const DetailClientPage = () => {
 
   useEffect(() => {
     // Todo : 스케쥴 재검색 해야함.
-  }, [isScheduleModalOpen])
+    const fetchClientData = async () => {
+      if (clientId) {
+        try {
+          const response = await fetchSearchClientDetail(clientId)
+          if (response.responseCode === 'SUCCESS') {
+            setSearchData(response.data)
+            setRemarkRows(response.data.clientRemarkList)
+            setScheduleRows(response.data.showingPropertyList)
+            setScheduleRows(response.data.scheduleList)
+          } else {
+            console.error('Failed to fetch client list:', response.message)
+          }
+        } catch (error) {
+          console.error('Error fetching client list:', error)
+        }
+      }
+    }
+    fetchClientData()
+  }, [clientId, isScheduleModalOpen])
 
   useEffect(() => {
-    // Todo : 보여줄 목록 재검색 해야함.
-  }, [isPropertyModalOpen])
+    const fetchClientData = async () => {
+      if (clientId) {
+        try {
+          const response = await fetchSearchClientDetail(clientId)
+          if (response.responseCode === 'SUCCESS') {
+            setSearchData(response.data)
+            setRemarkRows(response.data.clientRemarkList)
+            setScheduleRows(response.data.showingPropertyList)
+            setScheduleRows(response.data.scheduleList)
+          } else {
+            console.error('Failed to fetch client list:', response.message)
+          }
+        } catch (error) {
+          console.error('Error fetching client list:', error)
+        }
+      }
+    }
+    fetchClientData()
+  }, [clientId, isPropertyModalOpen])
 
   useEffect(() => {
-    // Todo : 특이사항 재검색 해야함.
-  }, [isRemarkModalOpen])
+    const fetchClientData = async () => {
+      if (clientId) {
+        try {
+          const response = await fetchSearchClientDetail(clientId)
+          if (response.responseCode === 'SUCCESS') {
+            setSearchData(response.data)
+            setRemarkRows(response.data.clientRemarkList)
+            setScheduleRows(response.data.showingPropertyList)
+            setScheduleRows(response.data.scheduleList)
+          } else {
+            console.error('Failed to fetch client list:', response.message)
+          }
+        } catch (error) {
+          console.error('Error fetching client list:', error)
+        }
+      }
+    }
+    fetchClientData()
+  }, [clientId, isRemarkModalOpen])
 
   const handleSearchInputChange = (field, value) => {
     setSearchCondition((prev) => ({
@@ -92,7 +152,7 @@ const DetailClientPage = () => {
   const handleSearch = async () => {
     try {
       console.log(searchCondition)
-      const response = await fetchSearchClients(searchCondition)
+      const response = await fetchSearchClients(searchCondition.clientName, searchCondition.clientPhoneNumber)
       if (response.responseCode === 'SUCCESS') {
         setClientRows(response.data)
       } else {
@@ -119,16 +179,29 @@ const DetailClientPage = () => {
     setSelectedPropertyRowIds([])
   }
 
-  const handleDeleteRemarkRows = () => {
-    const newShowingRows = remarkRows.filter(
-      (row) => !selectedRemarkRowIds.includes(row.id)
-    )
-    setRemarkRows(newShowingRows)
-    setSelectedRemarkRowIds([])
+  const handleDeleteRemarkRows = async () => {
+    try{
+      const response = await fetchDeleteClientRemark(selectedRemarkRowIds[0])
+      if(response.responseCode === "SUCCESS"){
+        const response = await fetchSearchClient(clientId)
+        if (response.responseCode === 'SUCCESS') {
+          setSearchData(response.data)
+          setRemarkRows(response.data.clientRemarkList)
+          setScheduleRows(response.data.showingPropertyList)
+          setScheduleRows(response.data.scheduleList)
+        } else {
+          throw new Error('Failed to fetch client list:', response.message)
+        }
+      } else{
+        throw new Error('Failed to fetch:', response.message)
+      }
+    } catch(error){
+      alert(error)
+    }
   }
 
   const handleSelectClientRow = async (params) => {
-    setSelectClientId(params.id)
+    setClientId(params[0])
   }
 
   const handleScheduleRows = (newSelection) => {
@@ -143,10 +216,24 @@ const DetailClientPage = () => {
     setSelectedRemarkRowIds(newSelection)
   }
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
     isScheduleModalOpen ? setIsScheduleModalOpen(false) : null
     isPropertyModalOpen ? setIsPropertyModalOpen(false) : null
     isRemarkModalOpen ? setIsRemarkModalOpen(false) : null
+
+    try{
+      const response = await fetchSearchClient(clientId)
+        if (response.responseCode === 'SUCCESS') {
+          setSearchData(response.data)
+          setRemarkRows(response.data.clientRemarkList)
+          setScheduleRows(response.data.showingPropertyList)
+          setScheduleRows(response.data.scheduleList)
+        } else {
+          throw new Error('Failed to fetch client list:', response.message)
+        }
+    } catch(error) {
+      alert(error)
+    }
   }
 
   return (
@@ -207,7 +294,7 @@ const DetailClientPage = () => {
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <CustomDataGrid
+                  <CustomDataGrid2
                     rows={clientRows}
                     columns={clientColumns}
                     height={'62.5vh'}
@@ -218,6 +305,7 @@ const DetailClientPage = () => {
                     onRowSelectionModelChange={handleSelectClientRow}
                     pageSize={10}
                     rowHeight={48}
+                    getRowId={(row) => row.clientId}
                   />
                 </Grid>
               </Stack>
@@ -243,13 +331,12 @@ const DetailClientPage = () => {
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <InputName2
-                      label="유입경로"
-                      value={searchData.inflowType}
-                      onChange={(e) => {
-                        handleInputChange('inflowType', e.target.value)
+                    <InflowType
+                      value={searchData.inflowType} // Add this line
+                      onChange={(value) => {
+                        handleInputChange('inflowType', value)
                       }}
-                      name="clientName"
+                      label="유입 경로"
                       readOnly={true}
                       sx={{
                         '& .MuiInputBase-root': {
@@ -279,13 +366,12 @@ const DetailClientPage = () => {
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <InputName2
-                      label="담당 매니저"
-                      value={searchData.picManger}
-                      onChange={(e) => {
-                        handleInputChange('picManger', e.target.value)
+                    <ManagerAutocomplete
+                      value={searchData.managerId} // Add this line
+                      onChange={(value) => {
+                        handleInputChange('managerId', value)
                       }}
-                      name="clientName"
+                      label="담당 매니저"
                       readOnly={true}
                       sx={{
                         '& .MuiInputBase-root': {
@@ -299,7 +385,7 @@ const DetailClientPage = () => {
                 <Grid sx={{ borderTop: '2px solid Black' }} />
                 <Grid container>
                   <Grid item xs={11}>
-                    <CustomDataGrid
+                    <CustomDataGrid2
                       rows={scheduleRows}
                       columns={scheduleColumns}
                       height={'19vh'}
@@ -311,6 +397,7 @@ const DetailClientPage = () => {
                       showAll={true}
                       pageSize={10}
                       rowHeight={48}
+                      getRowId={(row) => row.scheduleId}
                     />
                   </Grid>
                   <Grid
@@ -341,7 +428,7 @@ const DetailClientPage = () => {
                 <Grid sx={{ borderTop: '2px solid Black' }} />
                 <Grid container>
                   <Grid item xs={11}>
-                    <CustomDataGrid
+                    <CustomDataGrid2
                       rows={propertyRows}
                       columns={propertyColumns}
                       height={'19vh'}
@@ -353,6 +440,7 @@ const DetailClientPage = () => {
                       showAll={true}
                       pageSize={10}
                       rowHeight={48}
+                      getRowId={(row) => row.propertyId}
                     />
                   </Grid>
                   <Grid
@@ -383,18 +471,19 @@ const DetailClientPage = () => {
                 <Grid sx={{ borderTop: '2px solid Black' }} />
                 <Grid container>
                   <Grid item xs={11}>
-                    <CustomDataGrid
+                    <CustomDataGrid2
                       rows={remarkRows}
                       columns={remarkColumns}
                       height={'19vh'}
                       columnVisibilityModel={{
-                        remarkId: false,
+                        clientRemarkId: false,
                       }}
                       checkboxSelection={true}
                       onRowSelectionModelChange={handleRemarkRows}
                       showAll={true}
                       pageSize={10}
                       rowHeight={48}
+                      getRowId={(row) => row.clientRemarkId}
                     />
                   </Grid>
                   <Grid

@@ -14,7 +14,7 @@ import {
   DialogTitle,
   Divider,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import DepartmentColumn from './columns/DepartmentColumn'
 import InputName2 from '@/components/textfield/InputName2'
 import { LocalizationProvider } from '@mui/x-date-pickers'
@@ -26,6 +26,11 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import AddDepartmentModal from '@/components/modal/AddDepartmentModal'
 import HandleDepartmentMember from '@/components/modal/HandleDepartmentMemeber'
 import DeleteBtn from '@/components/button/DeleteBtn'
+import { fetchSearchDepartmentListInit } from './api/fetchSearchDepartmentListInit'
+import { fetchSearchDepartment } from './api/fetchSearchDepartment'
+import { fetchSearchDepartmentList } from './api/fetchSearchDepartmentList'
+import { fetchDeleteDepartment } from './api/fetchDeleteDepartment'
+import { fetchSearchDepartmentTotalPrice } from './api/fetchSearchDepartmentTotalPrice'
 
 const ManageCompanyPage = () => {
   const initDepartmentInfo = {
@@ -42,10 +47,12 @@ const ManageCompanyPage = () => {
 
   const [mode, setMode] = useState(false)
   const [searchDate, setSearchDate] = useState(initSearchDate)
+  const [companyId, setCompanyId] = useState(null)
 
   const [departmentId, setDepartmentId] = useState(null)
 
   const [departmentInfo, setDepartmentInfo] = useState(initDepartmentInfo)
+  const [departmentTotalRevenue, setDepartmentTotalRevenue] = useState(0)
 
   const [departmentRows, setDepartmentRows] = useState([])
   const [managerRows, setManagerRows] = useState([])
@@ -62,11 +69,83 @@ const ManageCompanyPage = () => {
 
   const handleSave = () => {}
 
-  const handleAddDepartment = () => {}
+  const handleAddDepartment = () => {
+  }
 
-  const handleSelectDepartmentRow = () => {}
+  const handleSelectDepartmentRow = async (selectedRowIds) => {
+    if(selectedRowIds.length != 1)
+      return
+    const selectedRowId = selectedRowIds[0]
+    
+    const selectedRow = departmentRows.find(row => row.departmentId === selectedRowId)
+    
+    if (selectedRow) {
+      try{
+        setDepartmentInfo(initDepartmentInfo)
+        const response = await fetchSearchDepartment(selectedRow.departmentId)
+        console.log(response.data)
+        setDepartmentId(response.data.departmentId)
+        setDepartmentInfo(response.data)
+        setDepartmentTotalRevenue(response.data.departmentTotalRevenue)
+        setManagerRows(response.data.departmentManagerList)
+        setSearchDate(initSearchDate)
+      } catch (error){
+        alert(error)
+      }
+    } else {
+      alert('부서가 선택되지 않았습니다.')
+    }
+  };
 
-  const handleSearchInputChange = () => {}
+  const handleSearchInputChange = (field, value) => {
+    setSearchDate(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchSearchDepartmentListInit()
+        setCompanyId(response.data.companyId)
+        setDepartmentRows(response.data.departmentInfoDtoList)
+      } catch (error) {
+        alert(error);
+      }
+    };
+  
+    fetchData();
+  }, []); 
+
+  useEffect(() => {
+    if(departmentRows.length !== 0){
+      const fetchData = async () => {
+        const response = await fetchSearchDepartmentList(companyId)
+        setDepartmentRows(response.data.departmentInfoDtoList)
+      }
+      fetchData() 
+    }
+  }, [isAddDepartmentkModalOpen, companyId, departmentRows.length])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let startDate = searchDate.startDate === "Invalid Date" || searchDate.startDate === '' ? '19700101' : searchDate.startDate;
+        let endDate = searchDate.endDate === "Invalid Date" || searchDate.endDate === '' ? new Date().toISOString().slice(0, 10).replace(/-/g, '') : searchDate.endDate;
+        
+        console.log(startDate, endDate);
+        // const response = await fetchSearchDepartmentTotalPrice(departmentId, startDate, endDate);
+        // alert(response.data);
+      } catch (error) {
+        alert(error);
+      }
+    };
+  
+    if (departmentId) {
+      fetchData();
+    }
+  }, [departmentId, searchDate]);
 
   const handleCloseModal = () => {
     isAddDepartmentkModalOpen ? setIsAddDepartmentModalOpen(false) : null
@@ -79,10 +158,20 @@ const ManageCompanyPage = () => {
     setIsDeleteDialogOpen(true)
   }
 
-  const confirmDelete = () => {
-    // 실제 삭제 작업을 여기서 수행합니다.
-    alert('부서 삭제됨')
-    setIsDeleteDialogOpen(false)
+  const confirmDelete = async () => {
+    try{
+      console.log(departmentId)
+      const response = await fetchDeleteDepartment(departmentId)
+      if(response.responseCode === "SUCCESS"){
+        const response = await fetchSearchDepartmentList(companyId)
+        setDepartmentRows(response.data.departmentInfoDtoList)
+        setIsDeleteDialogOpen(false)
+      } else{
+        throw new Error(response.message | "Error!")
+      }
+    } catch(error) {
+      alert(error)
+    }
   }
 
   return (
@@ -141,7 +230,7 @@ const ManageCompanyPage = () => {
                     onRowSelectionModelChange={handleSelectDepartmentRow}
                     pageSize={10}
                     rowHeight={48}
-                    getRowId={(row) => row.buildingId} // getRowId 속성 전달
+                    getRowId={(row) => row.departmentId} // getRowId 속성 전달
                   />
                 </Grid>
               </Stack>
@@ -177,8 +266,8 @@ const ManageCompanyPage = () => {
                       readOnly={true}
                       sx={{
                         '& .MuiInputBase-root': {
-                          backgroundColor: !mode ? '#f5f5f5' : 'inherite', // 회색빛 배경 설정
-                          cursor: !mode ? 'not-allowed' : 'inherite', // 커서 변경
+                          backgroundColor: '#f5f5f5', // 회색빛 배경 설정
+                          cursor: 'not-allowed', // 커서 변경
                         },
                       }}
                     />
@@ -233,10 +322,16 @@ const ManageCompanyPage = () => {
                                 label="시작일"
                                 value={dayjs(searchDate.startDate)}
                                 onChange={(value) => {
+                                  if (value === null || value === '') {
+                                    // value가 null이거나 빈 문자열인 경우에 대한 처리
+                                    console.log('Value is null or empty');
+                                    return;
+                                  } 
+                                  console.log(value === "InvalidValue")
                                   handleSearchInputChange(
                                     'startDate',
                                     value.format('YYYYMMDD')
-                                  )
+                                  );
                                 }}
                               />
                             </Grid>
@@ -245,6 +340,7 @@ const ManageCompanyPage = () => {
                                 label="종료일"
                                 value={dayjs(searchDate.endDate)}
                                 onChange={(value) => {
+                                  value === '' || null ? '' : 
                                   handleSearchInputChange(
                                     'endDate',
                                     value.format('YYYYMMDD')
@@ -254,7 +350,7 @@ const ManageCompanyPage = () => {
                             </Grid>
                           </LocalizationProvider>
                           <Grid item alignSelf="flex-end">
-                            <Typography fontSize={25}>0</Typography>
+                            <Typography fontSize={25}>{departmentTotalRevenue}</Typography>
                           </Grid>
                           <Grid item alignSelf="flex-end">
                             <Typography> 원</Typography>
@@ -298,7 +394,7 @@ const ManageCompanyPage = () => {
                     showAll={true}
                     pageSize={10}
                     rowHeight={48}
-                    getRowId={(row) => row.buildingId} // getRowId 속성 전달
+                    getRowId={(row) => row.managerId} // getRowId 속성 전달
                   />
                 </Grid>
               </Stack>
@@ -309,12 +405,13 @@ const ManageCompanyPage = () => {
       <AddDepartmentModal
         open={isAddDepartmentkModalOpen}
         handleClose={handleCloseModal}
-        data={{ departmentId: departmentId }}
+        companyId={companyId}
+        setIsAddDepartmentModalOpen={setIsAddDepartmentModalOpen}
       />
       <HandleDepartmentMember
         open={isHandleDepartmentMemberModalOpen}
         handleClose={handleCloseModal}
-        data={{ departmentId: departmentId }}
+        data={{ companyId: companyId, departmentId: departmentId }}
       />
       <Dialog
         open={isDeleteDialogOpen}

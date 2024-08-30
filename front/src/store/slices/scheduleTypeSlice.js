@@ -4,12 +4,8 @@ export const fetchScheduleTypeList = createAsyncThunk(
   'common/fetchScheduleTypeList',
   async () => {
     const response = await fetch('/api/schedule/v1/schedule-type-list')
-    if (!response.ok) {
-      // throw new Error('Network response was not ok')
-      throw new Error(response.statusText)
-    }
-    const result = await response.json()
-    return result
+    const data = await response.json()
+    return data
   }
 )
 

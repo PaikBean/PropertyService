@@ -10,16 +10,16 @@ public class BuildingDto {
     private Long buildingId;
     private String ownerName;
     private String ownerRelation;
-    private String ownerPhonNumber;
+    private String ownerPhoneNumber;
     private String buildingAddress;
 
     @Builder
     @QueryProjection
-    public BuildingDto(Long buildingId, String ownerName, String ownerRelation, String ownerPhonNumber, String buildingAddress) {
+    public BuildingDto(Long buildingId, String ownerName, String ownerRelation, String ownerPhoneNumber, String buildingAddress) {
         this.buildingId = buildingId;
         this.ownerName = ownerName;
         this.ownerRelation = ownerRelation;
-        this.ownerPhonNumber = ownerPhonNumber;
+        this.ownerPhoneNumber = ownerPhoneNumber;
         this.buildingAddress = buildingAddress;
     }
 

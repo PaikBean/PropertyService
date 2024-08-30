@@ -1,5 +1,7 @@
 package com.propertyservice.propertyservice.jwt;
 
+import com.propertyservice.propertyservice.dto.manager.CustomUserDetail;
+import com.propertyservice.propertyservice.service.CustomUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +22,8 @@ import java.util.Collections;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
+
+    private final CustomUserDetailService customUserDetailService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -52,9 +56,15 @@ public class JWTFilter extends OncePerRequestFilter {
 
 
         // 3. 정보 객체 담기
-        User user = new User(username, "123123", Collections.singleton(new SimpleGrantedAuthority(role)));
-        System.out.println("user 객체 : "  + user.toString());
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        //User user = new User(username, "123123", Collections.singleton(new SimpleGrantedAuthority(role)));
+        CustomUserDetail user = (CustomUserDetail) customUserDetailService.loadUserByUsername(username);
+        //System.out.println("user 객체 : "  + user.toString());
+//        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+//                user, null, Collections.singleton(new SimpleGrantedAuthority(role))
+//        );
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                user, null, user.getAuthorities()
+        );
 
         // 4. securityContextHolder에 등록. ( user 세션 생성.)
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

@@ -43,6 +43,7 @@ const CustomDataGrid2 = ({
       pagination={!showAll}
       rowHeight={rowHeight}
       sx={gridStyle}
+      disableSelectionOnClick={true} // 행 클릭 시 선택을 비활성화
     />
   )
 }

@@ -1,14 +1,13 @@
 import { TextField } from '@mui/material'
-import { useEffect } from 'react'
 
-const InputSignUpPassword = ({ value, onChange, sx }) => {
+const InputSignUpPassword = ({ value, onChange, sx, label = '비밀번호' }) => {
   return (
     <TextField
       sx={sx}
       value={value}
       onChange={onChange}
       id="password"
-      label="Password"
+      label={label}
       name="password"
       required
       fullWidth

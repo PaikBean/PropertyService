@@ -1,37 +1,31 @@
+import { fetchGet } from '@/utils/fetch/fetchWrapper'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 export const fetchManagerStateList = createAsyncThunk(
   'common/manager-state-list',
   async () => {
-    // const response = await fetch('/api/common/v1/manager-state-list')
-    // const data = await response.json()
-    const data = {
-      responseCode: 'SUCCESS',
-      data: [
-        {
-          mangerStateId: 1,
-          managerState: '재직',
-        },
-        {
-          mangerStateId: 2,
-          managerState: '휴직',
-        },
-        {
-          mangerStateId: 3,
-          managerState: '퇴사',
-        },
-      ],
-      message: null,
-      code: '200',
+    try {
+      const response = await fetchGet(
+        '/api/common/v1/manager-state-list',
+        {},
+        null
+      )
+      console.log(response)
+      if (response.responseCode === 'SUCCESS') {
+        return response
+      } else {
+        throw new Error(response.message || 'Error!')
+      }
+    } catch (error) {
+      return new Error(error.message) // 에러 발생 시 null 반환
     }
-    return data
   }
 )
 
 const managerStateSlice = createSlice({
   name: 'managerState',
   initialState: {
-    options: null,
+    options: [],
     status: 'idle',
     error: null,
   },

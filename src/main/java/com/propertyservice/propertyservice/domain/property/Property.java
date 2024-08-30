@@ -2,6 +2,8 @@ package com.propertyservice.propertyservice.domain.property;
 
 import com.propertyservice.propertyservice.domain.building.Building;
 import com.propertyservice.propertyservice.domain.common.BaseTimeEntity;
+import com.propertyservice.propertyservice.domain.common.TransactionState;
+import com.propertyservice.propertyservice.domain.common.TransactionType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,50 +26,63 @@ public class Property extends BaseTimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "building_id")
     private Building building;
+    private Long picManagerId; // 담당매니저.
+    private PropertyType propertyType;
     @Column(nullable = false)
     private String unitNumber;
-    private Long picManagerId;
-    private Long propertyTypeId;
-    @Column(nullable = false)
-    private Long transactionTypeId;
+    private TransactionType transactionType;
     private BigDecimal deposit;
     private BigDecimal monthlyFee;
     private BigDecimal jeonseFee;
     private BigDecimal tradeFee;
+    private BigDecimal shortTermDeposit;
+    private BigDecimal shortTermMonthlyFee;
     private BigDecimal maintenanceFee;
     @OneToOne
     @JoinColumn(name = "maintenance_item_id")
     private MaintenanceItem maintenanceItem;
-    private Long transactionStateId;
+
+    private TransactionState transactionState;
+    private BigDecimal commision;
+    private String remark;
 
     @Builder
-    public Property(Long propertyId, Building building, String unitNumber, Long picManagerId, Long propertyTypeId, Long transactionTypeId, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, Long transactionStateId) {
+    public Property(Long propertyId, Building building, String unitNumber, Long picManagerId, PropertyType propertyType, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal shortTermDeposit, BigDecimal shortTermMonthlyFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, TransactionState transactionState, BigDecimal commision, String remark) {
         this.propertyId = propertyId;
         this.building = building;
         this.unitNumber = unitNumber;
         this.picManagerId = picManagerId;
-        this.propertyTypeId = propertyTypeId;
-        this.transactionTypeId = transactionTypeId;
+        this.propertyType = propertyType;
+        this.transactionType = transactionType;
         this.deposit = deposit;
         this.monthlyFee = monthlyFee;
         this.jeonseFee = jeonseFee;
         this.tradeFee = tradeFee;
+        this.shortTermDeposit = shortTermDeposit;
+        this.shortTermMonthlyFee = shortTermMonthlyFee;
         this.maintenanceFee = maintenanceFee;
         this.maintenanceItem = maintenanceItem;
-        this.transactionStateId = transactionStateId;
+        this.transactionState = transactionState;
+        this.commision = commision;
+        this.remark = remark;
     }
 
-    public void updateProperty(String unitNumber, Long picManagerId, Long propertyTypeId, Long transactionTypeId, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, Long transactionStateId) {
+    public void updateProperty(Building building, String unitNumber, Long picManagerId, PropertyType propertyType, TransactionType transactionType, BigDecimal deposit, BigDecimal monthlyFee, BigDecimal jeonseFee, BigDecimal tradeFee, BigDecimal shortTermDeposit, BigDecimal shortTermMonthlyFee,  BigDecimal maintenanceFee, MaintenanceItem maintenanceItem, TransactionState transactionState, BigDecimal commision, String remark) {
+        this.building = building;
         this.unitNumber = unitNumber;
         this.picManagerId = picManagerId;
-        this.propertyTypeId = propertyTypeId;
-        this.transactionTypeId = transactionTypeId;
+        this.propertyType = propertyType;
+        this.transactionType = transactionType;
         this.deposit = deposit;
         this.monthlyFee = monthlyFee;
         this.jeonseFee = jeonseFee;
         this.tradeFee = tradeFee;
+        this.shortTermDeposit = shortTermMonthlyFee;
+        this.shortTermMonthlyFee = shortTermDeposit;
         this.maintenanceFee = maintenanceFee;
         this.maintenanceItem = maintenanceItem;
-        this.transactionStateId = transactionStateId;
+        this.transactionState = transactionState;
+        this.commision = commision;
+        this.remark = remark;
     }
 }

@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material'
 
-const InputBizNumber = ({ value, onChange, sx }) => {
+const InputBizNumber = ({ value, onChange, sx, readOnly }) => {
   return (
     <TextField
       value={value}
@@ -14,6 +14,9 @@ const InputBizNumber = ({ value, onChange, sx }) => {
       variant="outlined"
       type="bizNumber"
       autoComplete="bizNumber"
+      InputProps={{
+        readOnly: readOnly, // readOnly 속성 설정
+      }}
     />
   )
 }

@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class ScheduleTypeDto {
-    private Long scheduleId;
-    private String scheduleType;
+    private String scheduleTypeName;
+    private String label;
 
     @Builder
-    public ScheduleTypeDto(Long scheduleId, String scheduleType) {
-        this.scheduleId = scheduleId;
-        this.scheduleType = scheduleType;
+    public ScheduleTypeDto(String scheduleTypeName, String label) {
+        this.scheduleTypeName = scheduleTypeName;
+        this.label = label;
     }
 }

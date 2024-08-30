@@ -8,9 +8,11 @@ import lombok.Setter;
 @Setter
 public class DepartmentForm {
 
-    private Company companyId;
+    private Company company;
 
     private String departmentName;
 
     private String departmentCode;
+
+    private Long managerId;
 }

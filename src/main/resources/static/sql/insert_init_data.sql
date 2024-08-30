@@ -1,22 +1,22 @@
 -- 일정 유형 정보
-INSERT INTO schedule_type (schedule_type) VALUES ('잔금');
-INSERT INTO schedule_type (schedule_type) VALUES ('미팅');
-INSERT INTO schedule_type (schedule_type) VALUES ('휴가');
-INSERT INTO schedule_type (schedule_type) VALUES ('입주');
-INSERT INTO schedule_type (schedule_type) VALUES ('퇴실');
+-- INSERT INTO schedule_type (schedule_type) VALUES ('잔금');
+-- INSERT INTO schedule_type (schedule_type) VALUES ('미팅');
+-- INSERT INTO schedule_type (schedule_type) VALUES ('휴가');
+-- INSERT INTO schedule_type (schedule_type) VALUES ('입주');
+-- INSERT INTO schedule_type (schedule_type) VALUES ('퇴실');
 
 -- 주용도 정보
-INSERT INTO property_type (property_type) VALUES ('주거용');
-INSERT INTO property_type (property_type) VALUES ('상업용');
+-- INSERT INTO property_type (property_type) VALUES ('주거용');
+-- INSERT INTO property_type (property_type) VALUES ('상업용');
 
 -- 거래상태 정보
-INSERT INTO transaction_state (transaction_state) VALUES ('거래중');
-INSERT INTO transaction_state (transaction_state) VALUES ('거래완료');
+-- INSERT INTO transaction_state (transaction_state) VALUES ('거래중');
+-- INSERT INTO transaction_state (transaction_state) VALUES ('거래완료');
 
 -- 근무상태 정보
-INSERT INTO manager_state (manager_state) VALUES ('재직');
-INSERT INTO manager_state (manager_state) VALUES ('휴직');
-INSERT INTO manager_state (manager_state) VALUES ('퇴사');
+-- INSERT INTO manager_state (manager_state) VALUES ('재직');
+-- INSERT INTO manager_state (manager_state) VALUES ('휴직');
+-- INSERT INTO manager_state (manager_state) VALUES ('퇴사');
 
 -- -- 성별 정보
 -- INSERT INTO gender (gender) VALUES ('남성');
@@ -24,17 +24,17 @@ INSERT INTO manager_state (manager_state) VALUES ('퇴사');
 -- INSERT INTO gender (gender) VALUES ('미상');
 
 -- 거래유형 정보
-INSERT INTO transaction_type (transaction_type_name, transaction_type_code) VALUES ('월세', 'monthly');
-INSERT INTO transaction_type (transaction_type_name, transaction_type_code) VALUES ('전세', 'jeonse');
-INSERT INTO transaction_type (transaction_type_name, transaction_type_code) VALUES ('매매', 'trade');
-INSERT INTO transaction_type (transaction_type_name, transaction_type_code) VALUES ('단기', 'shorterm');
+-- INSERT INTO transaction_type (transaction_type_name, transaction_type_code) VALUES ('월세', 'monthly');
+-- INSERT INTO transaction_type (transaction_type_name, transaction_type_code) VALUES ('전세', 'jeonse');
+-- INSERT INTO transaction_type (transaction_type_name, transaction_type_code) VALUES ('매매', 'trade');
+-- INSERT INTO transaction_type (transaction_type_name, transaction_type_code) VALUES ('단기', 'shorterm');
 
 -- 유입경로 정보
-INSERT INTO inflow_type (inflow_type) VALUES ('직방');
-INSERT INTO inflow_type (inflow_type) VALUES ('다방');
-INSERT INTO inflow_type (inflow_type) VALUES ('피터팬');
-INSERT INTO inflow_type (inflow_type) VALUES ('집토스');
-INSERT INTO inflow_type (inflow_type) VALUES ('기타');
+-- INSERT INTO inflow_type (inflow_type) VALUES ('직방');
+-- INSERT INTO inflow_type (inflow_type) VALUES ('다방');
+-- INSERT INTO inflow_type (inflow_type) VALUES ('피터팬');
+-- INSERT INTO inflow_type (inflow_type) VALUES ('집토스');
+-- INSERT INTO inflow_type (inflow_type) VALUES ('기타');
 
 -- 주소 정보
 INSERT INTO address_level1 (address_level1_id, address_level1) VALUES (1, '서울특별시');
